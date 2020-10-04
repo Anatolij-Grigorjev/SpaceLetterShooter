@@ -7,17 +7,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.tiem625.space_letter_shooter.resource.ResourcesManager;
+import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
+import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
+import com.tiem625.space_letter_shooter.resource.make.TextureMaker;
 
-public class Launcher extends ApplicationAdapter {
+public class GameLoop extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	ParticleEffect effect;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-		effect = new ParticleEffect();
+		batch = SpriteBatchMaker.buildDefault();
+		img = TextureMaker.buildForInternalPath("badlogic.jpg");
+		effect = ParticleEffectMaker.buildDefault();
+
 		effect.load(
 				Gdx.files.internal("particles/space/space_particles.p"),
 				new TextureAtlas(Gdx.files.internal("particles/space/atlas/pack.atlas"))
@@ -38,8 +43,6 @@ public class Launcher extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		effect.dispose();
-		img.dispose();
+		ResourcesManager.INSTANCE.disposeAll();
 	}
 }
