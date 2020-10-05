@@ -25,7 +25,7 @@ public class GameLoop extends ApplicationAdapter {
 
 		effect.load(
 				Gdx.files.internal("particles/space/space_particles.p"),
-				new TextureAtlas(Gdx.files.internal("particles/space/atlas/pack.atlas"))
+				new TextureAtlas(Gdx.files.internal("atlas/pack.atlas"))
 		);
 		effect.start();
 		effect.setPosition(0, 480);
