@@ -12,7 +12,7 @@ public enum ResourcesManager {
 
     private final Set<Disposable> resources;
 
-    private final String DISPOSABLE_MESSAGE_FORMAT = "Disposing '%s' of type [%s]\n";
+    private final String DISPOSING_OF_RESOURCE_MESSAGE_FORMAT = "Disposing '%s' of type [%s]\n";
 
     ResourcesManager() {
         resources = ConcurrentHashMap.newKeySet();
@@ -33,7 +33,7 @@ public enum ResourcesManager {
 
     public void disposeAll() {
         resources.forEach(resource -> {
-            System.out.printf(DISPOSABLE_MESSAGE_FORMAT, resource, resource.getClass());
+            System.out.printf(DISPOSING_OF_RESOURCE_MESSAGE_FORMAT, resource, resource.getClass());
             resource.dispose();
         });
     }

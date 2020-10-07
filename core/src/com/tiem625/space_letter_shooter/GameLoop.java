@@ -10,18 +10,21 @@ import com.tiem625.space_letter_shooter.config.RuntimeConfig;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
+import com.tiem625.space_letter_shooter.resource.make.TextureAtlasMaker;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     ParticleEffect effect;
+    TextureAtlas textures;
 
     @Override
     public void create() {
         batch = SpriteBatchMaker.buildDefault();
+        textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
         effect.load(
                 Gdx.files.internal("particles/space/space_particles.p"),
-                new TextureAtlas(Gdx.files.internal("atlas/pack.atlas"))
+                textures
         );
         effect.start();
         effect.setPosition(0, RuntimeConfig.getScreenY());
@@ -34,12 +37,15 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        effect.draw(batch, Gdx.graphics.getDeltaTime());
+        if (RuntimeConfig.enableDynamicBackgrounds()) {
+            effect.draw(batch, Gdx.graphics.getDeltaTime());
+        }
         batch.end();
     }
 
     @Override
     public void dispose() {
         ResourcesManager.INSTANCE.disposeAll();
+        RuntimeConfig.writeOutConfig();
     }
 }

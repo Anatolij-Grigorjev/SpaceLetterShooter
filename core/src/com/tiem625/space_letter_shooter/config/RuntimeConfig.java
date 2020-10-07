@@ -2,27 +2,27 @@ package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.Gdx;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 public class RuntimeConfig {
 
-    private static final String KEY_RESOLUTION_WIDTH = "screen.resolution.x";
-    private static final String KEY_RESOLUTION_HEIGHT = "screen.resolution.y";
-    private static final String KEY_GAME_TITLE = "game.title";
-
+    private static final String LOADING_PROP_MESSAGE_FORMAT = "Loading prop {%s=%s}\n";
     private static final String PROPS_FILE_LOCATION = "game_props.properties";
 
-    private static final Map<String, Object> configValues = new HashMap<>();
+    private static final Map<ConfigProperty, Object> configValues = new HashMap<>();
 
     static {
         Properties propertiesSource;
         try {
             var propsFile = new Properties();
-            propsFile.load(Gdx.files.internal(PROPS_FILE_LOCATION).reader());
+            System.out.println("Reading props from location " + PROPS_FILE_LOCATION);
+            propsFile.load(Gdx.files.external(PROPS_FILE_LOCATION).reader());
             propertiesSource = propsFile;
-        } catch (Exception propsProblem) {
+        } catch (IOException propsProblem) {
             propsProblem.printStackTrace();
             propertiesSource = buildDefaultProps();
         }
@@ -31,30 +31,58 @@ public class RuntimeConfig {
 
     private static Properties buildDefaultProps() {
         var props = new Properties();
-        props.put(KEY_RESOLUTION_WIDTH, 1280);
-        props.put(KEY_RESOLUTION_HEIGHT, 720);
-        props.put(KEY_GAME_TITLE, "The Shooting Type");
+        Stream.of(ConfigProperty.values())
+                .forEach(configProperty -> props.put(
+                        configProperty.getPropKey(),
+                        configProperty.getDefaultRaw()
+                ));
 
         return props;
     }
 
-    private static void loadPropertiesIntoMap(Properties source, Map<String, Object> destination) {
-        destination.put(KEY_RESOLUTION_WIDTH, source.get(KEY_RESOLUTION_WIDTH));
-        destination.put(KEY_RESOLUTION_HEIGHT, source.get(KEY_RESOLUTION_HEIGHT));
-        destination.put(KEY_GAME_TITLE, source.get(KEY_GAME_TITLE));
+    private static void loadPropertiesIntoMap(Properties source, Map<ConfigProperty, Object> destination) {
+        Stream.of(ConfigProperty.values()).forEach(configProperty -> {
+            String key = configProperty.getPropKey();
+            String rawPropValue = source.getProperty(key);
+            System.out.printf(LOADING_PROP_MESSAGE_FORMAT, key, rawPropValue);
+            destination.put(configProperty, configProperty.loadProperty(rawPropValue));
+        });
     }
 
-    private RuntimeConfig() {}
+    private RuntimeConfig() {
+    }
 
     public static Integer getScreenX() {
-        return (Integer) configValues.get(KEY_RESOLUTION_WIDTH);
+        return (Integer) configValues.get(ConfigProperty.RESOLUTION_WIDTH);
     }
 
     public static Integer getScreenY() {
-        return (Integer) configValues.get(KEY_RESOLUTION_HEIGHT);
+        return (Integer) configValues.get(ConfigProperty.RESOLUTION_HEIGHT);
     }
 
     public static String getGameTitle() {
-        return (String) configValues.get(KEY_GAME_TITLE);
+        return (String) configValues.get(ConfigProperty.GAME_TITLE);
+    }
+
+    public static boolean enableDynamicBackgrounds() {
+        return (boolean) configValues.get(ConfigProperty.ENABLE_DYNAMIC_BG);
+    }
+
+    public static void writeOutConfig() {
+        var propsFileWriter = Gdx.files.external(PROPS_FILE_LOCATION).writer(false);
+        try (propsFileWriter) {
+            configValues.forEach((key, value) -> {
+                try {
+                    String propKey = key.getPropKey();
+                    String propLine = String.format("%s=%s\n", propKey, value);
+                    propsFileWriter.write(propLine);
+                    System.out.print("Added prop to file: " + propLine);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
