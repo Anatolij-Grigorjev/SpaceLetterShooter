@@ -1,6 +1,7 @@
 package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,10 +20,11 @@ public class RuntimeConfig {
         Properties propertiesSource;
         try {
             var propsFile = new Properties();
-            System.out.println("Reading props from location " + PROPS_FILE_LOCATION);
-            propsFile.load(Gdx.files.external(PROPS_FILE_LOCATION).reader());
+            FileHandle fileHandle = Gdx.files.external(PROPS_FILE_LOCATION);
+            System.out.println("Reading props from file: " + fileHandle.file().getAbsolutePath());
+            propsFile.load(fileHandle.reader());
             propertiesSource = propsFile;
-        } catch (IOException propsProblem) {
+        } catch (RuntimeException | IOException propsProblem) {
             propsProblem.printStackTrace();
             propertiesSource = buildDefaultProps();
         }
@@ -69,7 +71,9 @@ public class RuntimeConfig {
     }
 
     public static void writeOutConfig() {
-        var propsFileWriter = Gdx.files.external(PROPS_FILE_LOCATION).writer(false);
+        FileHandle fileHandle = Gdx.files.external(PROPS_FILE_LOCATION);
+        System.out.println("writing props to file: " + fileHandle.file().getAbsolutePath());
+        var propsFileWriter = fileHandle.writer(false);
         try (propsFileWriter) {
             configValues.forEach((key, value) -> {
                 try {
