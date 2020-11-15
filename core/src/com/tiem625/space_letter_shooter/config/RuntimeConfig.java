@@ -66,7 +66,7 @@ public class RuntimeConfig {
         return (String) configValues.get(ConfigProperty.GAME_TITLE);
     }
 
-    public static boolean enableDynamicBackgrounds() {
+    public static boolean isDynamicBackgroundEnabled() {
         return (boolean) configValues.get(ConfigProperty.ENABLE_DYNAMIC_BG);
     }
 

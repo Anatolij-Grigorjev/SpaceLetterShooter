@@ -6,19 +6,24 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.RuntimeConfig;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
+import com.tiem625.space_letter_shooter.resource.make.StageMaker;
 import com.tiem625.space_letter_shooter.resource.make.TextureAtlasMaker;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     ParticleEffect effect;
     TextureAtlas textures;
+    Stage spaceStage;
+
 
     @Override
     public void create() {
+        spaceStage = StageMaker.buildDefault();
         batch = SpriteBatchMaker.buildDefault();
         textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
@@ -37,7 +42,7 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        if (RuntimeConfig.enableDynamicBackgrounds()) {
+        if (RuntimeConfig.isDynamicBackgroundEnabled()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
         batch.end();
