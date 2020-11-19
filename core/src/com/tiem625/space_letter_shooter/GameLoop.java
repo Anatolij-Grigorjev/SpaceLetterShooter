@@ -44,7 +44,7 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        if (ConfigHolder.config.isDynamicBgEnabled()) {
+        if (ConfigHolder.config.isEnabledDynamicBg()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
         StagesManager.INSTANCE.actCurrentStages();

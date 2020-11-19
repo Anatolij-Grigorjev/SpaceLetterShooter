@@ -7,13 +7,13 @@ import java.util.Properties;
 public class GameConfig {
 
     private String gameTitle;
-    private Boolean enableDynamicBg;
+    private Boolean enabledDynamicBg;
     private int resolutionWidth;
     private int resolutionHeight;
 
     public GameConfig() {
         this.gameTitle = "The Typed Shooter";
-        this.enableDynamicBg = true;
+        this.enabledDynamicBg = true;
         this.resolutionWidth = 1280;
         this.resolutionHeight = 720;
     }
@@ -21,7 +21,7 @@ public class GameConfig {
     public GameConfig(Properties properties) {
         Objects.requireNonNull(properties, "Received null properties for config!");
         this.gameTitle = properties.getProperty("gameTitle");
-        this.enableDynamicBg = Boolean.valueOf(properties.getProperty("enableDynamicBg"));
+        this.enabledDynamicBg = Boolean.valueOf(properties.getProperty("enableDynamicBg"));
         this.resolutionWidth = Integer.parseInt(properties.getProperty("resolutionWidth"));
         this.resolutionHeight = Integer.parseInt(properties.getProperty("resolutionHeight"));
     }
@@ -34,12 +34,12 @@ public class GameConfig {
         this.gameTitle = gameTitle;
     }
 
-    public Boolean isDynamicBgEnabled() {
-        return enableDynamicBg;
+    public Boolean isEnabledDynamicBg() {
+        return enabledDynamicBg;
     }
 
-    void setEnableDynamicBg(Boolean enableDynamicBg) {
-        this.enableDynamicBg = enableDynamicBg;
+    void setEnabledDynamicBg(Boolean enableDynamicBg) {
+        this.enabledDynamicBg = enableDynamicBg;
     }
 
     public int getResolutionWidth() {
@@ -61,7 +61,7 @@ public class GameConfig {
     Map<String, String> toPropsMap() {
         return Map.of(
                 "gameTitle", gameTitle,
-                "enableDynamicBg", enableDynamicBg.toString(),
+                "enableDynamicBg", enabledDynamicBg.toString(),
                 "resolutionWidth", "" + resolutionWidth,
                 "resolutionHeight", "" + resolutionHeight
         );

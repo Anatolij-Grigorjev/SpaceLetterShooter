@@ -1,9 +1,17 @@
 package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.tiem625.space_letter_shooter.resource.make.StageMaker;
+import com.tiem625.space_letter_shooter.stages.StageId;
+import com.tiem625.space_letter_shooter.stages.StageWithId;
+import com.tiem625.space_letter_shooter.stages.StagesManager;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 public class ConfigHolder {
@@ -22,6 +30,22 @@ public class ConfigHolder {
         } catch (RuntimeException | IOException propsProblem) {
             return new GameConfig();
         }
+    }
+
+    static {
+        var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
+        if (isGameDebugProfile) {
+            System.out.println("Game in debug profile! Enabling debug config changer...");
+            StagesManager.INSTANCE.addStageWithId(buildConfigChangingStage());
+        }
+    }
+
+    private static StageWithId buildConfigChangingStage() {
+
+        var gameConfigChangeStage = StageMaker.buildWithId(StageId.DEBUG);
+        gameConfigChangeStage.addListener(new ChangeGameConfigInputListener());
+
+        return gameConfigChangeStage;
     }
 
     private ConfigHolder() {
@@ -43,6 +67,22 @@ public class ConfigHolder {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static class ChangeGameConfigInputListener extends InputListener {
+        @Override
+        public boolean keyUp(InputEvent event, int keycode) {
+            switch(keycode) {
+
+                case Input.Keys.P:
+                    config.setEnabledDynamicBg(!config.isEnabledDynamicBg());
+                    break;
+                default:
+                    System.out.println("Got key input with no action: " + keycode);
+            }
+
+            return true;
         }
     }
 }
