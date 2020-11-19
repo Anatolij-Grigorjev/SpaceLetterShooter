@@ -30,7 +30,7 @@ public class GameConfig {
         return gameTitle;
     }
 
-    public void setGameTitle(String gameTitle) {
+    void setGameTitle(String gameTitle) {
         this.gameTitle = gameTitle;
     }
 
@@ -38,7 +38,7 @@ public class GameConfig {
         return enableDynamicBg;
     }
 
-    public void setEnableDynamicBg(Boolean enableDynamicBg) {
+    void setEnableDynamicBg(Boolean enableDynamicBg) {
         this.enableDynamicBg = enableDynamicBg;
     }
 
@@ -46,7 +46,7 @@ public class GameConfig {
         return resolutionWidth;
     }
 
-    public void setResolutionWidth(int resolutionWidth) {
+    void setResolutionWidth(int resolutionWidth) {
         this.resolutionWidth = resolutionWidth;
     }
 
@@ -54,11 +54,11 @@ public class GameConfig {
         return resolutionHeight;
     }
 
-    public void setResolutionHeight(int resolutionHeight) {
+    void setResolutionHeight(int resolutionHeight) {
         this.resolutionHeight = resolutionHeight;
     }
 
-    public Map<String, String> toPropsMap() {
+    Map<String, String> toPropsMap() {
         return Map.of(
                 "gameTitle", gameTitle,
                 "enableDynamicBg", enableDynamicBg.toString(),
