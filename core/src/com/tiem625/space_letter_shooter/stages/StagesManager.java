@@ -1,9 +1,11 @@
 package com.tiem625.space_letter_shooter.stages;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public enum StagesManager {
 
@@ -23,11 +25,16 @@ public enum StagesManager {
         return currentStages.put(stage.getStageId(), stage);
     }
 
-    public void actCurrentStages() {
-        actCurrentStages(Gdx.graphics.getDeltaTime());
+    private Consumer<Stage> renderStage = stage -> {
+      stage.act(Gdx.graphics.getDeltaTime());
+      stage.draw();
+    };
+
+    public void renderCurrentStages() {
+        forStages(renderStage);
     }
 
-    public void actCurrentStages(float delta) {
-        currentStages.values().forEach(stage -> stage.act(delta));
+    private void forStages(Consumer<Stage> stageActions) {
+        currentStages.values().forEach(stageActions);
     }
 }

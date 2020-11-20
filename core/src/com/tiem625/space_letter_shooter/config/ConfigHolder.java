@@ -18,9 +18,9 @@ public class ConfigHolder {
 
     private static final String PROPS_FILE_LOCATION = "game_props.properties";
 
-    public static final GameConfig config = loadAvailableProperties();
+    public static final GameConfig config = loadAvailableConfig();
 
-    private static GameConfig loadAvailableProperties() {
+    private static GameConfig loadAvailableConfig() {
         try {
             var propertiesSource = new Properties();
             FileHandle fileHandle = Gdx.files.external(PROPS_FILE_LOCATION);
@@ -36,7 +36,8 @@ public class ConfigHolder {
         var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
         if (isGameDebugProfile) {
             System.out.println("Game in debug profile! Enabling debug config changer...");
-            StagesManager.INSTANCE.addStageWithId(buildConfigChangingStage());
+            var stage = StagesManager.INSTANCE.addStageWithId(buildConfigChangingStage());
+            Gdx.input.setInputProcessor(stage);
         }
     }
 

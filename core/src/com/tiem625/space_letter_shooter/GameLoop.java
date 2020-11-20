@@ -47,7 +47,7 @@ public class GameLoop extends ApplicationAdapter {
         if (ConfigHolder.config.isEnabledDynamicBg()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
-        StagesManager.INSTANCE.actCurrentStages();
+        StagesManager.INSTANCE.renderCurrentStages();
         batch.end();
     }
 
