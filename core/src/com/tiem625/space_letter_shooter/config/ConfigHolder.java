@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.make.StageMaker;
 import com.tiem625.space_letter_shooter.stages.StageId;
 import com.tiem625.space_letter_shooter.stages.StageWithId;
@@ -37,7 +38,7 @@ public class ConfigHolder {
         if (isGameDebugProfile) {
             System.out.println("Game in debug profile! Enabling debug config changer...");
             var stage = StagesManager.INSTANCE.addStageWithId(buildConfigChangingStage());
-            Gdx.input.setInputProcessor(stage);
+            InputProcessorManager.addAlwaysOnInputProcessor(stage);
         }
     }
 

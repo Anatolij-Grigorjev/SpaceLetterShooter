@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.ConfigHolder;
+import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
@@ -37,6 +38,7 @@ public class GameLoop extends ApplicationAdapter {
         effect.setPosition(0, ConfigHolder.config.getResolutionHeight());
         Gdx.graphics.setTitle(ConfigHolder.config.getGameTitle());
         Gdx.graphics.setWindowedMode(ConfigHolder.config.getResolutionWidth(), ConfigHolder.config.getResolutionHeight());
+        InputProcessorManager.setCurrentInputProcessors();
     }
 
     @Override
