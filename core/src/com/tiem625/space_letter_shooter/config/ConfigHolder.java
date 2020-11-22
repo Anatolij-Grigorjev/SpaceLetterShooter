@@ -10,6 +10,7 @@ import com.tiem625.space_letter_shooter.resource.make.StageMaker;
 import com.tiem625.space_letter_shooter.stages.StageId;
 import com.tiem625.space_letter_shooter.stages.StageWithId;
 import com.tiem625.space_letter_shooter.stages.StagesManager;
+import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -51,6 +52,12 @@ public class ConfigHolder {
     }
 
     private ConfigHolder() {
+        throw new ClassIsStaticException(getClass());
+    }
+
+    public static void applyCurrentGameConfig() {
+        Gdx.graphics.setTitle(config.getGameTitle());
+        Gdx.graphics.setWindowedMode(config.getResolutionWidth(), config.getResolutionHeight());
     }
 
     public static void writeOutConfig() {

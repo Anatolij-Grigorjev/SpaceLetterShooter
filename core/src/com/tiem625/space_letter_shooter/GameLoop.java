@@ -36,8 +36,7 @@ public class GameLoop extends ApplicationAdapter {
         );
         effect.start();
         effect.setPosition(0, ConfigHolder.config.getResolutionHeight());
-        Gdx.graphics.setTitle(ConfigHolder.config.getGameTitle());
-        Gdx.graphics.setWindowedMode(ConfigHolder.config.getResolutionWidth(), ConfigHolder.config.getResolutionHeight());
+        ConfigHolder.applyCurrentGameConfig();
         InputProcessorManager.setCurrentInputProcessors();
     }
 

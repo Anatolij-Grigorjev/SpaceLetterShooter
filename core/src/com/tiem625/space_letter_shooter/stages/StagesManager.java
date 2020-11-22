@@ -25,7 +25,7 @@ public enum StagesManager {
         return currentStages.put(stage.getStageId(), stage);
     }
 
-    private Consumer<Stage> renderStage = stage -> {
+    private final Consumer<Stage> renderStage = stage -> {
       stage.act(Gdx.graphics.getDeltaTime());
       stage.draw();
     };

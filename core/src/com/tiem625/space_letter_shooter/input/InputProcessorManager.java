@@ -3,6 +3,7 @@ package com.tiem625.space_letter_shooter.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.util.*;
 
@@ -11,7 +12,7 @@ public class InputProcessorManager {
     private static final Set<InputProcessor> alwaysOnInputProcessors = new HashSet<>();
 
     private InputProcessorManager() {
-        throw new RuntimeException("InputProcessorManager is static!");
+        throw new ClassIsStaticException(getClass());
     }
 
     /**
