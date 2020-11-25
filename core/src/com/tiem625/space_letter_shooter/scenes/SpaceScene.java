@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.stages;
+package com.tiem625.space_letter_shooter.scenes;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 

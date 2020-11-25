@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.make.StageMaker;
-import com.tiem625.space_letter_shooter.stages.StageId;
-import com.tiem625.space_letter_shooter.stages.StageWithId;
-import com.tiem625.space_letter_shooter.stages.StagesManager;
+import com.tiem625.space_letter_shooter.scenes.SceneId;
+import com.tiem625.space_letter_shooter.scenes.ScenesManager;
+import com.tiem625.space_letter_shooter.scenes.StageWithId;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.io.IOException;
@@ -38,14 +38,14 @@ public class ConfigHolder {
         var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
         if (isGameDebugProfile) {
             System.out.println("Game in debug profile! Enabling debug config changer...");
-            var stage = StagesManager.INSTANCE.addStageWithId(buildConfigChangingStage());
+            var stage = ScenesManager.INSTANCE.setScene(buildConfigChangingStage());
             InputProcessorManager.addAlwaysOnInputProcessor(stage);
         }
     }
 
     private static StageWithId buildConfigChangingStage() {
 
-        var gameConfigChangeStage = StageMaker.buildWithId(StageId.DEBUG);
+        var gameConfigChangeStage = StageMaker.buildWithId(SceneId.DEBUG);
         gameConfigChangeStage.addListener(new ChangeGameConfigInputListener());
 
         return gameConfigChangeStage;

@@ -12,8 +12,8 @@ import com.tiem625.space_letter_shooter.config.ConfigHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.*;
-import com.tiem625.space_letter_shooter.stages.StageId;
-import com.tiem625.space_letter_shooter.stages.StagesManager;
+import com.tiem625.space_letter_shooter.scenes.SceneId;
+import com.tiem625.space_letter_shooter.scenes.ScenesManager;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
@@ -25,7 +25,7 @@ public class GameLoop extends ApplicationAdapter {
 
     @Override
     public void create() {
-        spaceStage = StageMaker.buildWithId(StageId.SPACE);
+        spaceStage = StageMaker.buildWithId(SceneId.SPACE);
         batch = SpriteBatchMaker.buildDefault();
         textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
@@ -45,7 +45,7 @@ public class GameLoop extends ApplicationAdapter {
         if (ConfigHolder.config.isEnabledDynamicBg()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
-        StagesManager.INSTANCE.renderCurrentStages();
+        ScenesManager.INSTANCE.renderCurrentStages();
         bitmapFont.draw(batch, "nestle", 100, 400);
         batch.end();
     }
