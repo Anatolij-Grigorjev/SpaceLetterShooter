@@ -25,7 +25,7 @@ public class GameLoop extends ApplicationAdapter {
 
     @Override
     public void create() {
-        spaceStage = StageMaker.buildWithId(SceneId.SPACE);
+        spaceStage = SceneMaker.buildWithId(SceneId.SPACE);
         batch = SpriteBatchMaker.buildDefault();
         textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
@@ -45,7 +45,7 @@ public class GameLoop extends ApplicationAdapter {
         if (ConfigHolder.config.isEnabledDynamicBg()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
-        ScenesManager.INSTANCE.renderCurrentStages();
+        ScenesManager.INSTANCE.renderActiveScenes();
         bitmapFont.draw(batch, "nestle", 100, 400);
         batch.end();
     }
