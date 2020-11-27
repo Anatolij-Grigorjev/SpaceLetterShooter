@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.ConfigHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.*;
+import com.tiem625.space_letter_shooter.scenes.Scene;
 import com.tiem625.space_letter_shooter.scenes.SceneId;
 import com.tiem625.space_letter_shooter.scenes.ScenesManager;
 
@@ -19,13 +19,13 @@ public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     ParticleEffect effect;
     TextureAtlas textures;
-    Stage spaceStage;
+    Scene spaceScene;
     BitmapFont bitmapFont;
 
 
     @Override
     public void create() {
-        spaceStage = SceneMaker.buildWithId(SceneId.SPACE);
+        spaceScene = SceneMaker.buildWithId(SceneId.SPACE);
         batch = SpriteBatchMaker.buildDefault();
         textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
@@ -46,7 +46,6 @@ public class GameLoop extends ApplicationAdapter {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
         ScenesManager.INSTANCE.renderActiveScenes();
-        bitmapFont.draw(batch, "nestle", 100, 400);
         batch.end();
     }
 

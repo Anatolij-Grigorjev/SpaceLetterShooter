@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.scenes.Scene;
 import com.tiem625.space_letter_shooter.scenes.SceneId;
@@ -37,15 +39,18 @@ public class ConfigHolder {
         var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
         if (isGameDebugProfile) {
             System.out.println("Game in debug profile! Enabling debug config changer...");
-            ScenesManager.INSTANCE.addAlwaysOnScene(buildDebugScene());
+            Scene debugScene = buildDebugScene();
+            ScenesManager.INSTANCE.addAlwaysOnScene(debugScene);
+            InputProcessorManager.addAlwaysOnInputProcessor(debugScene.getFirstStage());
         }
     }
 
     private static Scene buildDebugScene() {
 
-        var gameConfigChangeScene = SceneMaker.buildFrom(() -> new DebugScene(SceneId.DEBUG));
-
-        gameConfigChangeScene.addListener(new ChangeGameConfigInputListener());
+        var gameConfigChangeScene = SceneMaker.buildWithId(SceneId.DEBUG);
+        var stage = new Stage();
+        stage.addListener(new ChangeGameConfigInputListener());
+        gameConfigChangeScene.addStage(stage);
 
         return gameConfigChangeScene;
     }
@@ -81,7 +86,7 @@ public class ConfigHolder {
     private static class ChangeGameConfigInputListener extends InputListener {
         @Override
         public boolean keyUp(InputEvent event, int keycode) {
-            switch(keycode) {
+            switch (keycode) {
 
                 case Input.Keys.P:
                     config.setEnabledDynamicBg(!config.isEnabledDynamicBg());

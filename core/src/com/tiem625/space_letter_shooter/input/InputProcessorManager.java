@@ -72,6 +72,7 @@ public class InputProcessorManager {
 
     private static InputMultiplexer getCurrentOrSetNewMultiplexer() {
         return (InputMultiplexer) Optional.ofNullable(Gdx.input.getInputProcessor())
+                .filter(inputProcessor -> inputProcessor instanceof InputMultiplexer)
                 .orElseGet(() -> {
                     var multiplexer = new InputMultiplexer();
                     Gdx.input.setInputProcessor(multiplexer);

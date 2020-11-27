@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class Scene implements Disposable {
+public class Scene implements Disposable {
 
     protected final SceneId sceneId;
     protected final Set<Stage> stages;
@@ -30,6 +30,10 @@ public abstract class Scene implements Disposable {
         return stages;
     }
 
+    /**
+     * Get first {@link Stage} in this scene or an exception if no stages in this scene
+     * @return the first present {@link Stage} in this scene
+     */
     public Stage getFirstStage() {
         return stages.stream()
                 .findFirst()
