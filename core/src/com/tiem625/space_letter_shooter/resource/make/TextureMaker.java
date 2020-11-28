@@ -1,6 +1,7 @@
 package com.tiem625.space_letter_shooter.resource.make;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.tiem625.space_letter_shooter.resource.ResourceMaker;
 
 import java.util.Objects;
 

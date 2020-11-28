@@ -47,7 +47,7 @@ public class ConfigHolder {
 
     private static Scene buildDebugScene() {
 
-        var gameConfigChangeScene = SceneMaker.buildWithId(SceneId.DEBUG);
+        var gameConfigChangeScene = SceneMaker.buildEmptyWithId(SceneId.DEBUG);
         var stage = new Stage();
         stage.addListener(new ChangeGameConfigInputListener());
         gameConfigChangeScene.addStage(stage);

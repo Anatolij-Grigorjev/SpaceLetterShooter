@@ -1,12 +1,11 @@
-package com.tiem625.space_letter_shooter.resource.make;
+package com.tiem625.space_letter_shooter.resource;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-abstract class ResourceMaker {
+public abstract class ResourceMaker {
 
     /**
      * Create a {@link Disposable} resource in the way described by the provided {@link Supplier}.<br/>
