@@ -295,7 +295,7 @@ continuous: true
 aligned: false
 additive: false
 behind: false
-premultipliedAlpha: false
+premultipliedAlpha: true
 spriteMode: single
 - Image Paths -
 /Users/anatolij/Projects/intellij-workspace/space-letter-shooter/concept/packer_inputs/particle.png
