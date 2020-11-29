@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.resource;
+package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;

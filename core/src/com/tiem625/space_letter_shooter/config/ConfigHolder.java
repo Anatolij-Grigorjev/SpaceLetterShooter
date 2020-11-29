@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
-import com.tiem625.space_letter_shooter.scenes.Scene;
-import com.tiem625.space_letter_shooter.scenes.ScenesManager;
+import com.tiem625.space_letter_shooter.scene.Scene;
+import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.io.IOException;

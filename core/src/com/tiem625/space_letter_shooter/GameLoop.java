@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.tiem625.space_letter_shooter.actors.EnemyShip;
 import com.tiem625.space_letter_shooter.config.ConfigHolder;
+import com.tiem625.space_letter_shooter.config.GameFonts;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
-import com.tiem625.space_letter_shooter.resource.GameFonts;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.*;
-import com.tiem625.space_letter_shooter.scenes.Scene;
-import com.tiem625.space_letter_shooter.scenes.ScenesManager;
+import com.tiem625.space_letter_shooter.scene.Scene;
+import com.tiem625.space_letter_shooter.scene.ScenesManager;
+import com.tiem625.space_letter_shooter.space.EnemyShip;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
