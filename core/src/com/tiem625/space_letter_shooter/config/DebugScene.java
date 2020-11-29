@@ -26,7 +26,7 @@ public class DebugScene extends Scene {
             switch (keycode) {
 
                 case Input.Keys.P:
-                    ConfigHolder.config.toggleEnabledDynamicBg();
+                    GamePropsHolder.props.toggleEnabledDynamicBg();
                     break;
                 default:
                     System.out.println("Got key input with no action: " + keycode);

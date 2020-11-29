@@ -12,21 +12,21 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
-public class ConfigHolder {
+public class GamePropsHolder {
 
     private static final String PROPS_FILE_LOCATION = "game_props.properties";
 
-    public static final GameConfig config = loadAvailableConfig();
+    public static final GameProps props = loadAvailableConfig();
 
-    private static GameConfig loadAvailableConfig() {
+    private static GameProps loadAvailableConfig() {
         try {
             var propertiesSource = new Properties();
             FileHandle fileHandle = Gdx.files.external(PROPS_FILE_LOCATION);
             System.out.println("Reading props from file: " + fileHandle.file().getAbsolutePath());
             propertiesSource.load(fileHandle.reader());
-            return new GameConfig(propertiesSource);
+            return new GameProps(propertiesSource);
         } catch (RuntimeException | IOException propsProblem) {
-            return new GameConfig();
+            return new GameProps();
         }
     }
 
@@ -40,13 +40,13 @@ public class ConfigHolder {
         }
     }
 
-    private ConfigHolder() {
+    private GamePropsHolder() {
         throw new ClassIsStaticException(getClass());
     }
 
     public static void applyCurrentGameConfig() {
-        Gdx.graphics.setTitle(config.getGameTitle());
-        Gdx.graphics.setWindowedMode(config.getResolutionWidth(), config.getResolutionHeight());
+        Gdx.graphics.setTitle(props.getGameTitle());
+        Gdx.graphics.setWindowedMode(props.getResolutionWidth(), props.getResolutionHeight());
     }
 
     public static void writeOutConfig() {
@@ -54,7 +54,7 @@ public class ConfigHolder {
         System.out.println("writing props to file: " + fileHandle.file().getAbsolutePath());
         var propsFileWriter = fileHandle.writer(false);
         try (propsFileWriter) {
-            config.toPropsMap().forEach((key, value) -> {
+            props.toPropsMap().forEach((key, value) -> {
                 try {
                     String propLine = String.format("%s=%s\n", key, value);
                     propsFileWriter.write(propLine);

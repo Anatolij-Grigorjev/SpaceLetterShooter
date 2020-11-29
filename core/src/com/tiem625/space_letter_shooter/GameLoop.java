@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.tiem625.space_letter_shooter.config.ConfigHolder;
 import com.tiem625.space_letter_shooter.config.GameFonts;
+import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.*;
@@ -36,8 +36,8 @@ public class GameLoop extends ApplicationAdapter {
         effect = ParticleEffectMaker.buildDefault();
         effect.load(Gdx.files.internal("particles/space/space_particles.p"), textures);
         effect.start();
-        effect.setPosition(0, ConfigHolder.config.getResolutionHeight());
-        ConfigHolder.applyCurrentGameConfig();
+        effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
+        GamePropsHolder.applyCurrentGameConfig();
         InputProcessorManager.setCurrentInputProcessors();
     }
 
@@ -46,7 +46,7 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        if (ConfigHolder.config.isEnabledDynamicBg()) {
+        if (GamePropsHolder.props.isEnabledDynamicBg()) {
             effect.draw(batch, Gdx.graphics.getDeltaTime());
         }
         ScenesManager.INSTANCE.renderActiveScenes();
@@ -56,6 +56,6 @@ public class GameLoop extends ApplicationAdapter {
     @Override
     public void dispose() {
         ResourcesManager.INSTANCE.disposeAll();
-        ConfigHolder.writeOutConfig();
+        GamePropsHolder.writeOutConfig();
     }
 }

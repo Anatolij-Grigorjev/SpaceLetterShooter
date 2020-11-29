@@ -4,21 +4,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
-public class GameConfig {
+public class GameProps {
 
     private String gameTitle;
     private Boolean enabledDynamicBg;
     private int resolutionWidth;
     private int resolutionHeight;
 
-    public GameConfig() {
+    public GameProps() {
         this.gameTitle = "The Typed Shooter";
         this.enabledDynamicBg = true;
         this.resolutionWidth = 1280;
         this.resolutionHeight = 720;
     }
 
-    public GameConfig(Properties properties) {
+    public GameProps(Properties properties) {
         Objects.requireNonNull(properties, "Received null properties for config!");
         this.gameTitle = properties.getProperty("gameTitle");
         this.enabledDynamicBg = Boolean.valueOf(properties.getProperty("enableDynamicBg"));
