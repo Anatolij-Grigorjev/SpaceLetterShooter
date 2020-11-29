@@ -1,15 +1,10 @@
 package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.scenes.Scene;
-import com.tiem625.space_letter_shooter.scenes.SceneId;
 import com.tiem625.space_letter_shooter.scenes.ScenesManager;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
@@ -39,20 +34,10 @@ public class ConfigHolder {
         var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
         if (isGameDebugProfile) {
             System.out.println("Game in debug profile! Enabling debug config changer...");
-            Scene debugScene = buildDebugScene();
+            Scene debugScene = SceneMaker.buildDebugScene();
             ScenesManager.INSTANCE.addAlwaysOnScene(debugScene);
             InputProcessorManager.addAlwaysOnInputProcessor(debugScene.getFirstStage());
         }
-    }
-
-    private static Scene buildDebugScene() {
-
-        var gameConfigChangeScene = SceneMaker.buildEmptyWithId(SceneId.DEBUG);
-        var stage = new Stage();
-        stage.addListener(new ChangeGameConfigInputListener());
-        gameConfigChangeScene.addStage(stage);
-
-        return gameConfigChangeScene;
     }
 
     private ConfigHolder() {
@@ -80,22 +65,6 @@ public class ConfigHolder {
             });
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static class ChangeGameConfigInputListener extends InputListener {
-        @Override
-        public boolean keyUp(InputEvent event, int keycode) {
-            switch (keycode) {
-
-                case Input.Keys.P:
-                    config.setEnabledDynamicBg(!config.isEnabledDynamicBg());
-                    break;
-                default:
-                    System.out.println("Got key input with no action: " + keycode);
-            }
-
-            return true;
         }
     }
 }

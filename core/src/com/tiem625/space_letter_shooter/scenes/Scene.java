@@ -7,23 +7,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Scene implements Disposable {
+public abstract class Scene implements Disposable {
 
-    protected final SceneId sceneId;
     protected final Set<Stage> stages;
 
-    public Scene(SceneId sceneId) {
-        this.sceneId = sceneId;
+    public Scene() {
         this.stages = new HashSet<>();
     }
 
     public void addStage(Stage stage) {
         Objects.requireNonNull(stage);
         stages.add(stage);
-    }
-
-    public SceneId getSceneId() {
-        return sceneId;
     }
 
     public Set<Stage> getStages() {

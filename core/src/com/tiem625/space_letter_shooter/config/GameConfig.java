@@ -42,6 +42,10 @@ public class GameConfig {
         this.enabledDynamicBg = enableDynamicBg;
     }
 
+    public void toggleEnabledDynamicBg() {
+        this.enabledDynamicBg = !this.enabledDynamicBg;
+    }
+
     public int getResolutionWidth() {
         return resolutionWidth;
     }
