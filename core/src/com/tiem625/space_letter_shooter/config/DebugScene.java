@@ -10,7 +10,7 @@ public class DebugScene extends Scene {
 
     public DebugScene() {
         super();
-        addStage(buildDebugInputsStage());
+        addAndGetStage(buildDebugInputsStage());
     }
 
     private Stage buildDebugInputsStage() {

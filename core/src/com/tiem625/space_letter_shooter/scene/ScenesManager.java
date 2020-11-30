@@ -23,7 +23,7 @@ public enum ScenesManager {
         alwaysOnScenes.add(scene);
     }
 
-    public void setScene(Scene scene) {
+    public void setCurrentScene(Scene scene) {
         currentScene = scene;
     }
 

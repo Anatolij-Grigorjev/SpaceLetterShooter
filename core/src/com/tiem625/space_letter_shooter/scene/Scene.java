@@ -15,9 +15,11 @@ public abstract class Scene implements Disposable {
         this.stages = new HashSet<>();
     }
 
-    public void addStage(Stage stage) {
+    public Stage addAndGetStage(Stage stage) {
         Objects.requireNonNull(stage);
         stages.add(stage);
+
+        return stage;
     }
 
     public Set<Stage> getStages() {

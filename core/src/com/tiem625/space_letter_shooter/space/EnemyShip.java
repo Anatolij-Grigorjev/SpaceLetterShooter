@@ -11,8 +11,6 @@ public class EnemyShip extends Actor {
     public EnemyShip(String text) {
         super();
         this.text = text;
-        this.setPosition(300, 250);
-        this.setZIndex(999);
     }
 
     @Override

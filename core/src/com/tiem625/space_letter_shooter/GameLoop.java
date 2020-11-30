@@ -11,15 +11,15 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.ResourcesManager;
 import com.tiem625.space_letter_shooter.resource.make.*;
-import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
+import com.tiem625.space_letter_shooter.space.SpaceScene;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     ParticleEffect effect;
     TextureAtlas textures;
-    Scene spaceScene;
+    SpaceScene spaceScene;
 
 
     @Override
@@ -28,8 +28,7 @@ public class GameLoop extends ApplicationAdapter {
         GameFonts.MAIN_UI_FONT = BitmapFontMaker.buildMain();
 
         spaceScene = SceneMaker.buildSpaceScene();
-        spaceScene.getFirstStage().addActor(new EnemyShip("nestle"));
-        ScenesManager.INSTANCE.setScene(spaceScene);
+        ScenesManager.INSTANCE.setCurrentScene(spaceScene);
 
         batch = SpriteBatchMaker.buildDefault();
         textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
@@ -38,6 +37,8 @@ public class GameLoop extends ApplicationAdapter {
         effect.start();
         effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
         GamePropsHolder.applyCurrentGameConfig();
+        var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle"));
+        enemyShip.setPosition(100, GamePropsHolder.props.getResolutionHeight() - 100);
         InputProcessorManager.setCurrentInputProcessors();
     }
 
