@@ -1,6 +1,8 @@
 package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.scene.Scene;
 
 import java.util.Objects;
@@ -16,7 +18,10 @@ public class SpaceScene extends Scene {
     }
 
     private Stage addEmptyShipsStage() {
-        return addAndGetStage(new Stage());
+        return addAndGetStage(new Stage(new FitViewport(
+                GamePropsHolder.props.getResolutionWidth(),
+                GamePropsHolder.props.getResolutionHeight()
+        )));
     }
 
     public EnemyShip addEnemyShip(EnemyShip ship) {
