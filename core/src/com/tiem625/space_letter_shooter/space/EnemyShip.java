@@ -8,6 +8,7 @@ public class EnemyShip extends Actor {
 
     private final String text;
 
+
     public EnemyShip(String text) {
         super();
         this.text = text;
