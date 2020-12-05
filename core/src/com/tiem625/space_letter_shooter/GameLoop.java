@@ -39,7 +39,7 @@ public class GameLoop extends ApplicationAdapter {
         GamePropsHolder.applyCurrentGameConfig();
         var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle"));
         enemyShip.setPosition(100, GamePropsHolder.props.getResolutionHeight() - 100);
-        InputProcessorManager.setCurrentInputProcessors();
+        InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
     }
 
     @Override

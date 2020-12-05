@@ -16,18 +16,17 @@ public class EnemyShip extends Actor {
         this.spelledCharacters = "";
     }
 
-    public boolean tryHitCharacter(char input) {
+    public boolean canHitCharacter(char input) {
         if (shipTextIsSpelled()) {
             return false;
         }
         var nextShipTextChar = text.substring(spelledCharacters.length()).charAt(0);
-        if (input == nextShipTextChar) {
-            spelledCharacters = spelledCharacters + input;
-            disposeIfSpelled();
-            return true;
-        } else {
-            return false;
-        }
+        return nextShipTextChar == input;
+    }
+
+    public void hitCharacter(char input) {
+        spelledCharacters += input;
+        disposeIfSpelled();
     }
 
     private boolean shipTextIsSpelled() {
@@ -43,8 +42,11 @@ public class EnemyShip extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
-        GameFonts.ENEMY_TEXT_NORMAL_FONT.draw(batch, text, getX(), getY());
-        GameFonts.ENEMY_TEXT_NORMAL_FONT.setColor(Color.RED);
-        GameFonts.ENEMY_TEXT_NORMAL_FONT.draw(batch, spelledCharacters, getX(), getY());
+        var font = GameFonts.ENEMY_TEXT_NORMAL_FONT;
+
+        font.draw(batch, text, getX(), getY());
+        GameFonts.useFontWithColor(font, Color.RED, coloredFont -> {
+            coloredFont.draw(batch, spelledCharacters, getX(), getY());
+        });
     }
 }

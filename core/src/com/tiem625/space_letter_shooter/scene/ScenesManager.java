@@ -11,6 +11,11 @@ public enum ScenesManager {
     INSTANCE;
 
     private final Set<Scene> alwaysOnScenes;
+
+    public Scene getCurrentScene() {
+        return currentScene;
+    }
+
     private Scene currentScene;
 
     ScenesManager() {

@@ -47,6 +47,10 @@ public class SpaceScene extends Scene {
         @Override
         public boolean keyTyped(InputEvent event, char character) {
 
+            enemyShips()
+                    .filter(ship -> ship.canHitCharacter(character))
+                    .findFirst()
+                    .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
 
 
             return true;
