@@ -1,7 +1,6 @@
 package com.tiem625.space_letter_shooter.resource.make;
 
 import com.tiem625.space_letter_shooter.config.DebugScene;
-import com.tiem625.space_letter_shooter.resource.ResourceMaker;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 
 public class SceneMaker extends ResourceMaker {

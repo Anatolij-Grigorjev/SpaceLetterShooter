@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.config;
+package com.tiem625.space_letter_shooter.resource;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -6,9 +6,9 @@ import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.util.function.Consumer;
 
-public class GameFonts {
+public class Fonts {
 
-    private GameFonts() {
+    private Fonts() {
         throw new ClassIsStaticException(getClass());
     }
 

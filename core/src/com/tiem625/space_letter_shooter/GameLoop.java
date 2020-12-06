@@ -5,12 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.tiem625.space_letter_shooter.config.GameFonts;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
-import com.tiem625.space_letter_shooter.resource.ResourcesManager;
-import com.tiem625.space_letter_shooter.resource.make.*;
+import com.tiem625.space_letter_shooter.resource.Fonts;
+import com.tiem625.space_letter_shooter.resource.ResourcesDisposer;
+import com.tiem625.space_letter_shooter.resource.Textures;
+import com.tiem625.space_letter_shooter.resource.make.BitmapFontMaker;
+import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
+import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
+import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
@@ -18,26 +21,24 @@ import com.tiem625.space_letter_shooter.space.SpaceScene;
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     ParticleEffect effect;
-    TextureAtlas textures;
     SpaceScene spaceScene;
 
 
     @Override
     public void create() {
-        GameFonts.ENEMY_TEXT_NORMAL_FONT = BitmapFontMaker.buildEnemyShipNormalFont();
-        GameFonts.MAIN_UI_FONT = BitmapFontMaker.buildMain();
+        Fonts.ENEMY_TEXT_NORMAL_FONT = BitmapFontMaker.buildEnemyShipNormalFont();
+        Fonts.MAIN_UI_FONT = BitmapFontMaker.buildMain();
 
         spaceScene = SceneMaker.buildSpaceScene();
         ScenesManager.INSTANCE.setCurrentScene(spaceScene);
 
         batch = SpriteBatchMaker.buildDefault();
-        textures = TextureAtlasMaker.buildForInternalPackFile("atlas/pack.atlas");
         effect = ParticleEffectMaker.buildDefault();
-        effect.load(Gdx.files.internal("particles/space/space_particles.p"), textures);
+        effect.load(Gdx.files.internal("particles/space/space_particles.p"), Textures.getAtlas());
         effect.start();
         effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
         GamePropsHolder.applyCurrentGameConfig();
-        var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle"));
+        var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle", "enemy_ship_1w"));
         enemyShip.setPosition(100, GamePropsHolder.props.getResolutionHeight() - 100);
         InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
     }
@@ -56,7 +57,7 @@ public class GameLoop extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        ResourcesManager.INSTANCE.disposeAll();
+        ResourcesDisposer.INSTANCE.disposeAll();
         GamePropsHolder.writeOutConfig();
     }
 }

@@ -2,18 +2,22 @@ package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.tiem625.space_letter_shooter.config.GameFonts;
+import com.tiem625.space_letter_shooter.resource.Fonts;
+import com.tiem625.space_letter_shooter.resource.Textures;
 
 public class EnemyShip extends Actor {
 
     private final String text;
+    private final Sprite shipSprite;
     private String spelledCharacters;
 
-    public EnemyShip(String text) {
+    public EnemyShip(String text, String spriteKey) {
         super();
         this.text = text;
         this.spelledCharacters = "";
+        this.shipSprite = Textures.buildAndGetAtlasRegionSprite(spriteKey);
     }
 
     public boolean canHitCharacter(char input) {
@@ -42,11 +46,10 @@ public class EnemyShip extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
 
-        var font = GameFonts.ENEMY_TEXT_NORMAL_FONT;
-
-        font.draw(batch, text, getX(), getY());
-        GameFonts.useFontWithColor(font, Color.RED, coloredFont -> {
-            coloredFont.draw(batch, spelledCharacters, getX(), getY());
+        batch.draw(shipSprite, getX(), getY() - shipSprite.getHeight());
+        var font = Fonts.ENEMY_TEXT_NORMAL_FONT;
+        Fonts.useFontWithColor(font, Color.YELLOW, colorFont -> {
+            colorFont.draw(batch, text.substring(spelledCharacters.length()), getX(), getY());
         });
     }
 }

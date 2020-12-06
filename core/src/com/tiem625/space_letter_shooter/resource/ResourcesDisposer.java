@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public enum ResourcesManager {
+public enum ResourcesDisposer {
 
     INSTANCE;
 
@@ -14,7 +14,7 @@ public enum ResourcesManager {
 
     private final String DISPOSING_OF_RESOURCE_MESSAGE_FORMAT = "Disposing '%s' of type [%s]\n";
 
-    ResourcesManager() {
+    ResourcesDisposer() {
         resources = ConcurrentHashMap.newKeySet();
     }
 
