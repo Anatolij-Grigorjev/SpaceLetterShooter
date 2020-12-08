@@ -7,21 +7,20 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
-import com.tiem625.space_letter_shooter.util.Point;
 
 public class EnemyShip extends Actor {
 
     private final String text;
-    private final Point textSpriteCenterOffset;
-    private final Sprite shipSprite;
     private String spelledCharacters;
+    private final Sprite shipSprite;
+    private final ShipRenderSpec shipRenderSpec;
 
-    public EnemyShip(String text, String spriteKey, Point textSpriteCenterOffset) {
+    public EnemyShip(String text, ShipRenderSpec shipRenderSpec) {
         super();
         this.text = text;
         this.spelledCharacters = "";
-        this.shipSprite = Textures.buildAndGetAtlasRegionSprite(spriteKey);
-        this.textSpriteCenterOffset = textSpriteCenterOffset;
+        this.shipRenderSpec = shipRenderSpec;
+        this.shipSprite = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
     }
 
     public boolean canHitCharacter(char input) {
@@ -49,9 +48,8 @@ public class EnemyShip extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        var spriteCenter = new Point(getX() - shipSprite.getWidth() / 2, getY() - shipSprite.getHeight() / 2);
         //draw sprite with actor origin at sprite center
-        batch.draw(shipSprite, spriteCenter.x, spriteCenter.y);
+        batch.draw(shipSprite, getX(), getY());
         var font = Fonts.ENEMY_TEXT_NORMAL_FONT;
         Fonts.useFontWithColor(font, Color.YELLOW, colorFont -> {
             var drawString = text.substring(spelledCharacters.length());
@@ -60,11 +58,11 @@ public class EnemyShip extends Actor {
                     //text
                     drawString,
                     //position
-                    spriteCenter.x + textSpriteCenterOffset.x, spriteCenter.y + textSpriteCenterOffset.y,
+                    getX() + shipRenderSpec.textShipOffsetX, getY() + shipRenderSpec.textShipOffsetY,
                     //substring indexes
                     0, drawString.length(),
                     //width
-                    50.0f,
+                    shipRenderSpec.textTargetWidth,
                     //align, wrap, truncate
                     Align.center, false, "..."
             );

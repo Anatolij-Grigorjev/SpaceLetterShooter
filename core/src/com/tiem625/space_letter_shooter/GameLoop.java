@@ -16,8 +16,8 @@ import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
+import com.tiem625.space_letter_shooter.space.ShipRenderSpec;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.util.Point;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
@@ -38,12 +38,13 @@ public class GameLoop extends ApplicationAdapter {
         effect.start();
         effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
         GamePropsHolder.applyCurrentGameConfig();
-        var enemyShip = spaceScene.addEnemyShip(new EnemyShip(
-                "nestle",
+        var shipSpec = new ShipRenderSpec(
                 "enemy_ship_1w",
-                new Point(-20, -30)
-                ));
-        enemyShip.setPosition(100, GamePropsHolder.props.getResolutionHeight() - 100);
+                35, 95,
+                85
+        );
+        var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle the twenty second", shipSpec));
+        enemyShip.setPosition(200, GamePropsHolder.props.getResolutionHeight() - 200);
         InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
     }
 
