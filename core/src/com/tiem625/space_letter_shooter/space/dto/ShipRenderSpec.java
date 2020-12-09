@@ -1,11 +1,11 @@
-package com.tiem625.space_letter_shooter.space;
+package com.tiem625.space_letter_shooter.space.dto;
 
 public class ShipRenderSpec {
 
-    final String spriteKey;
-    final float textShipOffsetX;
-    final float textShipOffsetY;
-    final float textTargetWidth;
+    public final String spriteKey;
+    public final float textShipOffsetX;
+    public final float textShipOffsetY;
+    public final float textTargetWidth;
 
     public ShipRenderSpec(String spriteKey, float textShipOffsetX, float textShipOffsetY, float textTargetWidth) {
         this.spriteKey = spriteKey;

@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
+import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.util.Point;
 
 public class EnemyShip extends Actor {
 
@@ -21,6 +23,10 @@ public class EnemyShip extends Actor {
         this.spelledCharacters = "";
         this.shipRenderSpec = shipRenderSpec;
         this.shipSprite = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
+    }
+
+    public Point getShipSize() {
+        return new Point(shipSprite.getWidth(), shipSprite.getHeight());
     }
 
     public boolean canHitCharacter(char input) {
@@ -64,7 +70,7 @@ public class EnemyShip extends Actor {
                     //width
                     shipRenderSpec.textTargetWidth,
                     //align, wrap, truncate
-                    Align.center, false, "..."
+                    Align.center, true, "..."
             );
         });
     }

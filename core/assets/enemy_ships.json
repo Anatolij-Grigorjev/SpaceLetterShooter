@@ -1,0 +1,14 @@
+[
+	{
+		"spriteKey" : "enemy_ship_1w_v1",
+		"textShipOffsetX" : 35,
+		"textShipOffsetY" : 98,
+		"textTargetWidth" : 85,
+	},
+	{
+		"spriteKey" : "enemy_ship_1w_v2",
+		"textShipOffsetX" : 33,
+		"textShipOffsetY" : 126,
+		"textTargetWidth" : 46,
+	}
+]

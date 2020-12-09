@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Fonts;
@@ -16,10 +18,16 @@ import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
-import com.tiem625.space_letter_shooter.space.ShipRenderSpec;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
+import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class GameLoop extends ApplicationAdapter {
+    Random RNG = new Random();
     SpriteBatch batch;
     ParticleEffect effect;
     SpaceScene spaceScene;
@@ -38,14 +46,29 @@ public class GameLoop extends ApplicationAdapter {
         effect.start();
         effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
         GamePropsHolder.applyCurrentGameConfig();
-        var shipSpec = new ShipRenderSpec(
-                "enemy_ship_1w",
-                35, 95,
-                85
-        );
-        var enemyShip = spaceScene.addEnemyShip(new EnemyShip("nestle the twenty second", shipSpec));
-        enemyShip.setPosition(200, GamePropsHolder.props.getResolutionHeight() - 200);
+        var shipsXMargin = 100.0f;
+        var shipsXPadding = 50.0f;
+        var finalXOffset = loadShipSpecs().stream()
+                .map(spec -> new EnemyShip("test" + System.currentTimeMillis(), spec))
+                .map(spaceScene::addEnemyShip)
+                .reduce(shipsXMargin, (prevOffset, nextShip) -> {
+                    var shipSize = nextShip.getShipSize();
+                    var randomY = shipSize.y + RNG.nextFloat() * (GamePropsHolder.props.getResolutionHeight() / 2 - shipSize.y);
+                    nextShip.setPosition(prevOffset, randomY);
+
+                    return shipSize.x + shipsXPadding;
+                }, Float::sum);
         InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
+    }
+
+    private List<ShipRenderSpec> loadShipSpecs() {
+
+        try {
+            return new ObjectMapper().readValue(Gdx.files.internal("enemy_ships.json").read(), new TypeReference<List<ShipRenderSpec>>() {});
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     @Override
