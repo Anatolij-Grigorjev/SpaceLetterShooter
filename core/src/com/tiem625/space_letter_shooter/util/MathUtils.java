@@ -1,6 +1,10 @@
 package com.tiem625.space_letter_shooter.util;
 
+import java.util.Random;
+
 public class MathUtils {
+
+    public static final Random RNG = new Random();
 
     private MathUtils() {
         throw new ClassIsStaticException(getClass());

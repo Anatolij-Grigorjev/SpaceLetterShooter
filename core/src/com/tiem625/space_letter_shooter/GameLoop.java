@@ -24,11 +24,11 @@ import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.function.BinaryOperator;
 
+import static com.tiem625.space_letter_shooter.util.MathUtils.RNG;
+
 public class GameLoop extends ApplicationAdapter {
-    Random RNG = new Random();
     SpriteBatch batch;
     ParticleEffect effect;
     SpaceScene spaceScene;
