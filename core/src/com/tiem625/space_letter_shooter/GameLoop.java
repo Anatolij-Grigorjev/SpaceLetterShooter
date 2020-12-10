@@ -48,7 +48,7 @@ public class GameLoop extends ApplicationAdapter {
         effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
         GamePropsHolder.applyCurrentGameConfig();
         var shipsXMargin = 100.0f;
-        var shipsXPadding = 50.0f;
+        var shipsXPadding = 150.0f;
         var shipsSpecs = loadShipSpecs();
         placeRowOfShips(shipsSpecs, shipsXMargin, shipsXPadding);
         InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
@@ -60,7 +60,7 @@ public class GameLoop extends ApplicationAdapter {
                 .map(spaceScene::addEnemyShip)
                 .reduce(shipsXMargin, (prevOffset, nextShip) -> {
                     var shipSize = nextShip.getShipSize();
-                    var randomY = shipSize.y + RNG.nextFloat() * (GamePropsHolder.props.getResolutionHeight() / 2 - shipSize.y);
+                    var randomY = GamePropsHolder.props.getResolutionHeight() - (shipSize.y + RNG.nextFloat() * shipSize.y);
                     nextShip.setPosition(prevOffset, randomY);
 
                     return shipSize.x + shipsXPadding + prevOffset;
