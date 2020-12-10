@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BinaryOperator;
 
 public class GameLoop extends ApplicationAdapter {
     Random RNG = new Random();
@@ -48,17 +49,22 @@ public class GameLoop extends ApplicationAdapter {
         GamePropsHolder.applyCurrentGameConfig();
         var shipsXMargin = 100.0f;
         var shipsXPadding = 50.0f;
-        var finalXOffset = loadShipSpecs().stream()
-                .map(spec -> new EnemyShip("test" + System.currentTimeMillis(), spec))
+        var shipsSpecs = loadShipSpecs();
+        placeRowOfShips(shipsSpecs, shipsXMargin, shipsXPadding);
+        InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
+    }
+
+    private void placeRowOfShips(List<ShipRenderSpec> shipsSpecs, float shipsXMargin, float shipsXPadding) {
+        shipsSpecs.stream()
+                .map(spec -> new EnemyShip("test " + System.currentTimeMillis(), spec))
                 .map(spaceScene::addEnemyShip)
                 .reduce(shipsXMargin, (prevOffset, nextShip) -> {
                     var shipSize = nextShip.getShipSize();
                     var randomY = shipSize.y + RNG.nextFloat() * (GamePropsHolder.props.getResolutionHeight() / 2 - shipSize.y);
                     nextShip.setPosition(prevOffset, randomY);
 
-                    return shipSize.x + shipsXPadding;
-                }, Float::sum);
-        InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
+                    return shipSize.x + shipsXPadding + prevOffset;
+                }, BinaryOperator.maxBy(Float::compare));
     }
 
     private List<ShipRenderSpec> loadShipSpecs() {
