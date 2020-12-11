@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
@@ -51,7 +52,8 @@ public class GameLoop extends ApplicationAdapter {
         var shipsXPadding = 150.0f;
         var shipsSpecs = loadShipSpecs();
         placeRowOfShips(shipsSpecs, shipsXMargin, shipsXPadding);
-        InputProcessorManager.setCurrentInputProcessors(ScenesManager.INSTANCE.getCurrentScene().getFirstStage());
+
+        setCurrentSceneAsInput();
     }
 
     private void placeRowOfShips(List<ShipRenderSpec> shipsSpecs, float shipsXMargin, float shipsXPadding) {
@@ -62,7 +64,6 @@ public class GameLoop extends ApplicationAdapter {
                     var shipSize = nextShip.getShipSize();
                     var randomY = GamePropsHolder.props.getResolutionHeight() - (shipSize.y + RNG.nextFloat() * shipSize.y);
                     nextShip.setPosition(prevOffset, randomY);
-
                     return shipSize.x + shipsXPadding + prevOffset;
                 }, BinaryOperator.maxBy(Float::compare));
     }
@@ -75,6 +76,14 @@ public class GameLoop extends ApplicationAdapter {
             ex.printStackTrace();
             return Collections.emptyList();
         }
+    }
+
+    private void setCurrentSceneAsInput() {
+        InputProcessorManager
+                .setCurrentInputProcessors(
+                        ScenesManager.INSTANCE.getCurrentScene()
+                                .stages()
+                                .toArray(Stage[]::new));
     }
 
     @Override

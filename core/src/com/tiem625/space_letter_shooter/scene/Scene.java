@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public abstract class Scene implements Disposable {
 
@@ -22,8 +23,8 @@ public abstract class Scene implements Disposable {
         return stage;
     }
 
-    public Set<Stage> getStages() {
-        return stages;
+    public Stream<Stage> stages() {
+        return stages.stream();
     }
 
     /**

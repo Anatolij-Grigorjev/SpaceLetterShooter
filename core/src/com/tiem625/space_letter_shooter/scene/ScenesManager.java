@@ -3,7 +3,10 @@ package com.tiem625.space_letter_shooter.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public enum ScenesManager {
@@ -45,16 +48,13 @@ public enum ScenesManager {
 
     private void renderCurrentScene() {
         Optional.ofNullable(currentScene)
-                .map(Scene::getStages)
-                .ifPresent(stages -> {
-                    stages.forEach(renderStage);
-                });
+                .map(Scene::stages)
+                .ifPresent(stages -> stages.forEach(renderStage));
     }
 
     private void renderAlwaysOnScenes() {
         alwaysOnScenes.stream()
-                .map(Scene::getStages)
-                .flatMap(Collection::stream)
+                .flatMap(Scene::stages)
                 .forEach(renderStage);
     }
 }
