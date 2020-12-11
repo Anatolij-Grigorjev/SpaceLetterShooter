@@ -5,7 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
@@ -52,6 +54,26 @@ public class GameLoop extends ApplicationAdapter {
         var shipsXPadding = 150.0f;
         var shipsSpecs = loadShipSpecs();
         placeRowOfShips(shipsSpecs, shipsXMargin, shipsXPadding);
+
+        spaceScene.enemyShips()
+                .sorted((ship1, ship2) -> (int)(ship1.getX() - ship2.getX()))
+                .reduce(Actions.delay(500), (prevDelay, nextShip) -> {
+
+                    var moveToStartAction = Actions.moveTo(
+                            nextShip.getX(),
+                            nextShip.getY(),
+                            500,
+                            Interpolation.sine
+                    );
+                    var shipActions = Actions.sequence(
+                            prevDelay,
+                            moveToStartAction
+                    );
+                    nextShip.moveBy(-500, -50);
+                    nextShip.addAction(shipActions);
+
+                    return Actions.delay(prevDelay.getDuration() + 500);
+                }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));
 
         setCurrentSceneAsInput();
     }

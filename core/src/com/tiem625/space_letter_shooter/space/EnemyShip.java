@@ -74,4 +74,12 @@ public class EnemyShip extends Actor {
             );
         });
     }
+
+    @Override
+    public String toString() {
+        return "EnemyShip{" +
+                "text='" + text + '\'' +
+                ", shipSprite=" + shipSprite +
+                '}';
+    }
 }
