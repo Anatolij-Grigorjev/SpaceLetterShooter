@@ -15,8 +15,8 @@ public enum ScenesManager {
 
     private final Set<Scene> alwaysOnScenes;
 
-    public Scene getCurrentScene() {
-        return currentScene;
+    public Optional<Scene> currentScene() {
+        return Optional.ofNullable(currentScene);
     }
 
     private Scene currentScene;
@@ -47,7 +47,7 @@ public enum ScenesManager {
     }
 
     private void renderCurrentScene() {
-        Optional.ofNullable(currentScene)
+        currentScene()
                 .map(Scene::stages)
                 .ifPresent(stages -> stages.forEach(renderStage));
     }

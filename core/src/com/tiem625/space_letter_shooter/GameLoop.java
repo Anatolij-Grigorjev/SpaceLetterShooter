@@ -59,17 +59,16 @@ public class GameLoop extends ApplicationAdapter {
                 .sorted((ship1, ship2) -> (int)(ship1.getX() - ship2.getX()))
                 .reduce(Actions.delay(500), (prevDelay, nextShip) -> {
 
-                    var moveToStartAction = Actions.moveTo(
+                    var moveToStartAction = Actions.moveBy(
                             nextShip.getX(),
                             nextShip.getY(),
                             500,
                             Interpolation.sine
                     );
                     var shipActions = Actions.sequence(
-                            prevDelay,
+                            Actions.delay(prevDelay.getDuration()),
                             moveToStartAction
                     );
-                    nextShip.moveBy(-500, -50);
                     nextShip.addAction(shipActions);
 
                     return Actions.delay(prevDelay.getDuration() + 500);
@@ -101,11 +100,9 @@ public class GameLoop extends ApplicationAdapter {
     }
 
     private void setCurrentSceneAsInput() {
-        InputProcessorManager
-                .setCurrentInputProcessors(
-                        ScenesManager.INSTANCE.getCurrentScene()
-                                .stages()
-                                .toArray(Stage[]::new));
+        ScenesManager.INSTANCE.currentScene()
+                .ifPresent(scene ->
+                        InputProcessorManager.setCurrentInputProcessors(scene.stages().toArray(Stage[]::new)));
     }
 
     @Override
