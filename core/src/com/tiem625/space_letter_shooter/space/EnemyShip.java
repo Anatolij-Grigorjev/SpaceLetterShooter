@@ -2,7 +2,7 @@ package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
@@ -14,7 +14,7 @@ public class EnemyShip extends Actor {
 
     private final String text;
     private String spelledCharacters;
-    private final Sprite shipSprite;
+    private final TextureRegion texture;
     private final ShipRenderSpec shipRenderSpec;
 
     public EnemyShip(String text, ShipRenderSpec shipRenderSpec) {
@@ -22,11 +22,11 @@ public class EnemyShip extends Actor {
         this.text = text;
         this.spelledCharacters = "";
         this.shipRenderSpec = shipRenderSpec;
-        this.shipSprite = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
+        this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
     }
 
-    public Point getShipSize() {
-        return new Point(shipSprite.getWidth(), shipSprite.getHeight());
+    public Point getShipTextureSize() {
+        return new Point(texture.getRegionWidth(), texture.getRegionHeight());
     }
 
     public boolean canHitCharacter(char input) {
@@ -55,7 +55,7 @@ public class EnemyShip extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         //draw sprite with actor origin at sprite center
-        batch.draw(shipSprite, getX(), getY());
+        batch.draw(texture, getX(), getY());
         var font = Fonts.ENEMY_TEXT_NORMAL_FONT;
         Fonts.useFontWithColor(font, Color.YELLOW, colorFont -> {
             var drawString = text.substring(spelledCharacters.length());
@@ -79,7 +79,7 @@ public class EnemyShip extends Actor {
     public String toString() {
         return "EnemyShip{" +
                 "text='" + text + '\'' +
-                ", shipSprite=" + shipSprite +
+                ", shipSprite=" + texture +
                 '}';
     }
 }

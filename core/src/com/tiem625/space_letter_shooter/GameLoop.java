@@ -23,11 +23,14 @@ import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.util.Point;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.BinaryOperator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.tiem625.space_letter_shooter.util.MathUtils.RNG;
 
@@ -53,40 +56,57 @@ public class GameLoop extends ApplicationAdapter {
         var shipsXMargin = 100.0f;
         var shipsXPadding = 150.0f;
         var shipsSpecs = loadShipSpecs();
-        placeRowOfShips(shipsSpecs, shipsXMargin, shipsXPadding);
+        var sceneShips = addSpaceSceneShips(shipsSpecs);
+        var shipDesiredPositions = calcShipsStartingPositions(sceneShips, shipsXMargin, shipsXPadding);
+        setupShipsFlyToStartActions(shipDesiredPositions);
 
-        spaceScene.enemyShips()
-                .sorted((ship1, ship2) -> (int)(ship1.getX() - ship2.getX()))
-                .reduce(Actions.delay(500), (prevDelay, nextShip) -> {
+        setCurrentSceneAsInput();
+    }
 
-                    var moveToStartAction = Actions.moveBy(
-                            nextShip.getX(),
-                            nextShip.getY(),
-                            500,
+    private void setupShipsFlyToStartActions(Map<EnemyShip, Point> shipDesiredPositions) {
+        shipDesiredPositions.entrySet().stream()
+                .reduce(Actions.delay(1), (prevDelay, shipPositionPair) -> {
+                    var ship = shipPositionPair.getKey();
+                    var startPosition = shipPositionPair.getValue();
+                    var moveToStartAction = Actions.moveTo(
+                            startPosition.x,
+                            startPosition.y,
+                            1,
                             Interpolation.sine
                     );
                     var shipActions = Actions.sequence(
                             Actions.delay(prevDelay.getDuration()),
                             moveToStartAction
                     );
-                    nextShip.addAction(shipActions);
+                    ship.addAction(shipActions);
 
-                    return Actions.delay(prevDelay.getDuration() + 500);
+                    return Actions.delay(prevDelay.getDuration() + 0.5f);
                 }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));
-
-        setCurrentSceneAsInput();
     }
 
-    private void placeRowOfShips(List<ShipRenderSpec> shipsSpecs, float shipsXMargin, float shipsXPadding) {
-        shipsSpecs.stream()
-                .map(spec -> new EnemyShip("test " + System.currentTimeMillis(), spec))
+    private List<EnemyShip> addSpaceSceneShips(List<ShipRenderSpec> shipSpecs) {
+        return shipSpecs.stream()
+                .map(spec -> new EnemyShip("test_" + System.currentTimeMillis(), spec))
                 .map(spaceScene::addEnemyShip)
-                .reduce(shipsXMargin, (prevOffset, nextShip) -> {
-                    var shipSize = nextShip.getShipSize();
-                    var randomY = GamePropsHolder.props.getResolutionHeight() - (shipSize.y + RNG.nextFloat() * shipSize.y);
-                    nextShip.setPosition(prevOffset, randomY);
-                    return shipSize.x + shipsXPadding + prevOffset;
-                }, BinaryOperator.maxBy(Float::compare));
+                //put ships safely offscreen
+                .peek(ship -> ship.setPosition(-500, -500))
+                .collect(Collectors.toList());
+    }
+
+    private Map<EnemyShip, Point> calcShipsStartingPositions(List<EnemyShip> enemyShips, float shipsXMargin, float shipsXPadding) {
+        var shipStartingPositions = new HashMap<EnemyShip, Point>();
+        float nextShipOffsetX = shipsXMargin;
+        var resolutionHeight = GamePropsHolder.props.getResolutionHeight();
+        for (EnemyShip nextShip: enemyShips) {
+            Point shipTextureSize = nextShip.getShipTextureSize();
+            spaceScene.addEnemyShip(nextShip);
+            //top half of screen, between 0 - 1 ship heights from top border
+            var randomYOffset = resolutionHeight - ((1 + RNG.nextFloat()) * shipTextureSize.y);
+            shipStartingPositions.put(nextShip, new Point(nextShipOffsetX, randomYOffset));
+            nextShipOffsetX = nextShipOffsetX + shipsXPadding + shipTextureSize.x;
+        }
+
+        return shipStartingPositions;
     }
 
     private List<ShipRenderSpec> loadShipSpecs() {
