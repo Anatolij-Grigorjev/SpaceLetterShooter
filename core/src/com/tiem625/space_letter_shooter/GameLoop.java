@@ -3,20 +3,18 @@ package com.tiem625.space_letter_shooter;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.ResourcesDisposer;
-import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.resource.make.BitmapFontMaker;
-import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
@@ -36,36 +34,35 @@ import static com.tiem625.space_letter_shooter.util.MathUtils.RNG;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
-    ParticleEffect effect;
     SpaceScene spaceScene;
+    AlwaysOnBGScene alwaysOnBGScene;
 
 
     @Override
     public void create() {
         Fonts.ENEMY_TEXT_NORMAL_FONT = BitmapFontMaker.buildEnemyShipNormalFont();
         Fonts.MAIN_UI_FONT = BitmapFontMaker.buildMain();
-
         spaceScene = SceneMaker.buildSpaceScene();
+        alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
+
+        GamePropsHolder.applyCurrentGameConfig();
+        ScenesManager.INSTANCE.addAlwaysOnScene(alwaysOnBGScene);
+
         ScenesManager.INSTANCE.setCurrentScene(spaceScene);
         batch = SpriteBatchMaker.buildDefault();
-        effect = ParticleEffectMaker.buildDefault();
-        effect.load(Gdx.files.internal("particles/space/space_particles.p"), Textures.getAtlas());
-        effect.start();
-        effect.setPosition(0, GamePropsHolder.props.getResolutionHeight());
-        GamePropsHolder.applyCurrentGameConfig();
+        setCurrentSceneAsInput();
+
         var shipsXMargin = 100.0f;
         var shipsXPadding = 150.0f;
         var shipsSpecs = loadShipSpecs();
         var sceneShips = addSpaceSceneShips(shipsSpecs);
         var shipDesiredPositions = calcShipsStartingPositions(sceneShips, shipsXMargin, shipsXPadding);
         setupShipsFlyToStartActions(shipDesiredPositions);
-
-        setCurrentSceneAsInput();
     }
 
     private void setupShipsFlyToStartActions(Map<EnemyShip, Point> shipDesiredPositions) {
         shipDesiredPositions.entrySet().stream()
-                .reduce(Actions.delay(1), (prevDelay, shipPositionPair) -> {
+                .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
                     var ship = shipPositionPair.getKey();
                     var startPosition = shipPositionPair.getValue();
                     var moveToStartAction = Actions.moveTo(
@@ -130,9 +127,6 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        if (GamePropsHolder.props.isEnabledDynamicBg()) {
-            effect.draw(batch, Gdx.graphics.getDeltaTime());
-        }
         ScenesManager.INSTANCE.renderActiveScenes();
         batch.end();
     }

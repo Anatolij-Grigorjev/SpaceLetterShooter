@@ -1,5 +1,6 @@
 package com.tiem625.space_letter_shooter.resource.make;
 
+import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.DebugScene;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 
@@ -12,6 +13,10 @@ public class SceneMaker extends ResourceMaker {
      */
     public static SpaceScene buildSpaceScene() {
         return makeResource(SpaceScene::new);
+    }
+
+    public static AlwaysOnBGScene buildAlwaysOnBGScene() {
+        return makeResource(AlwaysOnBGScene::new);
     }
 
     public static DebugScene buildDebugScene() {
