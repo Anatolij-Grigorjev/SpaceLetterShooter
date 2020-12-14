@@ -2,14 +2,9 @@ package com.tiem625.space_letter_shooter.config;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.tiem625.space_letter_shooter.input.InputProcessorManager;
-import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
-import com.tiem625.space_letter_shooter.scene.Scene;
-import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 
 public class GamePropsHolder {
@@ -27,16 +22,6 @@ public class GamePropsHolder {
             return new GameProps(propertiesSource);
         } catch (RuntimeException | IOException propsProblem) {
             return new GameProps();
-        }
-    }
-
-    static {
-        var isGameDebugProfile = Objects.equals(System.getProperty("game.profile.active"), "debug");
-        if (isGameDebugProfile) {
-            System.out.println("Game in debug profile! Enabling debug config changer...");
-            Scene debugScene = SceneMaker.buildDebugScene();
-            ScenesManager.INSTANCE.addAlwaysOnScene(debugScene);
-            InputProcessorManager.addAlwaysOnInputProcessor(debugScene.getFirstStage());
         }
     }
 

@@ -17,6 +17,7 @@ import com.tiem625.space_letter_shooter.resource.ResourcesDisposer;
 import com.tiem625.space_letter_shooter.resource.make.BitmapFontMaker;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
+import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
@@ -24,10 +25,7 @@ import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
 import com.tiem625.space_letter_shooter.util.Point;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.tiem625.space_letter_shooter.util.MathUtils.RNG;
@@ -40,17 +38,21 @@ public class GameLoop extends ApplicationAdapter {
 
     @Override
     public void create() {
+        batch = SpriteBatchMaker.buildDefault();
         Fonts.ENEMY_TEXT_NORMAL_FONT = BitmapFontMaker.buildEnemyShipNormalFont();
         Fonts.MAIN_UI_FONT = BitmapFontMaker.buildMain();
+
+        if (isGameDebugProfile()) {
+            addAlwaysOnDebugScene();
+        }
         spaceScene = SceneMaker.buildSpaceScene();
         alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
-
-        GamePropsHolder.applyCurrentGameConfig();
         ScenesManager.INSTANCE.addAlwaysOnScene(alwaysOnBGScene);
 
         ScenesManager.INSTANCE.setCurrentScene(spaceScene);
-        batch = SpriteBatchMaker.buildDefault();
         setCurrentSceneAsInput();
+        GamePropsHolder.applyCurrentGameConfig();
+
 
         var shipsXMargin = 100.0f;
         var shipsXPadding = 150.0f;
@@ -58,6 +60,17 @@ public class GameLoop extends ApplicationAdapter {
         var sceneShips = addSpaceSceneShips(shipsSpecs);
         var shipDesiredPositions = calcShipsStartingPositions(sceneShips, shipsXMargin, shipsXPadding);
         setupShipsFlyToStartActions(shipDesiredPositions);
+    }
+
+    private boolean isGameDebugProfile() {
+        return Objects.equals(System.getProperty("game.profile.active"), "debug");
+    }
+
+    private void addAlwaysOnDebugScene() {
+        System.out.println("Game in debug profile! Enabling debug config changer...");
+        Scene debugScene = SceneMaker.buildDebugScene();
+        ScenesManager.INSTANCE.addAlwaysOnScene(debugScene);
+        InputProcessorManager.addAlwaysOnInputProcessor(debugScene.getFirstStage());
     }
 
     private void setupShipsFlyToStartActions(Map<EnemyShip, Point> shipDesiredPositions) {
