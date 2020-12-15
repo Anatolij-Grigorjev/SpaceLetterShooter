@@ -2,6 +2,7 @@ package com.tiem625.space_letter_shooter.util;
 
 import com.badlogic.gdx.math.RandomXS128;
 
+import java.util.Collection;
 import java.util.Random;
 
 public class MathUtils {
@@ -18,5 +19,12 @@ public class MathUtils {
         if (value.compareTo(max) > 0) return max;
 
         return value;
+    }
+
+    public static <T> T nextRandomElement(Collection<T> col) {
+        return col.stream()
+                .skip(RNG.nextInt(col.size()))
+                .findFirst()
+                .orElseThrow();
     }
 }

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Fonts;
@@ -22,18 +21,19 @@ import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.EnemyShip;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.util.MathUtils;
 import com.tiem625.space_letter_shooter.util.Point;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.tiem625.space_letter_shooter.util.MathUtils.RNG;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
     SpaceScene spaceScene;
-    AlwaysOnBGScene alwaysOnBGScene;
 
 
     @Override
@@ -46,7 +46,7 @@ public class GameLoop extends ApplicationAdapter {
             addAlwaysOnDebugScene();
         }
         spaceScene = SceneMaker.buildSpaceScene();
-        alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
+        var alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
         ScenesManager.INSTANCE.addAlwaysOnScene(alwaysOnBGScene);
 
         ScenesManager.INSTANCE.setCurrentScene(spaceScene);
@@ -54,10 +54,12 @@ public class GameLoop extends ApplicationAdapter {
         GamePropsHolder.applyCurrentGameConfig();
 
 
-        var shipsXMargin = 100.0f;
-        var shipsXPadding = 150.0f;
+        var shipsXMargin = 10.0f;
         var shipsSpecs = loadShipSpecs();
-        var sceneShips = addSpaceSceneShips(shipsSpecs);
+        var sceneShips = addSpaceSceneShips(7, shipsSpecs);
+        float shipsTotalWidth = (float)sceneShips.stream().mapToDouble(ship -> ship.getShipTextureSize().x).sum();
+        var spaceReservedForPadding = GamePropsHolder.props.getResolutionWidth() - shipsTotalWidth - (2 * shipsXMargin);
+        var shipsXPadding = spaceReservedForPadding <= 0.0f ? 0.0f : spaceReservedForPadding / sceneShips.size();
         var shipDesiredPositions = calcShipsStartingPositions(sceneShips, shipsXMargin, shipsXPadding);
         setupShipsFlyToStartActions(shipDesiredPositions);
     }
@@ -94,9 +96,9 @@ public class GameLoop extends ApplicationAdapter {
                 }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));
     }
 
-    private List<EnemyShip> addSpaceSceneShips(List<ShipRenderSpec> shipSpecs) {
-        return shipSpecs.stream()
-                .map(spec -> new EnemyShip("test_" + System.currentTimeMillis(), spec))
+    private List<EnemyShip> addSpaceSceneShips(int numShips, Set<ShipRenderSpec> shipSpecs) {
+        return IntStream.range(0, numShips)
+                .mapToObj(idx -> new EnemyShip("test_" + idx, MathUtils.nextRandomElement(shipSpecs)))
                 .map(spaceScene::addEnemyShip)
                 //put ships safely offscreen
                 .peek(ship -> ship.setPosition(-500, -500))
@@ -119,13 +121,14 @@ public class GameLoop extends ApplicationAdapter {
         return shipStartingPositions;
     }
 
-    private List<ShipRenderSpec> loadShipSpecs() {
+    private Set<ShipRenderSpec> loadShipSpecs() {
 
         try {
-            return new ObjectMapper().readValue(Gdx.files.internal("enemy_ships.json").read(), new TypeReference<List<ShipRenderSpec>>() {});
+            return new ObjectMapper().readValue(Gdx.files.internal("enemy_ships.json").read(), new TypeReference<>() {
+            });
         } catch (IOException ex) {
             ex.printStackTrace();
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
     }
 
