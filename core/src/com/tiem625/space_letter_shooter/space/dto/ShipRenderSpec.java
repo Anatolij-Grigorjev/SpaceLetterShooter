@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class ShipRenderSpec {
 
+    public final String specId;
     public final String spriteKey;
     public final float textShipOffsetX;
     public final float textShipOffsetY;
@@ -14,11 +15,13 @@ public class ShipRenderSpec {
 
     @JsonCreator
     public ShipRenderSpec(
+            @JsonProperty("specId") String specId,
             @JsonProperty("spriteKey") String spriteKey,
             @JsonProperty("textShipOffsetX") float textShipOffsetX,
             @JsonProperty("textShipOffsetY") float textShipOffsetY,
             @JsonProperty("textTargetWidth") float textTargetWidth
     ) {
+        this.specId = specId;
         this.spriteKey = spriteKey;
         this.textShipOffsetX = textShipOffsetX;
         this.textShipOffsetY = textShipOffsetY;
@@ -33,11 +36,12 @@ public class ShipRenderSpec {
         return Float.compare(that.textShipOffsetX, textShipOffsetX) == 0 &&
                 Float.compare(that.textShipOffsetY, textShipOffsetY) == 0 &&
                 Float.compare(that.textTargetWidth, textTargetWidth) == 0 &&
-                spriteKey.equals(that.spriteKey);
+                Objects.equals(specId, that.specId) &&
+                Objects.equals(spriteKey, that.spriteKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(spriteKey, textShipOffsetX, textShipOffsetY, textTargetWidth);
+        return Objects.hash(specId, spriteKey, textShipOffsetX, textShipOffsetY, textTargetWidth);
     }
 }

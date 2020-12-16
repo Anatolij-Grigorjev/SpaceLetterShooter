@@ -1,0 +1,27 @@
+{
+  "sceneId": "SS1",
+  "sceneName": "Space Scene",
+  "shipPlacements": [
+    {
+      "position": {
+        "x": 100,
+        "y": 350
+      },
+      "shipSpecId": "1WR"
+    },
+    {
+      "position": {
+        "x": 500,
+        "y": 250
+      },
+      "shipSpecId": "1WR"
+    },
+    {
+      "position": {
+        "x": 300,
+        "y": 150
+      },
+      "shipSpecId": "1WO"
+    }
+  ]
+}
