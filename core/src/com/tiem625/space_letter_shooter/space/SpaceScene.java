@@ -1,6 +1,7 @@
 package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
-import com.tiem625.space_letter_shooter.util.Point;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -31,7 +31,7 @@ public class SpaceScene extends Scene {
     public void load(SceneConfigureSpec spec) {
 
         var shipDesiredPositions = spec.shipPlacements.stream()
-                .map(this::placement2ShipWithPoint)
+                .map(this::placement2ShipWithPosition)
                 //add to stage and hide enemy ship
                 .peek(shipAndPoint ->
                         addEnemyShip(shipAndPoint.getRight())
@@ -57,9 +57,9 @@ public class SpaceScene extends Scene {
                 .map(actor -> (EnemyShip) actor);
     }
 
-    private Pair<Point, EnemyShip> placement2ShipWithPoint(SceneConfigureSpec.ShipPlacement placement) {
+    private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
         return ImmutablePair.of(
-                placement.position,
+                placement.position.toVector2(),
                 new EnemyShip("test:" + placement.position.y, ShipRenderSpecs.getRenderSpec(placement.shipSpecId))
         );
     }
@@ -71,7 +71,7 @@ public class SpaceScene extends Scene {
         )));
     }
 
-    private void setupShipsFlyToStartActions(Map<EnemyShip, Point> shipDesiredPositions) {
+    private void setupShipsFlyToStartActions(Map<EnemyShip, Vector2> shipDesiredPositions) {
         shipDesiredPositions.entrySet().stream()
                 .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
                     var ship = shipPositionPair.getKey();

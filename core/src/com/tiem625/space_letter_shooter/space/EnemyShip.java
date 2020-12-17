@@ -3,14 +3,15 @@ package com.tiem625.space_letter_shooter.space;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
-import com.tiem625.space_letter_shooter.util.CommonActionsBuilders;
-import com.tiem625.space_letter_shooter.util.Point;
+
+import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildShakeActionSequence;
 
 
 public class EnemyShip extends Actor {
@@ -28,8 +29,8 @@ public class EnemyShip extends Actor {
         this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
     }
 
-    public Point getShipTextureSize() {
-        return new Point(texture.getRegionWidth(), texture.getRegionHeight());
+    public Vector2 getShipTextureSize() {
+        return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }
 
     public boolean canHitCharacter(char input) {
@@ -57,7 +58,7 @@ public class EnemyShip extends Actor {
 
     private void beginDisposeActions() {
         var disappearActions = Actions.sequence(
-                CommonActionsBuilders.buildShakeActionSequence(25, new Point(25f, 25f), 2.0f),
+                buildShakeActionSequence(25, new Vector2(25f, 25f), 2.0f),
                 Actions.removeActor()
         );
         addAction(disappearActions);

@@ -1,13 +1,8 @@
 package com.tiem625.space_letter_shooter.util;
 
-import com.badlogic.gdx.math.RandomXS128;
-
-import java.util.Collection;
-import java.util.Random;
+import com.badlogic.gdx.math.Vector2;
 
 public class MathUtils {
-
-    public static final Random RNG = new RandomXS128();
 
     private MathUtils() {
         throw new ClassIsStaticException(getClass());
@@ -21,17 +16,16 @@ public class MathUtils {
         return value;
     }
 
-    public static Point nextRandomPoint(Point amplitude) {
-        var randomUnitX = RNG.nextFloat() * 2f - 1f;
-        var randomUnitY = RNG.nextFloat() * 2f - 1f;
+    public static Vector2 nextRandomVector2(Vector2 amplitude) {
+        var randomDirection = new Vector2().setToRandomDirection();
+        randomDirection.x *= amplitude.x;
+        randomDirection.y *= amplitude.y;
 
-        return new Point(amplitude.x * randomUnitX, amplitude.y * randomUnitY);
+        return randomDirection;
     }
 
-    public static <T> T nextRandomElement(Collection<T> col) {
-        return col.stream()
-                .skip(RNG.nextInt(col.size()))
-                .findFirst()
-                .orElseThrow();
+    public static Vector2 inverse(Vector2 v) {
+        return new Vector2(-v.x, -v.y);
     }
+
 }

@@ -1,7 +1,7 @@
 package com.tiem625.space_letter_shooter.space.dto;
 
+import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tiem625.space_letter_shooter.util.Point;
 
 import java.util.List;
 
@@ -23,15 +23,33 @@ public class SceneConfigureSpec {
 
     public static class ShipPlacement {
 
-        public final Point position;
+        public final ShipPosition position;
         public final String shipSpecId;
 
         public ShipPlacement(
-                @JsonProperty("position") Point position,
+                @JsonProperty("position") ShipPosition position,
                 @JsonProperty("shipSpecId") String shipSpecId
         ) {
             this.position = position;
             this.shipSpecId = shipSpecId;
+        }
+
+        public static class ShipPosition {
+            public final float x;
+            public final float y;
+
+            public ShipPosition(
+                    @JsonProperty("x") float x,
+                    @JsonProperty("y") float y
+            ) {
+                this.x = x;
+                this.y = y;
+            }
+
+            public Vector2 toVector2() {
+                return new Vector2(x, y);
+            }
+
         }
     }
 }
