@@ -14,15 +14,12 @@ import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
-import com.tiem625.space_letter_shooter.space.SpaceScene;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
-    SpaceScene spaceScene;
-
 
     @Override
     public void create() {
@@ -33,15 +30,17 @@ public class GameLoop extends ApplicationAdapter {
         if (isGameDebugProfile()) {
             addAlwaysOnDebugScene();
         }
+
         try {
-            spaceScene = SceneMaker.buildSpaceScene("space_scene_1.json");
+            var spaceScene = SceneMaker.buildSpaceScene("space_scene_1.json");
+            ScenesManager.INSTANCE.setCurrentScene(spaceScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         var alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
         ScenesManager.INSTANCE.addAlwaysOnScene(alwaysOnBGScene);
 
-        ScenesManager.INSTANCE.setCurrentScene(spaceScene);
         setCurrentSceneAsInput();
         GamePropsHolder.applyCurrentGameConfig();
     }
