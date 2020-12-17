@@ -21,6 +21,13 @@ public class MathUtils {
         return value;
     }
 
+    public static Point nextRandomPoint(Point amplitude) {
+        var randomUnitX = RNG.nextFloat() * 2f - 1f;
+        var randomUnitY = RNG.nextFloat() * 2f - 1f;
+
+        return new Point(amplitude.x * randomUnitX, amplitude.y * randomUnitY);
+    }
+
     public static <T> T nextRandomElement(Collection<T> col) {
         return col.stream()
                 .skip(RNG.nextInt(col.size()))

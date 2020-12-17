@@ -4,11 +4,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.util.CommonActionsBuilders;
 import com.tiem625.space_letter_shooter.util.Point;
+
 
 public class EnemyShip extends Actor {
 
@@ -39,17 +42,25 @@ public class EnemyShip extends Actor {
 
     public void hitCharacter(char input) {
         spelledCharacters += input;
-        disposeIfSpelled();
+        beginDisposeActionsIfSpelled();
     }
 
     private boolean shipTextIsSpelled() {
         return spelledCharacters.length() >= text.length();
     }
 
-    private void disposeIfSpelled() {
+    private void beginDisposeActionsIfSpelled() {
         if (shipTextIsSpelled()) {
-            //TODO: ship dispose logic here
+            beginDisposeActions();
         }
+    }
+
+    private void beginDisposeActions() {
+        var disappearActions = Actions.sequence(
+                CommonActionsBuilders.buildShakeActionSequence(25, new Point(25f, 25f), 2.0f),
+                Actions.removeActor()
+        );
+        addAction(disappearActions);
     }
 
     @Override
