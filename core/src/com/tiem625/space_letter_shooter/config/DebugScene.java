@@ -1,5 +1,6 @@
 package com.tiem625.space_letter_shooter.config;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -28,8 +29,11 @@ public class DebugScene extends Scene {
                 case Input.Keys.P:
                     GamePropsHolder.props.toggleEnabledDynamicBg();
                     break;
+                case Input.Keys.Q:
+                    Gdx.app.exit();
+                    break;
                 default:
-                    System.out.println("Got key input with no action: " + keycode);
+                    break;
             }
 
             return true;

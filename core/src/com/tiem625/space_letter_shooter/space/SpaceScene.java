@@ -43,10 +43,8 @@ public class SpaceScene extends Scene {
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
 
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
-        System.out.println("Total startup delay: " + totalSetupDelayAction.getDuration());
 
         enemyShips().forEach(ship -> {
-
             ship.addAction(Actions.sequence(
                     Actions.delay(totalSetupDelayAction.getDuration() + 0.5f),
                     Actions.run(() -> ship.addAction(buildShipBounceNearestEdgeAction(ship)))
