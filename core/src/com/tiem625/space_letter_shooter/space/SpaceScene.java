@@ -6,8 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.tiem625.space_letter_shooter.config.GamePropsHolder;
+import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -40,6 +39,11 @@ public class SpaceScene extends Scene {
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
 
         setupShipsFlyToStartActions(shipDesiredPositions);
+        setupShipsFlyDownActions();
+    }
+
+    private void setupShipsFlyDownActions() {
+
     }
 
     public EnemyShip addEnemyShip(EnemyShip ship) {
@@ -65,10 +69,7 @@ public class SpaceScene extends Scene {
     }
 
     private Stage addEmptyShipsStage() {
-        return addAndGetStage(new Stage(new FitViewport(
-                GamePropsHolder.props.getResolutionWidth(),
-                GamePropsHolder.props.getResolutionHeight()
-        )));
+        return addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
     }
 
     private void setupShipsFlyToStartActions(Map<EnemyShip, Vector2> shipDesiredPositions) {
