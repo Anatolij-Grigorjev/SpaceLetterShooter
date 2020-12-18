@@ -5,20 +5,27 @@
     {
       "position": {
         "x": 100,
-        "y": 350
+        "y": 550
       },
       "shipSpecId": "1WR"
     },
     {
       "position": {
         "x": 500,
-        "y": 250
+        "y": 350
       },
       "shipSpecId": "1WR"
     },
     {
       "position": {
         "x": 300,
+        "y": 250
+      },
+      "shipSpecId": "1WO"
+    },
+    {
+      "position": {
+        "x": 750,
         "y": 150
       },
       "shipSpecId": "1WO"
