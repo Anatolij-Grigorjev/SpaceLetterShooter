@@ -47,17 +47,24 @@ public class SpaceScene extends Scene {
         enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
                     Actions.delay(totalSetupDelayAction.getDuration() + 0.5f),
-                    Actions.run(() -> ship.addAction(buildShipBounceNearestEdgeAction(ship)))
+                    Actions.repeat(5, Actions.run(() -> {
+                        var moveOneDirection = buildShipBounceFarthestEdgeAction(ship);
+                        ship.addAction(Actions.after(moveOneDirection));
+                        ship.addAction(Actions.after(Actions.delay(0.5f)));
+                    }))
             ));
         });
     }
 
-    private Action buildShipBounceNearestEdgeAction(EnemyShip ship) {
+    private Action buildShipBounceFarthestEdgeAction(EnemyShip ship) {
+
+        var resolutionWidth = GamePropsHolder.props.getResolutionWidth();
+        var farX = resolutionWidth - ship.getShipTextureSize().x;
         var speed = MathUtils.random(150f, 200f);
         var descentY = MathUtils.random(-10f, -20f);
-        var moveByX = ship.getX() <= GamePropsHolder.props.getResolutionWidth() / 2f ?
-                0 - ship.getX() : GamePropsHolder.props.getResolutionWidth() - ship.getShipTextureSize().x - ship.getX();
+        var moveByX = ship.getX() <= resolutionWidth / 2f ? farX - ship.getX() : 0 - ship.getX();
         var distance = new Vector2(moveByX, Math.abs(descentY)).len();
+
         return Actions.moveBy(moveByX, descentY, distance / speed, Interpolation.sine);
     }
 
