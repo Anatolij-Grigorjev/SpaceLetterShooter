@@ -24,6 +24,7 @@ public class EnemyShip extends Actor {
     public EnemyShip(String text, ShipRenderSpec shipRenderSpec) {
         super();
         this.text = text;
+        this.setName(text);
         this.spelledCharacters = "";
         this.shipRenderSpec = shipRenderSpec;
         this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
