@@ -8,23 +8,20 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.AfterAction;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.util.StreamUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class SpaceScene extends Scene {
 
@@ -59,21 +56,14 @@ public class SpaceScene extends Scene {
     }
 
     private void addShipStepsDescentActions(EnemyShip ship) {
-        int resolutionWidth = GamePropsHolder.props.getResolutionWidth();
-        float borderXEvenSteps, borderXOddSteps;
-        if (ship.getX() < resolutionWidth / 2f) {
-            borderXEvenSteps = 0f;
-            borderXOddSteps = resolutionWidth - ship.getShipTextureSize().x;
-        } else {
-            borderXEvenSteps = resolutionWidth - ship.getShipTextureSize().x;
-            borderXOddSteps = 0f;
-        }
 
-        List<Vector2> descentSteps = breakToDescentSteps(ship.getY(), borderXEvenSteps, borderXOddSteps);
+        List<Vector2> descentSteps = buildShipHeightDescentPositions(ship);
+
         descentSteps.stream()
-                .reduce(new ArrayList<Action>(), (actions, nextStep) -> {
-                    var prevStepX = actions.isEmpty() ? ship.getX() : ((MoveToAction)(actions.get(actions.size() - 1))).getX();
-                    actions.add(buildShipDescentAction(prevStepX, nextStep.x, nextStep.y));
+                .reduce(new ArrayList<Action>(), (actions, nextStepPosition) -> {
+                    final Vector2 prevStepEndPosition = findPrevStepEndPosition(actions)
+                            .orElse(new Vector2(ship.getX(), ship.getY()));
+                    actions.add(buildShipDescentAction(prevStepEndPosition, nextStepPosition));
                     return actions;
                 }, ((actions1, actions2) -> {
                     var result = new ArrayList<Action>(actions1);
@@ -81,31 +71,37 @@ public class SpaceScene extends Scene {
                     return result;
                 }))
                 .forEach(action -> ship.addAction(Actions.after(action)));
-        printShipMovements(ship);
     }
 
-    private void printShipMovements(EnemyShip ship) {
-        System.out.println("===========SHIP: " + ship.getName() + "===========");
-        StreamSupport.stream(ship.getActions().spliterator(), false)
-                .filter(action -> action instanceof AfterAction)
-                .map(afterAction -> ((AfterAction) afterAction).getAction())
+    private Optional<Vector2> findPrevStepEndPosition(ArrayList<Action> actions) {
+        return StreamUtils.findLast(actions.stream())
                 .filter(action -> action instanceof MoveToAction)
-                .map(moveToAction -> ((MoveToAction) moveToAction))
-                .forEachOrdered(moveToAction -> {
-                    System.out.println("move to: [" + moveToAction.getX() + ";" + moveToAction.getY() + "] duration: " + moveToAction.getDuration() + "s");
-                });
+                .map(action -> (MoveToAction) action)
+                .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
     }
 
-    private List<Vector2> breakToDescentSteps(float fullDescentHeight, float evenStepX, float oddStepX) {
+    private List<Vector2> buildShipHeightDescentPositions(EnemyShip ship) {
+        final int resolutionWidth = GamePropsHolder.props.getResolutionWidth();
+        final float leftEdgeX = 0;
+        final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
+        final Supplier<Float> edgesSupplier;
+        if (ship.getX() < resolutionWidth / 2f) {
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
+        } else {
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
+        }
+        return breakShipHeightIntoDescentSteps(ship.getY(), edgesSupplier);
+    }
+
+    private List<Vector2> breakShipHeightIntoDescentSteps(float fullDescentHeight, Supplier<Float> stepXCoordSource) {
 
         var stepSizeMin = 10f;
         var stepSizeMax = 25f;
         int maxDescentSteps = (int) (fullDescentHeight / stepSizeMin);
         var descentSteps = new ArrayList<Vector2>(maxDescentSteps);
         var remainingHeight = fullDescentHeight;
-        var iterationNum = 0;
         while (remainingHeight > 0) {
-            var stepX = iterationNum % 2 == 0 ? evenStepX : oddStepX;
+            var stepX = stepXCoordSource.get();
             var nextStepHeight = MathUtils.random(stepSizeMin, stepSizeMax);
             if (remainingHeight >= nextStepHeight) {
                 remainingHeight -= nextStepHeight;
@@ -114,18 +110,17 @@ public class SpaceScene extends Scene {
                 descentSteps.add(new Vector2(stepX, remainingHeight));
                 remainingHeight = 0;
             }
-            iterationNum++;
         }
 
         return descentSteps;
     }
 
-    private Action buildShipDescentAction(float moveFromX, float moveToX, float moveToY) {
+    private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo) {
 
         var speed = MathUtils.random(150f, 205f);
-        var distance = new Vector2(Math.abs(moveFromX - moveToX), moveToY).len();
+        var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
 
-        return Actions.moveTo(moveToX, moveToY, distance / speed, Interpolation.fastSlow);
+        return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
     }
 
     public EnemyShip addEnemyShip(EnemyShip ship) {
@@ -189,4 +184,5 @@ public class SpaceScene extends Scene {
             return true;
         }
     }
+
 }
