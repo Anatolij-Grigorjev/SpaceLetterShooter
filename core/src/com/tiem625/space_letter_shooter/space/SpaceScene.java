@@ -90,25 +90,26 @@ public class SpaceScene extends Scene {
         } else {
             edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
         }
-        return breakShipHeightIntoDescentSteps(ship.getY(), edgesSupplier);
+        return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
     }
 
-    private List<Vector2> breakShipHeightIntoDescentSteps(float fullDescentHeight, Supplier<Float> stepXCoordSource) {
+    private List<Vector2> breakShipHeightIntoDescentSteps(float startHeight, float endHeight, Supplier<Float> stepXCoordSource) {
 
         var stepSizeMin = 10f;
         var stepSizeMax = 25f;
+        float fullDescentHeight = startHeight - endHeight;
         int maxDescentSteps = (int) (fullDescentHeight / stepSizeMin);
         var descentSteps = new ArrayList<Vector2>(maxDescentSteps);
-        var remainingHeight = fullDescentHeight;
-        while (remainingHeight > 0) {
+        var remainingHeight = startHeight;
+        while (remainingHeight > endHeight) {
             var stepX = stepXCoordSource.get();
             var nextStepHeight = MathUtils.random(stepSizeMin, stepSizeMax);
-            if (remainingHeight >= nextStepHeight) {
+            if (remainingHeight - nextStepHeight > endHeight) {
                 remainingHeight -= nextStepHeight;
                 descentSteps.add(new Vector2(stepX, remainingHeight));
             } else {
                 descentSteps.add(new Vector2(stepX, remainingHeight));
-                remainingHeight = 0;
+                remainingHeight = endHeight;
             }
         }
 
