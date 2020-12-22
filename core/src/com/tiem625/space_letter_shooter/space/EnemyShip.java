@@ -30,6 +30,10 @@ public class EnemyShip extends Actor {
         this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
     }
 
+    public EnemyShip cloneShip(String withText) {
+        return new EnemyShip(withText, shipRenderSpec);
+    }
+
     public Vector2 getShipTextureSize() {
         return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }

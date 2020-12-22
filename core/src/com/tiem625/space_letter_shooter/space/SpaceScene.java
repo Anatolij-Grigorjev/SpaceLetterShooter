@@ -57,7 +57,7 @@ public class SpaceScene extends Scene {
 
     private void addShipStepsDescentActions(EnemyShip ship) {
 
-        List<Vector2> descentSteps = buildShipHeightDescentPositions(ship);
+        List<Vector2> descentSteps = buildShipDescentPositions(ship);
 
         descentSteps.stream()
                 .reduce(new ArrayList<Action>(), (actions, nextStepPosition) -> {
@@ -80,7 +80,7 @@ public class SpaceScene extends Scene {
                 .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
     }
 
-    private List<Vector2> buildShipHeightDescentPositions(EnemyShip ship) {
+    private List<Vector2> buildShipDescentPositions(EnemyShip ship) {
         final int resolutionWidth = GamePropsHolder.props.getResolutionWidth();
         final float leftEdgeX = 0;
         final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
