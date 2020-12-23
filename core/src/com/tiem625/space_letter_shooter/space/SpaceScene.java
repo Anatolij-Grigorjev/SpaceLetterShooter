@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
+import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -28,7 +29,7 @@ public class SpaceScene extends Scene {
     private final Stage enemyShipsStage;
 
     public SpaceScene() {
-        super();
+        super(SceneId.SHIPS_SPACE);
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
     }

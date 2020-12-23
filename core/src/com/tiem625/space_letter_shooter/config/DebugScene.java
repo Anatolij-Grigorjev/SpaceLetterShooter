@@ -6,11 +6,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.scene.Scene;
+import com.tiem625.space_letter_shooter.scene.SceneId;
 
 public class DebugScene extends Scene {
 
     public DebugScene() {
-        super();
+        super(SceneId.DEBUG);
         addAndGetStage(buildDebugInputsStage());
     }
 

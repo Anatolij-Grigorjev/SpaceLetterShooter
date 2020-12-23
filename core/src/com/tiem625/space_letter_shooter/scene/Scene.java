@@ -10,9 +10,12 @@ import java.util.stream.Stream;
 
 public abstract class Scene implements Disposable {
 
+    protected final SceneId sceneId;
+
     protected final Set<Stage> stages;
 
-    public Scene() {
+    public Scene(SceneId sceneId) {
+        this.sceneId = sceneId;
         this.stages = new HashSet<>();
     }
 
