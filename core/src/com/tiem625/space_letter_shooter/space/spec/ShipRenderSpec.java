@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.space.dto;
+package com.tiem625.space_letter_shooter.space.spec;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

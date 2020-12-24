@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.DebugScene;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 
 import java.io.IOException;
 

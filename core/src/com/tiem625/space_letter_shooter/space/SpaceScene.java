@@ -14,7 +14,7 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
-import com.tiem625.space_letter_shooter.space.dto.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

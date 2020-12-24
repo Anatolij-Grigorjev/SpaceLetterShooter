@@ -3,7 +3,7 @@ package com.tiem625.space_letter_shooter.space;
 import com.badlogic.gdx.Gdx;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
 import com.tiem625.space_letter_shooter.util.ClassIsStaticException;
 
 import java.io.IOException;

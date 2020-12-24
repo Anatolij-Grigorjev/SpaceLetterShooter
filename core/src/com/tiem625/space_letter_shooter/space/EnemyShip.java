@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
-import com.tiem625.space_letter_shooter.space.dto.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
 
 import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildShakeActionSequence;
 
