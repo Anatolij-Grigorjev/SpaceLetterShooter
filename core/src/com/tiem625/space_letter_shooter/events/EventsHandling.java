@@ -23,6 +23,7 @@ public class EventsHandling {
     }
 
     public static void postEvent(GameEvent event) {
+        System.out.println("Posted event '" + event.getClass().getSimpleName() + "' for destination " + event.destination);
         if (handlers.containsKey(event.destination)) {
             handlers.get(event.destination).forEach(handler -> handler.accept(event));
         }

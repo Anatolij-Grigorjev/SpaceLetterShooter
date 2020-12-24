@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
+import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -51,9 +52,16 @@ public class SpaceScene extends Scene {
             //wait for all ships to get in position
             ship.addAction(Actions.sequence(
                     Actions.delay(totalSetupDelayAction.getDuration() + 0.5f),
-                    Actions.run(() -> addShipStepsDescentActions(ship))
+                    Actions.run(() -> {
+                        addShipStepsDescentActions(ship);
+                        postShipReachedBottomEvent(ship);
+                    })
             ));
         });
+    }
+
+    private void postShipReachedBottomEvent(EnemyShip ship) {
+        ship.addAction(Actions.after(Actions.run(() -> EventsHandling.postEvent(new ShipReachBottomOfScreenEvent(SceneId.SHIPS_SPACE, ship)))));
     }
 
     private void addShipStepsDescentActions(EnemyShip ship) {
@@ -119,7 +127,7 @@ public class SpaceScene extends Scene {
 
     private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo) {
 
-        var speed = MathUtils.random(150f, 205f);
+        var speed = MathUtils.random(1500f, 2005f);
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
 
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);

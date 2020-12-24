@@ -4,7 +4,7 @@ import com.tiem625.space_letter_shooter.scene.SceneId;
 
 public abstract class GameEvent {
 
-    final SceneId destination;
+    public final SceneId destination;
 
     protected GameEvent(SceneId sceneId) {
         this.destination = sceneId;
