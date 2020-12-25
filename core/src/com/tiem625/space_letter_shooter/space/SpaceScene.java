@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
+import com.tiem625.space_letter_shooter.events.GameEvent;
+import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -33,6 +35,14 @@ public class SpaceScene extends Scene {
         super(SceneId.SHIPS_SPACE);
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
+        EventsHandling.addEventHandler(sceneId, GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
+            var shipAtBottom = (EnemyShip) gameEvent.payload.get("ship");
+            enemyShips().filter(ship -> ship != shipAtBottom).forEach(ship -> {
+                ship.stopActions();
+                var smilingShip = ship.cloneShip(":)");
+                addEnemyShip(smilingShip).setPosition(ship.getX(), ship.getY());
+            });
+        });
     }
 
     public void load(SceneConfigureSpec spec) {
@@ -61,7 +71,12 @@ public class SpaceScene extends Scene {
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
-        ship.addAction(Actions.after(Actions.run(() -> EventsHandling.postEvent(new ShipReachBottomOfScreenEvent(SceneId.SHIPS_SPACE, ship)))));
+        ship.addAction(Actions.after(Actions.run(() ->
+                EventsHandling.postEvent(new GameEvent(
+                        SceneId.SHIPS_SPACE,
+                        GameEventType.SHIP_REACH_BOTTOM_SCREEN,
+                        Map.of("ship", ship)
+                )))));
     }
 
     private void addShipStepsDescentActions(EnemyShip ship) {

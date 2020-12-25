@@ -2,11 +2,17 @@ package com.tiem625.space_letter_shooter.events;
 
 import com.tiem625.space_letter_shooter.scene.SceneId;
 
-public abstract class GameEvent {
+import java.util.Map;
+
+public class GameEvent {
 
     public final SceneId destination;
+    public final GameEventType type;
+    public final Map<String, Object> payload;
 
-    protected GameEvent(SceneId sceneId) {
-        this.destination = sceneId;
+    public GameEvent(SceneId destination, GameEventType type, Map<String, Object> payload) {
+        this.destination = destination;
+        this.type = type;
+        this.payload = payload;
     }
 }

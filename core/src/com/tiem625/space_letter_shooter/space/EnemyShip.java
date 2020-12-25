@@ -34,6 +34,10 @@ public class EnemyShip extends Actor {
         return new EnemyShip(withText, shipRenderSpec);
     }
 
+    public void stopActions() {
+        clearActions();
+    }
+
     public Vector2 getShipTextureSize() {
         return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }
