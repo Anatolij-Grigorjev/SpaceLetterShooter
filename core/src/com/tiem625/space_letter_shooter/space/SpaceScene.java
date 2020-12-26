@@ -36,13 +36,29 @@ public class SpaceScene extends Scene {
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         EventsHandling.addEventHandler(sceneId, GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
-            var shipAtBottom = (EnemyShip) gameEvent.payload.get("ship");
-            enemyShips().filter(ship -> ship != shipAtBottom).forEach(ship -> {
-                ship.stopActions();
-                var smilingShip = ship.cloneShip(":)");
-                addEnemyShip(smilingShip).setPosition(ship.getX(), ship.getY());
-            });
+            stopShipsWithSmiles();
+            startGameOverStage();
         });
+    }
+
+    private void startGameOverStage() {
+        var gameOverStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        gameOverStage.addActor(new GameOverText());
+    }
+
+    private void stopShipsWithSmiles() {
+        enemyShips().forEach(ship -> {
+            ship.stopActions();
+            var smilingShip = replaceShipWithSmiling(ship);
+        });
+    }
+
+    private EnemyShip replaceShipWithSmiling(EnemyShip originalShip) {
+        var smilingShip = originalShip.cloneShip(":)");
+        addEnemyShipToScene(smilingShip);
+        smilingShip.setSamePosition(originalShip);
+        originalShip.hide();
+        return smilingShip;
     }
 
     public void load(SceneConfigureSpec spec) {
@@ -51,7 +67,7 @@ public class SpaceScene extends Scene {
                 .map(this::placement2ShipWithPosition)
                 //add to stage and hide enemy ship
                 .peek(shipAndPoint ->
-                        addEnemyShip(shipAndPoint.getRight())
+                        addEnemyShipToScene(shipAndPoint.getRight())
                                 .setPosition(-500, -500)
                 )
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
@@ -148,7 +164,7 @@ public class SpaceScene extends Scene {
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
     }
 
-    public EnemyShip addEnemyShip(EnemyShip ship) {
+    public EnemyShip addEnemyShipToScene(EnemyShip ship) {
         Objects.requireNonNull(ship);
         enemyShipsStage.addActor(ship);
 

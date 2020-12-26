@@ -38,6 +38,18 @@ public class EnemyShip extends Actor {
         clearActions();
     }
 
+    public void show() {
+        setVisible(true);
+    }
+
+    public void hide() {
+        setVisible(false);
+    }
+
+    public void setSamePosition(Actor other) {
+        setPosition(other.getX(), other.getY());
+    }
+
     public Vector2 getShipTextureSize() {
         return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }

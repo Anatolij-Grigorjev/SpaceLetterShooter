@@ -3,9 +3,9 @@ package com.tiem625.space_letter_shooter.scene;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 public abstract class Scene implements Disposable {
@@ -16,7 +16,7 @@ public abstract class Scene implements Disposable {
 
     public Scene(SceneId sceneId) {
         this.sceneId = sceneId;
-        this.stages = new HashSet<>();
+        this.stages = ConcurrentHashMap.newKeySet();
     }
 
     public Stage addAndGetStage(Stage stage) {

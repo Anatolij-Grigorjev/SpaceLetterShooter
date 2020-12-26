@@ -1,5 +1,7 @@
 package com.tiem625.space_letter_shooter.config;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -69,5 +71,9 @@ public class GameProps {
                 "resolutionWidth", "" + resolutionWidth,
                 "resolutionHeight", "" + resolutionHeight
         );
+    }
+
+    public Vector2 getResolution() {
+        return new Vector2(resolutionWidth, resolutionHeight);
     }
 }
