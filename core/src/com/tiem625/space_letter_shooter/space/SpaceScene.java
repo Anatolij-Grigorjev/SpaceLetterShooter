@@ -37,13 +37,40 @@ public class SpaceScene extends Scene {
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         EventsHandling.addEventHandler(sceneId, GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
             stopShipsWithSmiles();
-            startGameOverStage();
+            startGameOverStages();
         });
     }
 
-    private void startGameOverStage() {
-        var gameOverStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
-        gameOverStage.addActor(new GameOverText());
+    private void startGameOverStages() {
+        startGameOverTextStage();
+        startGameOverOverlayStage();
+    }
+
+    private void startGameOverOverlayStage() {
+        var overlayStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+
+    }
+
+    private void startGameOverTextStage() {
+        var gameOverTextStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        //create animations for stage root since scaling text
+        //only works when mapped to viewport
+        var root = gameOverTextStage.getRoot();
+        var resolution = GamePropsHolder.props.getResolution();
+        root.setPosition(resolution.x / 2, resolution.y / 2 + 150);
+        root.setScale(0.01f);
+        root.addAction(Actions.sequence(
+                Actions.parallel(
+                        Actions.moveBy(0, -300, 1, Interpolation.fastSlow),
+                        Actions.scaleTo(0.25f, 0.25f, 1, Interpolation.slowFast)
+                ),
+                Actions.parallel(
+                        Actions.moveBy(0, 150, 1, Interpolation.slowFast),
+                        Actions.scaleTo(1, 1, 1, Interpolation.fastSlow)
+                )
+        ));
+        GameOverText gameOverText = new GameOverText();
+        gameOverTextStage.addActor(gameOverText);
     }
 
     private void stopShipsWithSmiles() {
@@ -126,9 +153,9 @@ public class SpaceScene extends Scene {
         final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
         final Supplier<Float> edgesSupplier;
         if (ship.getX() < resolutionWidth / 2f) {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
         } else {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
         }
         return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
     }
