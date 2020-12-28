@@ -1,7 +1,9 @@
 package com.tiem625.space_letter_shooter.space;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -48,25 +50,30 @@ public class SpaceScene extends Scene {
 
     private void startGameOverOverlayStage() {
         var overlayStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
-
+        var transparentBlack = new Color(0, 0, 0, 0.01f);
+        var resolution = GamePropsHolder.props.getResolution();
+        ColorOverlay colorOverlay = new ColorOverlay(transparentBlack, new Rectangle(0, 0, resolution.x, resolution.y));
+        overlayStage.addActor(colorOverlay);
+        colorOverlay.addAction(Actions.color(new Color(0.1f, 0.1f, 0.1f, 0.75f), 1, Interpolation.fastSlow));
     }
 
     private void startGameOverTextStage() {
         var gameOverTextStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
         //create animations for stage root since scaling text
         //only works when mapped to viewport
+        var textMoveDuration = 1.2f;
         var root = gameOverTextStage.getRoot();
         var resolution = GamePropsHolder.props.getResolution();
         root.setPosition(resolution.x / 2, resolution.y / 2 + 150);
         root.setScale(0.01f);
         root.addAction(Actions.sequence(
                 Actions.parallel(
-                        Actions.moveBy(0, -300, 1, Interpolation.fastSlow),
-                        Actions.scaleTo(0.25f, 0.25f, 1, Interpolation.slowFast)
+                        Actions.moveBy(0, -300, textMoveDuration, Interpolation.fastSlow),
+                        Actions.scaleTo(0.25f, 0.25f, textMoveDuration, Interpolation.slowFast)
                 ),
                 Actions.parallel(
-                        Actions.moveBy(0, 150, 1, Interpolation.slowFast),
-                        Actions.scaleTo(1, 1, 1, Interpolation.fastSlow)
+                        Actions.moveBy(0, 150, textMoveDuration, Interpolation.slowFast),
+                        Actions.scaleTo(1, 1, textMoveDuration, Interpolation.fastSlow)
                 )
         ));
         GameOverText gameOverText = new GameOverText();
