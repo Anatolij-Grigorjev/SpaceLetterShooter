@@ -32,14 +32,30 @@ public class SpaceScene extends Scene {
 
     private final Stage enemyShipsStage;
 
-    public SpaceScene() {
+    public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
         super(SceneId.SHIPS_SPACE);
+        load(sceneConfigureSpec);
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         EventsHandling.addEventHandler(sceneId, GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
             stopShipsWithSmiles();
             startGameOverStages();
         });
+    }
+
+    public EnemyShip addEnemyShipToScene(EnemyShip ship) {
+        Objects.requireNonNull(ship);
+        enemyShipsStage.addActor(ship);
+
+        return ship;
+    }
+
+    public Stream<EnemyShip> enemyShips() {
+        return stages.stream()
+                .map(Stage::getActors)
+                .flatMap(actors -> Stream.of(actors.items))
+                .filter(actor -> actor instanceof EnemyShip)
+                .map(actor -> (EnemyShip) actor);
     }
 
     private void startGameOverStages() {
@@ -84,15 +100,14 @@ public class SpaceScene extends Scene {
         });
     }
 
-    private EnemyShip replaceShipWithSmiling(EnemyShip originalShip) {
+    private void replaceShipWithSmiling(EnemyShip originalShip) {
         var smilingShip = originalShip.cloneShip(":)");
         addEnemyShipToScene(smilingShip);
         smilingShip.setSamePosition(originalShip);
-        originalShip.hide();
-        return smilingShip;
+        originalShip.remove();
     }
 
-    public void load(SceneConfigureSpec spec) {
+    private void load(SceneConfigureSpec spec) {
 
         var shipDesiredPositions = spec.shipPlacements.stream()
                 .map(this::placement2ShipWithPosition)
@@ -193,21 +208,6 @@ public class SpaceScene extends Scene {
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
 
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
-    }
-
-    public EnemyShip addEnemyShipToScene(EnemyShip ship) {
-        Objects.requireNonNull(ship);
-        enemyShipsStage.addActor(ship);
-
-        return ship;
-    }
-
-    public Stream<EnemyShip> enemyShips() {
-        return stages.stream()
-                .map(Stage::getActors)
-                .flatMap(actors -> Stream.of(actors.items))
-                .filter(actor -> actor instanceof EnemyShip)
-                .map(actor -> (EnemyShip) actor);
     }
 
     private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {

@@ -19,9 +19,7 @@ public class SceneMaker extends ResourceMaker {
     public static SpaceScene buildSpaceScene(String sceneConfigSpecPath) throws IOException {
         var sceneSpec = new ObjectMapper()
                 .readValue(Gdx.files.internal(sceneConfigSpecPath).read(), SceneConfigureSpec.class);
-        var newScene = makeResource(SpaceScene::new);
-        newScene.load(sceneSpec);
-        return newScene;
+        return makeResource(() -> new SpaceScene(sceneSpec));
     }
 
     public static AlwaysOnBGScene buildAlwaysOnBGScene() {
