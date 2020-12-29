@@ -1,19 +1,15 @@
 package com.tiem625.space_letter_shooter.scene;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public enum ScenesManager {
 
     INSTANCE;
 
-    private final Set<Scene> alwaysOnScenes;
+    private final List<Scene> alwaysOnScenes;
 
     public Optional<Scene> currentScene() {
         return Optional.ofNullable(currentScene);
@@ -22,7 +18,7 @@ public enum ScenesManager {
     private Scene currentScene;
 
     ScenesManager() {
-        alwaysOnScenes = new HashSet<>();
+        alwaysOnScenes = new CopyOnWriteArrayList<>();
         currentScene = null;
     }
 
@@ -35,11 +31,6 @@ public enum ScenesManager {
         currentScene = scene;
     }
 
-    private final Consumer<Stage> renderStage = stage -> {
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
-    };
-
     public void renderActiveScenes() {
 
         renderAlwaysOnScenes();
@@ -47,14 +38,10 @@ public enum ScenesManager {
     }
 
     private void renderCurrentScene() {
-        currentScene()
-                .map(Scene::stages)
-                .ifPresent(stages -> stages.forEach(renderStage));
+        currentScene().ifPresent(Scene::render);
     }
 
     private void renderAlwaysOnScenes() {
-        alwaysOnScenes.stream()
-                .flatMap(Scene::stages)
-                .forEach(renderStage);
+        alwaysOnScenes.forEach(Scene::render);
     }
 }

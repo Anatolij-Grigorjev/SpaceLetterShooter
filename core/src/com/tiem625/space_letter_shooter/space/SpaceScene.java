@@ -44,8 +44,8 @@ public class SpaceScene extends Scene {
     }
 
     private void startGameOverStages() {
-        startGameOverTextStage();
         startGameOverOverlayStage();
+        startGameOverTextStage();
     }
 
     private void startGameOverOverlayStage() {
