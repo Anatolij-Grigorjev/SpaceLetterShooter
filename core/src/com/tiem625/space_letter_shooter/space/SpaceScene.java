@@ -1,9 +1,7 @@
 package com.tiem625.space_letter_shooter.space;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +15,7 @@ import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
+import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -50,11 +49,9 @@ public class SpaceScene extends Scene {
 
     private void startGameOverOverlayStage() {
         var overlayStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
-        var transparentBlack = new Color(0, 0, 0, 0.01f);
-        var resolution = GamePropsHolder.props.getResolution();
-        ColorOverlay colorOverlay = new ColorOverlay(transparentBlack, new Rectangle(0, 0, resolution.x, resolution.y));
+        ColorOverlay colorOverlay = ColorOverlay.fullScreen(Colors.BLACK_ALPHA01);
         overlayStage.addActor(colorOverlay);
-        colorOverlay.addAction(Actions.color(new Color(0.1f, 0.1f, 0.1f, 0.75f), 1, Interpolation.fastSlow));
+        colorOverlay.addAction(Actions.color(Colors.BLACK_ALPHA75, 1, Interpolation.fastSlow));
     }
 
     private void startGameOverTextStage() {
@@ -83,7 +80,7 @@ public class SpaceScene extends Scene {
     private void stopShipsWithSmiles() {
         enemyShips().forEach(ship -> {
             ship.stopActions();
-            var smilingShip = replaceShipWithSmiling(ship);
+            replaceShipWithSmiling(ship);
         });
     }
 
@@ -160,9 +157,9 @@ public class SpaceScene extends Scene {
         final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
         final Supplier<Float> edgesSupplier;
         if (ship.getX() < resolutionWidth / 2f) {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
         } else {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
         }
         return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
     }

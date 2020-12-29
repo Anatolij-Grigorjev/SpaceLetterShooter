@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.resource.Textures;
 
 /**
@@ -13,6 +14,14 @@ import com.tiem625.space_letter_shooter.resource.Textures;
 public class ColorOverlay extends Actor {
 
     private final Sprite rectSprite;
+
+    public static ColorOverlay fullScreen(Color color) {
+        return new ColorOverlay(
+                color,
+                new Rectangle(0, 0, GamePropsHolder.props.getResolutionWidth(), GamePropsHolder.props.getResolutionHeight())
+        );
+    }
+
 
     public ColorOverlay(Color color, Rectangle bounds) {
         this.rectSprite = Textures.buildAndGetAtlasRegionSprite("white_rect");

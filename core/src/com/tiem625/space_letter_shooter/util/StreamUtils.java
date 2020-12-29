@@ -15,6 +15,11 @@ public class StreamUtils {
     }
 
 
+    /**
+     * A {@link Supplier} that consecutively provides values from the initial non-empty values array. <br/>
+     * If more values are needed, the supplier restarts from the beginning.
+     * @param <T> the type of values provided by this {@link Supplier}
+     */
     public static class RollingValuesSupplier<T> implements Supplier<T> {
 
         private final T[] values;
