@@ -151,11 +151,7 @@ public class SpaceScene extends Scene {
                             .orElse(new Vector2(ship.getX(), ship.getY()));
                     actions.add(buildShipDescentAction(prevStepEndPosition, nextStepPosition));
                     return actions;
-                }, ((actions1, actions2) -> {
-                    var result = new ArrayList<Action>(actions1);
-                    result.addAll(actions2);
-                    return result;
-                }))
+                }, StreamUtils.concatLists())
                 .forEach(action -> ship.addAction(Actions.after(action)));
     }
 

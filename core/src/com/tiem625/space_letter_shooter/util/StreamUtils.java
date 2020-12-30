@@ -1,7 +1,10 @@
 package com.tiem625.space_letter_shooter.util;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamUtils {
@@ -14,6 +17,11 @@ public class StreamUtils {
         return inStream.reduce((first, second) -> second);
     }
 
+    public static <E> BinaryOperator<? extends List<E>> concatLists() {
+        return (list1, list2) ->
+            Stream.concat(list1.stream(), list2.stream())
+                    .collect(Collectors.toList());
+    }
 
     /**
      * A {@link Supplier} that consecutively provides values from the initial non-empty values array. <br/>
