@@ -74,18 +74,19 @@ public class SpaceScene extends Scene {
         var gameOverTextStage = addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
         //create animations for stage root since scaling text
         //only works when mapped to viewport
-        var textMoveDuration = 1.2f;
+        var textMoveDuration = 1.0f;
+        var textTravelExtent = 150.0f;
         var root = gameOverTextStage.getRoot();
         var resolution = GamePropsHolder.props.getResolution();
-        root.setPosition(resolution.x / 2, resolution.y / 2 + 150);
-        root.setScale(0.01f);
+        root.setPosition(resolution.x / 2, resolution.y / 2 + textTravelExtent);
+        root.setScale(0.0f);
         root.addAction(Actions.sequence(
                 Actions.parallel(
-                        Actions.moveBy(0, -300, textMoveDuration, Interpolation.fastSlow),
+                        Actions.moveBy(0, -2 * textTravelExtent, textMoveDuration, Interpolation.fastSlow),
                         Actions.scaleTo(0.25f, 0.25f, textMoveDuration, Interpolation.slowFast)
                 ),
                 Actions.parallel(
-                        Actions.moveBy(0, 150, textMoveDuration, Interpolation.slowFast),
+                        Actions.moveBy(0, textTravelExtent, textMoveDuration, Interpolation.slowFast),
                         Actions.scaleTo(1, 1, textMoveDuration, Interpolation.fastSlow)
                 )
         ));
@@ -144,9 +145,9 @@ public class SpaceScene extends Scene {
     private void addShipStepsDescentActions(EnemyShip ship) {
 
         List<Vector2> descentSteps = buildShipDescentPositions(ship);
-
+        List<Action> actionsList = new ArrayList<>();
         descentSteps.stream()
-                .reduce(new ArrayList<Action>(), (actions, nextStepPosition) -> {
+                .reduce(actionsList, (actions, nextStepPosition) -> {
                     final Vector2 prevStepEndPosition = findPrevStepEndPosition(actions)
                             .orElse(new Vector2(ship.getX(), ship.getY()));
                     actions.add(buildShipDescentAction(prevStepEndPosition, nextStepPosition));
@@ -155,7 +156,7 @@ public class SpaceScene extends Scene {
                 .forEach(action -> ship.addAction(Actions.after(action)));
     }
 
-    private Optional<Vector2> findPrevStepEndPosition(ArrayList<Action> actions) {
+    private Optional<Vector2> findPrevStepEndPosition(List<Action> actions) {
         return StreamUtils.findLast(actions.stream())
                 .filter(action -> action instanceof MoveToAction)
                 .map(action -> (MoveToAction) action)

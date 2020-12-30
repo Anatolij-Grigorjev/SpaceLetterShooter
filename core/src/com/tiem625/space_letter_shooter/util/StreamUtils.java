@@ -17,7 +17,7 @@ public class StreamUtils {
         return inStream.reduce((first, second) -> second);
     }
 
-    public static <E> BinaryOperator<? extends List<E>> concatLists() {
+    public static <E> BinaryOperator<List<E>> concatLists() {
         return (list1, list2) ->
             Stream.concat(list1.stream(), list2.stream())
                     .collect(Collectors.toList());
