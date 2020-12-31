@@ -2,10 +2,10 @@
   "sceneId": "SS1",
   "sceneName": "Space Scene",
   "shipDescentSpec": {
-    "stepMin": 100,
-    "stepMax": 150,
-    "speedMin": 200,
-    "speedMax": 300
+    "stepMin": 15,
+    "stepMax": 25,
+    "speedMin": 500,
+    "speedMax": 800
   },
   "shipPlacements": [
     {

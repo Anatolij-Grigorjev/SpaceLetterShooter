@@ -1,42 +1,25 @@
 package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
-import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
-import com.tiem625.space_letter_shooter.util.StreamUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class SpaceScene extends Scene {
 
-    private static final Vector2 OFFSCREEN_POS = new Vector2(-500, -500);
-
     private final Stage enemyShipsStage;
-    private float descentStepMin;
-    private float descentStepMax;
-    private float descentSpeedMin;
-    private float descentSpeedMax;
 
     public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
         super(SceneId.SHIPS_SPACE);
@@ -52,7 +35,6 @@ public class SpaceScene extends Scene {
     public EnemyShip addEnemyShipToScene(EnemyShip ship) {
         Objects.requireNonNull(ship);
         enemyShipsStage.addActor(ship);
-        ship.setPosition(OFFSCREEN_POS.x, OFFSCREEN_POS.y);
         return ship;
     }
 
@@ -115,134 +97,13 @@ public class SpaceScene extends Scene {
     }
 
     private void load(SceneConfigureSpec spec) {
-
-        descentStepMin = spec.getShipDescentSpec().getStepMin();
-        descentStepMax = spec.getShipDescentSpec().getStepMax();
-        descentSpeedMin = spec.getShipDescentSpec().getSpeedMin();
-        descentSpeedMax = spec.getShipDescentSpec().getSpeedMax();
-
-        var shipDesiredPositions = spec.getShipPlacements().stream()
-                .map(this::placement2ShipWithPosition)
-                //add to stage and hide enemy ship
-                .peek(shipAndPoint -> addEnemyShipToScene(shipAndPoint.getRight()))
-                .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
-
-        var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
-
-        enemyShips().forEach(ship -> {
-            //wait for all ships to get in position
-            ship.addAction(Actions.sequence(
-                    Actions.delay(totalSetupDelayAction.getDuration() + 0.5f),
-                    Actions.run(() -> {
-                        addShipStepsDescentActions(ship);
-                        postShipReachedBottomEvent(ship);
-                    })
-            ));
-        });
-    }
-
-    private void postShipReachedBottomEvent(EnemyShip ship) {
-        ship.addAction(Actions.after(Actions.run(() ->
-                EventsHandling.postEvent(new GameEvent(
-                        SceneId.SHIPS_SPACE,
-                        GameEventType.SHIP_REACH_BOTTOM_SCREEN,
-                        Map.of("ship", ship)
-                )))));
-    }
-
-    private void addShipStepsDescentActions(EnemyShip ship) {
-
-        List<Vector2> descentSteps = buildShipDescentPositions(ship);
-        List<Action> actionsList = new ArrayList<>();
-        descentSteps.stream()
-                .reduce(actionsList, (actions, nextStepPosition) -> {
-                    final Vector2 prevStepEndPosition = findPrevStepEndPosition(actions)
-                            .orElse(new Vector2(ship.getX(), ship.getY()));
-                    actions.add(buildShipDescentAction(prevStepEndPosition, nextStepPosition));
-                    return actions;
-                }, StreamUtils.concatLists())
-                .forEach(action -> ship.addAction(Actions.after(action)));
-    }
-
-    private Optional<Vector2> findPrevStepEndPosition(List<Action> actions) {
-        return StreamUtils.findLast(actions.stream())
-                .filter(action -> action instanceof MoveToAction)
-                .map(action -> (MoveToAction) action)
-                .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
-    }
-
-    private List<Vector2> buildShipDescentPositions(EnemyShip ship) {
-        final int resolutionWidth = GamePropsHolder.props.getResolutionWidth();
-        final float leftEdgeX = 0;
-        final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
-        final Supplier<Float> edgesSupplier;
-        if (ship.getX() < resolutionWidth / 2f) {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
-        } else {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
-        }
-        return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
-    }
-
-    private List<Vector2> breakShipHeightIntoDescentSteps(float startHeight, float endHeight, Supplier<Float> stepXCoordSource) {
-
-        float fullDescentHeight = startHeight - endHeight;
-        int maxDescentSteps = (int) (fullDescentHeight / descentStepMin);
-        var descentSteps = new ArrayList<Vector2>(maxDescentSteps);
-        var remainingHeight = startHeight;
-        while (remainingHeight > endHeight) {
-            var stepX = stepXCoordSource.get();
-            var nextStepHeight = MathUtils.random(descentStepMin, descentStepMax);
-            if (remainingHeight - nextStepHeight > endHeight) {
-                remainingHeight -= nextStepHeight;
-                descentSteps.add(new Vector2(stepX, remainingHeight));
-            } else {
-                descentSteps.add(new Vector2(stepX, remainingHeight));
-                remainingHeight = endHeight;
-            }
-        }
-
-        return descentSteps;
-    }
-
-    private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo) {
-
-        var speed = MathUtils.random(descentSpeedMin, descentSpeedMax);
-        var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
-
-        return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
-    }
-
-    private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
-        return ImmutablePair.of(
-                placement.getPosition().toVector2(),
-                new EnemyShip("test:" + placement.getPosition().getY(), ShipRenderSpecs.getRenderSpec(placement.getShipSpecId()))
-        );
+        var descentLoader = new ShipDescentLoader();
+        var descendingShips = descentLoader.loadDescendingShipsFromSpec(spec);
+        descendingShips.forEach(this::addEnemyShipToScene);
     }
 
     private Stage addEmptyShipsStage() {
         return addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
-    }
-
-    private DelayAction setupShipsFlyToStartActions(Map<EnemyShip, Vector2> shipDesiredPositions) {
-        return shipDesiredPositions.entrySet().stream()
-                .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
-                    var ship = shipPositionPair.getKey();
-                    var startPosition = shipPositionPair.getValue();
-                    var moveToStartAction = Actions.moveTo(
-                            startPosition.x,
-                            startPosition.y,
-                            1,
-                            Interpolation.sine
-                    );
-                    var shipActions = Actions.sequence(
-                            Actions.delay(prevDelay.getDuration()),
-                            moveToStartAction
-                    );
-                    ship.addAction(shipActions);
-
-                    return Actions.delay(prevDelay.getDuration() + 0.5f);
-                }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));
     }
 
     private class ShipTextCharsCaptureListener extends InputListener {
@@ -254,7 +115,6 @@ public class SpaceScene extends Scene {
                     .filter(ship -> ship.canHitCharacter(character))
                     .findFirst()
                     .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
-
 
             return true;
         }
