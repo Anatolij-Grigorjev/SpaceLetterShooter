@@ -30,7 +30,13 @@ import java.util.stream.Stream;
 
 public class SpaceScene extends Scene {
 
+    private static final Vector2 OFFSCREEN_POS = new Vector2(-500, -500);
+
     private final Stage enemyShipsStage;
+    private float descentStepMin;
+    private float descentStepMax;
+    private float descentSpeedMin;
+    private float descentSpeedMax;
 
     public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
         super(SceneId.SHIPS_SPACE);
@@ -46,7 +52,7 @@ public class SpaceScene extends Scene {
     public EnemyShip addEnemyShipToScene(EnemyShip ship) {
         Objects.requireNonNull(ship);
         enemyShipsStage.addActor(ship);
-
+        ship.setPosition(OFFSCREEN_POS.x, OFFSCREEN_POS.y);
         return ship;
     }
 
@@ -110,13 +116,15 @@ public class SpaceScene extends Scene {
 
     private void load(SceneConfigureSpec spec) {
 
-        var shipDesiredPositions = spec.shipPlacements.stream()
+        descentStepMin = spec.getShipDescentSpec().getStepMin();
+        descentStepMax = spec.getShipDescentSpec().getStepMax();
+        descentSpeedMin = spec.getShipDescentSpec().getSpeedMin();
+        descentSpeedMax = spec.getShipDescentSpec().getSpeedMax();
+
+        var shipDesiredPositions = spec.getShipPlacements().stream()
                 .map(this::placement2ShipWithPosition)
                 //add to stage and hide enemy ship
-                .peek(shipAndPoint ->
-                        addEnemyShipToScene(shipAndPoint.getRight())
-                                .setPosition(-500, -500)
-                )
+                .peek(shipAndPoint -> addEnemyShipToScene(shipAndPoint.getRight()))
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
 
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
@@ -178,15 +186,13 @@ public class SpaceScene extends Scene {
 
     private List<Vector2> breakShipHeightIntoDescentSteps(float startHeight, float endHeight, Supplier<Float> stepXCoordSource) {
 
-        var stepSizeMin = 10f;
-        var stepSizeMax = 25f;
         float fullDescentHeight = startHeight - endHeight;
-        int maxDescentSteps = (int) (fullDescentHeight / stepSizeMin);
+        int maxDescentSteps = (int) (fullDescentHeight / descentStepMin);
         var descentSteps = new ArrayList<Vector2>(maxDescentSteps);
         var remainingHeight = startHeight;
         while (remainingHeight > endHeight) {
             var stepX = stepXCoordSource.get();
-            var nextStepHeight = MathUtils.random(stepSizeMin, stepSizeMax);
+            var nextStepHeight = MathUtils.random(descentStepMin, descentStepMax);
             if (remainingHeight - nextStepHeight > endHeight) {
                 remainingHeight -= nextStepHeight;
                 descentSteps.add(new Vector2(stepX, remainingHeight));
@@ -201,7 +207,7 @@ public class SpaceScene extends Scene {
 
     private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo) {
 
-        var speed = MathUtils.random(1500f, 2005f);
+        var speed = MathUtils.random(descentSpeedMin, descentSpeedMax);
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
 
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
@@ -209,8 +215,8 @@ public class SpaceScene extends Scene {
 
     private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
         return ImmutablePair.of(
-                placement.position.toVector2(),
-                new EnemyShip("test:" + placement.position.y, ShipRenderSpecs.getRenderSpec(placement.shipSpecId))
+                placement.getPosition().toVector2(),
+                new EnemyShip("test:" + placement.getPosition().getY(), ShipRenderSpecs.getRenderSpec(placement.getShipSpecId()))
         );
     }
 

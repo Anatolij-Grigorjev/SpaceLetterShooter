@@ -1,31 +1,53 @@
 package com.tiem625.space_letter_shooter.space.spec;
 
 import com.badlogic.gdx.math.Vector2;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class SceneConfigureSpec {
 
-    public final String sceneId;
-    public final String sceneName;
-    public final List<ShipPlacement> shipPlacements;
+    private final String sceneId;
+    private final String sceneName;
+    private final List<ShipPlacement> shipPlacements;
+    private final ShipDescentSpec shipDescentSpec;
 
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public SceneConfigureSpec(
             @JsonProperty("sceneId") String sceneId,
             @JsonProperty("sceneName") String sceneName,
-            @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements
+            @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements,
+            @JsonProperty("shipDescentSpec") ShipDescentSpec shipDescentSpec
     ) {
         this.sceneId = sceneId;
         this.sceneName = sceneName;
         this.shipPlacements = shipPlacements;
+        this.shipDescentSpec = shipDescentSpec;
+    }
+
+    public String getSceneId() {
+        return sceneId;
+    }
+
+    public String getSceneName() {
+        return sceneName;
+    }
+
+    public List<ShipPlacement> getShipPlacements() {
+        return shipPlacements;
+    }
+
+    public ShipDescentSpec getShipDescentSpec() {
+        return shipDescentSpec;
     }
 
     public static class ShipPlacement {
 
-        public final ShipPosition position;
-        public final String shipSpecId;
+        private final ShipPosition position;
+        private final String shipSpecId;
 
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public ShipPlacement(
                 @JsonProperty("position") ShipPosition position,
                 @JsonProperty("shipSpecId") String shipSpecId
@@ -34,10 +56,19 @@ public class SceneConfigureSpec {
             this.shipSpecId = shipSpecId;
         }
 
-        public static class ShipPosition {
-            public final float x;
-            public final float y;
+        public ShipPosition getPosition() {
+            return position;
+        }
 
+        public String getShipSpecId() {
+            return shipSpecId;
+        }
+
+        public static class ShipPosition {
+            private final float x;
+            private final float y;
+
+            @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
             public ShipPosition(
                     @JsonProperty("x") float x,
                     @JsonProperty("y") float y
@@ -46,10 +77,55 @@ public class SceneConfigureSpec {
                 this.y = y;
             }
 
+            public float getX() {
+                return x;
+            }
+
+            public float getY() {
+                return y;
+            }
+
             public Vector2 toVector2() {
                 return new Vector2(x, y);
             }
 
+        }
+    }
+
+    public static class ShipDescentSpec {
+
+        private final float stepMin;
+        private final float stepMax;
+        private final float speedMin;
+        private final float speedMax;
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public ShipDescentSpec(
+                @JsonProperty("stepMin") float stepMin,
+                @JsonProperty("stepMax") float stepMax,
+                @JsonProperty("speedMin") float speedMin,
+                @JsonProperty("speedMax") float speedMax
+        ) {
+            this.stepMin = stepMin;
+            this.stepMax = stepMax;
+            this.speedMin = speedMin;
+            this.speedMax = speedMax;
+        }
+
+        public float getStepMin() {
+            return stepMin;
+        }
+
+        public float getStepMax() {
+            return stepMax;
+        }
+
+        public float getSpeedMin() {
+            return speedMin;
+        }
+
+        public float getSpeedMax() {
+            return speedMax;
         }
     }
 }
