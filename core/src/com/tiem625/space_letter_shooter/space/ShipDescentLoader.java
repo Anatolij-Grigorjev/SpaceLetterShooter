@@ -95,9 +95,11 @@ public class ShipDescentLoader {
         final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
         final Supplier<Float> edgesSupplier;
         if (ship.getX() < resolutionWidth / 2f) {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
+//            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
         } else {
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
+//            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
+            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
         }
         return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
     }

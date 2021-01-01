@@ -9,6 +9,7 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
+import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.SceneId;
@@ -80,6 +81,8 @@ public class SpaceScene extends Scene {
         ));
         GameOverText gameOverText = new GameOverText();
         gameOverTextStage.addActor(gameOverText);
+        gameOverTextStage.addListener(new GameOverText.RestartSceneInputListener());
+        InputProcessorManager.setCurrentInputProcessors(gameOverTextStage);
     }
 
     private void stopShipsWithSmiles() {
