@@ -27,7 +27,7 @@ public class SpaceScene extends Scene {
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         load(sceneConfigureSpec);
-        EventsHandling.addEventHandler(sceneId, GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
+        EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
             stopShipsWithSmiles();
             startGameOverStages();
         });

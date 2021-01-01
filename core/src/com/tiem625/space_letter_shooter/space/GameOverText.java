@@ -9,7 +9,6 @@ import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Fonts;
-import com.tiem625.space_letter_shooter.scene.SceneId;
 
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -45,7 +44,7 @@ public class GameOverText extends Actor {
             switch (character) {
                 case 'R':
                 case 'r':
-                    EventsHandling.postEvent(new GameEvent(SceneId.DEBUG, GameEventType.SCENE_RESTART, Map.of()));
+                    EventsHandling.postEvent(new GameEvent(GameEventType.SCENE_RESTART, Map.of()));
                     break;
                 default:
                     break;

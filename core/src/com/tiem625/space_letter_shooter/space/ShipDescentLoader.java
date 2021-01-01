@@ -11,7 +11,6 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
-import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -62,7 +61,6 @@ public class ShipDescentLoader {
     private void postShipReachedBottomEvent(EnemyShip ship) {
         ship.addAction(Actions.after(Actions.run(() ->
                 EventsHandling.postEvent(new GameEvent(
-                        SceneId.SHIPS_SPACE,
                         GameEventType.SHIP_REACH_BOTTOM_SCREEN,
                         Map.of("ship", ship)
                 )))));
