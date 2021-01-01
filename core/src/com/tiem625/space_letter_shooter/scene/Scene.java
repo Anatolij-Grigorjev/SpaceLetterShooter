@@ -12,12 +12,16 @@ import java.util.stream.Stream;
 
 public abstract class Scene implements Disposable {
 
-    protected final SceneId sceneId;
+    protected final String sceneId;
     protected final List<Stage> stages;
 
-    public Scene(SceneId sceneId) {
+    public Scene(String sceneId) {
         this.sceneId = sceneId;
         this.stages = new CopyOnWriteArrayList<>();
+    }
+
+    public String getSceneId() {
+        return sceneId;
     }
 
     public Stage addAndGetStage(Stage stage) {

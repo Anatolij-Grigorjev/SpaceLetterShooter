@@ -12,7 +12,6 @@ import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.Scene;
-import com.tiem625.space_letter_shooter.scene.SceneId;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 
 import java.util.Objects;
@@ -23,7 +22,7 @@ public class SpaceScene extends Scene {
     private final Stage enemyShipsStage;
 
     public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
-        super(SceneId.SHIPS_SPACE);
+        super(sceneConfigureSpec.getSceneId());
         enemyShipsStage = addEmptyShipsStage();
         enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         load(sceneConfigureSpec);

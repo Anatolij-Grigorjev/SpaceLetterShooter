@@ -9,7 +9,6 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.resource.make.ParticleEffectMaker;
 import com.tiem625.space_letter_shooter.scene.Scene;
-import com.tiem625.space_letter_shooter.scene.SceneId;
 
 public class AlwaysOnBGScene extends Scene {
 
@@ -17,7 +16,7 @@ public class AlwaysOnBGScene extends Scene {
     private final Stage particlesStage;
 
     public AlwaysOnBGScene() {
-        super(SceneId.SPACE_BG);
+        super("space_bg");
         bgStarsParticles = buildBgStarsParticles();
         particlesStage = addAndGetStage(new Stage());
         particlesStage.addActor(new ParticlesDrawActor(bgStarsParticles));
