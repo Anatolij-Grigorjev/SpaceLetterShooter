@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public enum ScenesManager {
 
-    INSTANCE;
+    api;
 
     private final List<Scene> alwaysOnScenes;
 

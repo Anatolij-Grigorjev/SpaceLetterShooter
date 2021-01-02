@@ -8,15 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Fonts;
+import com.tiem625.space_letter_shooter.resource.ResourceLoader;
 import com.tiem625.space_letter_shooter.resource.ResourcesDisposer;
 import com.tiem625.space_letter_shooter.resource.make.BitmapFontMaker;
 import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
+import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.ShipRenderSpecs;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class GameLoop extends ApplicationAdapter {
     SpriteBatch batch;
@@ -30,19 +34,28 @@ public class GameLoop extends ApplicationAdapter {
         if (isGameDebugProfile()) {
             addAlwaysOnDebugScene();
         }
+        
+        loadStartupResources();
 
         try {
-            var spaceScene = SceneMaker.buildSpaceScene("space_scene_1.json");
-            ScenesManager.INSTANCE.setCurrentScene(spaceScene);
+            var spaceScene = SceneMaker.buildSpaceScene("SS1");
+            ScenesManager.api.setCurrentScene(spaceScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         var alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
-        ScenesManager.INSTANCE.addAlwaysOnScene(alwaysOnBGScene);
+        ScenesManager.api.addAlwaysOnScene(alwaysOnBGScene);
 
         setCurrentSceneAsInput();
         GamePropsHolder.applyCurrentGameConfig();
+    }
+
+    private void loadStartupResources() {
+        Stream.<ResourceLoader>of(
+                ShipRenderSpecs.api,
+                SceneConfigureSpecs.api
+        ).forEach(ResourceLoader::loadResources);
     }
 
     private boolean isGameDebugProfile() {
@@ -52,12 +65,12 @@ public class GameLoop extends ApplicationAdapter {
     private void addAlwaysOnDebugScene() {
         System.out.println("Game in debug profile! Enabling debug config changer...");
         Scene debugScene = SceneMaker.buildDebugScene();
-        ScenesManager.INSTANCE.addAlwaysOnScene(debugScene);
+        ScenesManager.api.addAlwaysOnScene(debugScene);
         InputProcessorManager.addAlwaysOnInputProcessor(debugScene.getFirstStage());
     }
 
     private void setCurrentSceneAsInput() {
-        ScenesManager.INSTANCE.currentScene()
+        ScenesManager.api.currentScene()
                 .ifPresent(scene ->
                         InputProcessorManager.setCurrentInputProcessors(scene.stages().toArray(Stage[]::new)));
     }
@@ -67,13 +80,13 @@ public class GameLoop extends ApplicationAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        ScenesManager.INSTANCE.renderActiveScenes();
+        ScenesManager.api.renderActiveScenes();
         batch.end();
     }
 
     @Override
     public void dispose() {
-        ResourcesDisposer.INSTANCE.disposeAll();
+        ResourcesDisposer.api.disposeAll();
         GamePropsHolder.writeOutConfig();
     }
 }

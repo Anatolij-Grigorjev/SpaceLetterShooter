@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum ResourcesDisposer {
 
-    INSTANCE;
+    api;
 
     private final Set<Disposable> resources;
 

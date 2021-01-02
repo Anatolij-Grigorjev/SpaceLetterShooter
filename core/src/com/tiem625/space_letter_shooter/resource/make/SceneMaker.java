@@ -1,11 +1,9 @@
 package com.tiem625.space_letter_shooter.resource.make;
 
-import com.badlogic.gdx.Gdx;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.DebugScene;
+import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 
 import java.io.IOException;
 
@@ -16,9 +14,8 @@ public class SceneMaker extends ResourceMaker {
      *
      * @return a newly constructed {@link SpaceScene}
      */
-    public static SpaceScene buildSpaceScene(String sceneConfigSpecPath) throws IOException {
-        var sceneSpec = new ObjectMapper()
-                .readValue(Gdx.files.internal(sceneConfigSpecPath).read(), SceneConfigureSpec.class);
+    public static SpaceScene buildSpaceScene(String sceneId) throws IOException {
+        var sceneSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
         return makeResource(() -> new SpaceScene(sceneSpec));
     }
 

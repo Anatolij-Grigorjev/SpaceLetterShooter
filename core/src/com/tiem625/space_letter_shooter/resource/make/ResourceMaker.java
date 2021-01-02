@@ -19,7 +19,7 @@ public abstract class ResourceMaker {
     protected static <T extends Disposable> T makeResource(Supplier<T> instancer) {
         Objects.requireNonNull(instancer);
         var instance = instancer.get();
-        ResourcesDisposer.INSTANCE.addResource(instance);
+        ResourcesDisposer.api.addResource(instance);
 
         return instance;
     }
