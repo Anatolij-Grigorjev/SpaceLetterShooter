@@ -20,6 +20,7 @@ public class EnemyShip extends Actor {
     private String spelledCharacters;
     private final TextureRegion texture;
     private final ShipRenderSpec shipRenderSpec;
+    private boolean shipDisposing;
 
     public EnemyShip(String text, ShipRenderSpec shipRenderSpec) {
         super();
@@ -28,6 +29,7 @@ public class EnemyShip extends Actor {
         this.spelledCharacters = "";
         this.shipRenderSpec = shipRenderSpec;
         this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
+        this.shipDisposing = false;
     }
 
     public EnemyShip cloneShip(String withText) {
@@ -67,12 +69,17 @@ public class EnemyShip extends Actor {
         beginDisposeActionsIfSpelled();
     }
 
+    public boolean isShipDisposing() {
+        return shipDisposing;
+    }
+
     private boolean shipTextIsSpelled() {
         return spelledCharacters.length() >= text.length();
     }
 
     private void beginDisposeActionsIfSpelled() {
         if (shipTextIsSpelled()) {
+            shipDisposing = true;
             beginDisposeActions();
         }
     }

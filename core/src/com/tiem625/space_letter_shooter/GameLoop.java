@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
+import com.tiem625.space_letter_shooter.events.EventsHandling;
+import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.ResourceLoader;
@@ -37,18 +39,32 @@ public class GameLoop extends ApplicationAdapter {
         
         loadStartupResources();
 
-        try {
-            var spaceScene = SceneMaker.buildSpaceScene("SS1");
-            ScenesManager.api.setCurrentScene(spaceScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        var spaceScene = buildSpaceScene();
+        setRenderAndInputToScene(spaceScene);
 
         var alwaysOnBGScene = SceneMaker.buildAlwaysOnBGScene();
         ScenesManager.api.addAlwaysOnScene(alwaysOnBGScene);
 
-        setCurrentSceneAsInput();
         GamePropsHolder.applyCurrentGameConfig();
+
+        EventsHandling.addEventHandler(GameEventType.SCENE_RESTART, restart -> {
+            var scene = buildSpaceScene();
+            setRenderAndInputToScene(scene);
+        });
+    }
+
+    private Scene buildSpaceScene() {
+        try {
+            return SceneMaker.buildSpaceScene("SS1");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not load space scene at SS1");
+        }
+    }
+
+    private void setRenderAndInputToScene(Scene scene) {
+        ScenesManager.api.setCurrentScene(scene);
+        setCurrentSceneAsInput();
     }
 
     private void loadStartupResources() {

@@ -59,11 +59,15 @@ public class ShipDescentLoader {
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
-        ship.addAction(Actions.after(Actions.run(() ->
-                EventsHandling.postEvent(new GameEvent(
-                        GameEventType.SHIP_REACH_BOTTOM_SCREEN,
-                        Map.of("ship", ship)
-                )))));
+        ship.addAction(Actions.after(Actions.run(() -> {
+            if (ship.isShipDisposing()) {
+                return;
+            }
+            EventsHandling.postEvent(new GameEvent(
+                    GameEventType.SHIP_REACH_BOTTOM_SCREEN,
+                    Map.of("ship", ship)
+            ));
+        })));
     }
 
     private void addShipStepsDescentActions(EnemyShip ship) {

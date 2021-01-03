@@ -17,6 +17,8 @@ import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static java.util.function.Predicate.not;
+
 public class SpaceScene extends Scene {
 
     private final Stage enemyShipsStage;
@@ -85,7 +87,9 @@ public class SpaceScene extends Scene {
     }
 
     private void stopShipsWithSmiles() {
-        enemyShips().forEach(ship -> {
+        enemyShips()
+                .filter(not(EnemyShip::isShipDisposing))
+                .forEach(ship -> {
             ship.stopActions();
             replaceShipWithSmiling(ship);
         });

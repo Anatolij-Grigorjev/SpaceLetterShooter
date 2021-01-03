@@ -4,8 +4,8 @@
   "shipDescentSpec": {
     "stepMin": 15,
     "stepMax": 25,
-    "speedMin": 500,
-    "speedMax": 800
+    "speedMin": 200,
+    "speedMax": 600
   },
   "shipPlacements": [
     {
