@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.space;
+package com.tiem625.space_letter_shooter.space.ship;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;

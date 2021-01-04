@@ -12,6 +12,8 @@ import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.Scene;
+import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
+import com.tiem625.space_letter_shooter.space.ship.ShipDescentLoader;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
 
 import java.util.Objects;
