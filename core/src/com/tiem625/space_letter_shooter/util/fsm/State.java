@@ -28,7 +28,7 @@ public abstract class State<E> {
 
     public abstract void act(float delta);
 
-    public abstract void exitState(String nextStateKey);
+    public void exitState(String nextStateKey) {};
 
-    public abstract void enterState(String prevStateKey);
+    public void enterState(String prevStateKey) {};
 }

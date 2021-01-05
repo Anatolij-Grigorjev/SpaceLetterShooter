@@ -13,7 +13,7 @@ import static java.util.function.Function.identity;
 
 public abstract class StateMachine<E> {
 
-    private static final String KEY_NO_STATE = "<NO_STATE>";
+    protected static final String KEY_NO_STATE = "<NO_STATE>";
 
     private final E entity;
     private final Map<String, State<E>> statesIndex;
@@ -60,16 +60,15 @@ public abstract class StateMachine<E> {
 
         actState(delta);
 
-        String nextStateKey = Optional.ofNullable(computeNextStateKey(delta))
-                .orElse(KEY_NO_STATE);
-        if (KEY_NO_STATE.equals(nextStateKey)) return;
-
-        setState(nextStateKey);
+        Optional.ofNullable(computeNextStateKey(delta))
+                .ifPresent(this::setState);
     }
 
     protected abstract Set<State<E>> loadStates();
 
-    protected abstract String computeNextStateKey(float delta);
+    protected String computeNextStateKey(float delta) {
+        return KEY_NO_STATE;
+    };
 
     private void actState(float delta) {
         getState(currentStateKey).act(delta);

@@ -15,6 +15,7 @@ import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.ship.ShipDescentLoader;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.util.StreamUtils;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -45,7 +46,7 @@ public class SpaceScene extends Scene {
     public Stream<EnemyShip> enemyShips() {
         return stages.stream()
                 .map(Stage::getActors)
-                .flatMap(actors -> Stream.of(actors.items))
+                .flatMap(StreamUtils::stream)
                 .filter(actor -> actor instanceof EnemyShip)
                 .map(actor -> (EnemyShip) actor);
     }

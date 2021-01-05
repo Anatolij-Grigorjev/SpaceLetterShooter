@@ -60,9 +60,6 @@ public class ShipDescentLoader {
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
         ship.addAction(Actions.after(Actions.run(() -> {
-            if (ship.isShipDisposing()) {
-                return;
-            }
             EventsHandling.postEvent(new GameEvent(
                     GameEventType.SHIP_REACH_BOTTOM_SCREEN,
                     Map.of("ship", ship)
@@ -85,7 +82,8 @@ public class ShipDescentLoader {
     }
 
     private Optional<Vector2> findPrevStepEndPosition(List<Action> actions) {
-        return StreamUtils.findLast(actions.stream())
+        return actions.stream()
+                .reduce(StreamUtils.findLast())
                 .filter(action -> action instanceof MoveToAction)
                 .map(action -> (MoveToAction) action)
                 .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));

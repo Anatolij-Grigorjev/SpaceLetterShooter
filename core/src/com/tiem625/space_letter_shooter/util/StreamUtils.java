@@ -1,11 +1,13 @@
 package com.tiem625.space_letter_shooter.util;
 
+import com.badlogic.gdx.utils.Array;
+
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class StreamUtils {
 
@@ -13,14 +15,18 @@ public class StreamUtils {
         throw new ClassIsStaticException(getClass());
     }
 
-    public static <T> Optional<T> findLast(Stream<T> inStream) {
-        return inStream.reduce((first, second) -> second);
+    public static <T> BinaryOperator<T> findLast() {
+        return (first, second) -> second;
     }
 
     public static <E> BinaryOperator<List<E>> concatLists() {
         return (list1, list2) ->
             Stream.concat(list1.stream(), list2.stream())
                     .collect(Collectors.toList());
+    }
+
+    public static <T> Stream<T> stream(Array<T> array) {
+        return StreamSupport.stream(array.spliterator(), false);
     }
 
     /**
