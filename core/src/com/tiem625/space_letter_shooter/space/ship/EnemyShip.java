@@ -89,7 +89,6 @@ public class EnemyShip extends Actor {
                 buildShakeActionSequence(25, new Vector2(25f, 25f), 2.0f),
                 Actions.removeActor()
         );
-        stopActions();
         addAction(disappearActions);
     }
 

@@ -136,7 +136,7 @@ public class ShipDescentLoader {
     private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
         return ImmutablePair.of(
                 placement.getPosition().toVector2(),
-                new EnemyShip("test:" + placement.getPosition().getY(), ShipRenderSpecs.api.getRenderSpec(placement.getShipSpecId()))
+                new EnemyShip("test", ShipRenderSpecs.api.getRenderSpec(placement.getShipSpecId()))
         );
     }
 
