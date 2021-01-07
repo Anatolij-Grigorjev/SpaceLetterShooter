@@ -15,8 +15,8 @@ public abstract class StateMachine<E> {
 
     protected static final String KEY_NO_STATE = "<NO_STATE>";
 
-    private final E entity;
-    private final Map<String, State<E>> statesIndex;
+    protected final E entity;
+    protected final Map<String, ? extends State<E>> statesIndex;
 
     private String currentStateKey;
 
@@ -64,7 +64,7 @@ public abstract class StateMachine<E> {
                 .ifPresent(this::setState);
     }
 
-    protected abstract Set<State<E>> loadStates();
+    protected abstract Set<? extends State<E>> loadStates();
 
     protected String computeNextStateKey(float delta) {
         return KEY_NO_STATE;

@@ -10,19 +10,19 @@ public abstract class State<E> {
         this.key = key;
     }
 
-    public String getKey() {
+    public final String getKey() {
         return key;
     }
 
-    public E getEntity() {
+    public final E getEntity() {
         return entity;
     }
 
-    public void setEntity(E entity) {
+    public final void setEntity(E entity) {
         this.entity = entity;
     }
 
-    public void setFsm(StateMachine<E> fsm) {
+    public final void setFsm(StateMachine<E> fsm) {
         this.fsm = fsm;
     }
 
