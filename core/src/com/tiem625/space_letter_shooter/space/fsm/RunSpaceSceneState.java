@@ -7,7 +7,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     public static final String KEY = "RUN_SPACE_SCENE";
 
-    public RunSpaceSceneState(SpaceScene entity) {
-        super(KEY, entity);
+    public RunSpaceSceneState() {
+        super(KEY);
     }
 }

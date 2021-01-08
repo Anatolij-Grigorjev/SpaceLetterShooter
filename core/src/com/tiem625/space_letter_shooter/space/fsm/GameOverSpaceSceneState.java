@@ -19,8 +19,8 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
 
     public static final String KEY = "GAME_OVER_SPACE_SCENE";
 
-    public GameOverSpaceSceneState(SpaceScene entity) {
-        super(KEY, entity);
+    public GameOverSpaceSceneState() {
+        super(KEY);
     }
 
     @Override

@@ -12,8 +12,8 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
 
     private final SceneConfigureSpec sceneConfigureSpec;
 
-    public LoadSpaceSceneState(SpaceScene scene, String sceneConfigureSpecKey) {
-        super(KEY, scene);
+    public LoadSpaceSceneState(String sceneConfigureSpecKey) {
+        super(KEY);
         this.sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigureSpecKey);
     }
 

@@ -16,9 +16,9 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
     @Override
     protected Set<? extends State<SpaceScene>> loadStates() {
         return Set.of(
-                new LoadSpaceSceneState(entity, "SS1"),
-                new RunSpaceSceneState(entity),
-                new GameOverSpaceSceneState(entity)
+                new LoadSpaceSceneState("SS1"),
+                new RunSpaceSceneState(),
+                new GameOverSpaceSceneState()
         );
     }
 }
