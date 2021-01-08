@@ -1,5 +1,7 @@
 package com.tiem625.space_letter_shooter.scene;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +40,9 @@ public enum ScenesManager {
     }
 
     private void renderCurrentScene() {
-        currentScene().ifPresent(Scene::render);
+        currentScene()
+                .map(Scene::getFsm)
+                .ifPresent(fsm -> fsm.act(Gdx.graphics.getDeltaTime()));
     }
 
     private void renderAlwaysOnScenes() {

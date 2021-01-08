@@ -18,7 +18,7 @@ public abstract class StateMachine<E> {
     protected final E entity;
     protected final Map<String, ? extends State<E>> statesIndex;
 
-    private String currentStateKey;
+    protected String currentStateKey;
 
     public StateMachine(E entity) {
         this.entity = entity;
@@ -43,6 +43,7 @@ public abstract class StateMachine<E> {
 
     public final void setState(String nextStateKey) {
         var prevStateKey = currentStateKey;
+        logStateChange(prevStateKey, nextStateKey);
         EventsHandling.postEvent(buildStateChangedEvent(prevStateKey, nextStateKey));
         currentStateKey = nextStateKey;
 
@@ -91,5 +92,9 @@ public abstract class StateMachine<E> {
                         "to_state", to
                 )
         );
+    }
+
+    private void logStateChange(String prevStateKey, String nextStateKey) {
+        System.out.println(getClass().getSimpleName() + ": " + prevStateKey + " -> " + nextStateKey);
     }
 }

@@ -3,6 +3,7 @@ package com.tiem625.space_letter_shooter.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
+import com.tiem625.space_letter_shooter.util.fsm.StateMachine;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ public abstract class Scene implements Disposable {
 
     protected final String sceneId;
     protected final List<Stage> stages;
+    protected StateMachine<? extends Scene> fsm;
 
     public Scene(String sceneId) {
         this.sceneId = sceneId;
@@ -22,6 +24,10 @@ public abstract class Scene implements Disposable {
 
     public String getSceneId() {
         return sceneId;
+    }
+
+    public StateMachine<? extends Scene> getFsm() {
+        return fsm;
     }
 
     public Stage addAndGetStage(Stage stage) {

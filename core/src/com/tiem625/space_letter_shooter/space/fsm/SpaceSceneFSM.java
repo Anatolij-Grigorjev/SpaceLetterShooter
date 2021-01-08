@@ -21,4 +21,19 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
                 new GameOverSpaceSceneState()
         );
     }
+
+    @Override
+    protected String computeNextStateKey(float delta) {
+
+        switch (currentStateKey) {
+            case LoadSpaceSceneState.KEY:
+                return null;
+            case RunSpaceSceneState.KEY:
+                return null;
+            case GameOverSpaceSceneState.KEY:
+                return null;
+            default:
+                return null;
+        }
+    }
 }
