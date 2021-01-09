@@ -4,10 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.Viewports;
-import com.tiem625.space_letter_shooter.events.EventsHandling;
-import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.Scene;
-import com.tiem625.space_letter_shooter.space.fsm.GameOverSpaceSceneState;
 import com.tiem625.space_letter_shooter.space.fsm.SpaceSceneFSM;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -25,12 +22,6 @@ public class SpaceScene extends Scene {
         this.enemyShipsStage = addEmptyShipsStage();
         this.enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         this.fsm = new SpaceSceneFSM(this);
-        EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
-            var screenBottomShip = (EnemyShip) gameEvent.payload.get("ship");
-            if (screenBottomShip.isShipDisposing()) return;
-
-            fsm.setState(GameOverSpaceSceneState.KEY);
-        });
     }
 
     public EnemyShip addEnemyShipToScene(EnemyShip ship) {
