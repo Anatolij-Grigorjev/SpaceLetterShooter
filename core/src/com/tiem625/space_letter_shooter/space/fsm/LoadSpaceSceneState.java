@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
-import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
@@ -54,7 +53,7 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
     }
 
     private void postShipsReadyDescentEvent() {
-        EventsHandling.postEvent(new GameEvent(GameEventType.SHIPS_AT_START, Map.of()));
+        EventsHandling.postEvent(GameEventType.SHIPS_AT_START.makeEvent());
     }
 
     private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {

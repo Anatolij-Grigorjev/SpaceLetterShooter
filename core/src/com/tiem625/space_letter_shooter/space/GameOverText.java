@@ -6,11 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
-import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 
-import java.util.Map;
 import java.util.stream.IntStream;
 
 public class GameOverText extends Actor {
@@ -44,7 +42,7 @@ public class GameOverText extends Actor {
             switch (character) {
                 case 'R':
                 case 'r':
-                    EventsHandling.postEvent(new GameEvent(GameEventType.SCENE_RESTART, Map.of()));
+                    EventsHandling.postEvent(GameEventType.SCENE_RESTART.makeEvent());
                     break;
                 default:
                     break;

@@ -69,7 +69,9 @@ public abstract class StateMachine<E> {
 
     protected String computeNextStateKey(float delta) {
         return KEY_NO_STATE;
-    };
+    }
+
+    ;
 
     private void actState(float delta) {
         getState(currentStateKey).act(delta);
@@ -84,8 +86,7 @@ public abstract class StateMachine<E> {
     }
 
     private GameEvent buildStateChangedEvent(String from, String to) {
-        return new GameEvent(
-                GameEventType.FSM_STATE_CHANGE,
+        return GameEventType.FSM_STATE_CHANGE.makeEvent(
                 Map.of(
                         "fsm", this,
                         "from_state", from,

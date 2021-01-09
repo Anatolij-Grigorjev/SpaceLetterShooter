@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
-import com.tiem625.space_letter_shooter.events.GameEvent;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
@@ -60,8 +59,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
         ship.addAction(Actions.after(Actions.run(() -> {
-            EventsHandling.postEvent(new GameEvent(
-                    GameEventType.SHIP_REACH_BOTTOM_SCREEN,
+            EventsHandling.postEvent(GameEventType.SHIP_REACH_BOTTOM_SCREEN.makeEvent(
                     Map.of("ship", ship)
             ));
         })));

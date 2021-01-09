@@ -8,7 +8,7 @@ public class GameEvent {
     public final GameEventType type;
     public final Map<String, Object> payload;
 
-    public GameEvent(GameEventType type, Map<String, Object> payload) {
+    GameEvent(GameEventType type, Map<String, Object> payload) {
         this.type = type;
         this.payload = Optional.ofNullable(payload).orElse(Map.of());
     }
