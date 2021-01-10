@@ -46,10 +46,12 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
         shipDesiredPositions.keySet().forEach(ship -> entity.addEnemyShipToScene(ship));
 
-        entity.getFirstStage()
-                .addAction(
-                        Actions.delay(totalSetupDelayAction.getDuration(),
-                                Actions.run(this::postShipsReadyDescentEvent)));
+        entity.getEnemyShipsStage().addAction(
+                Actions.delay(
+                        totalSetupDelayAction.getDuration(),
+                        Actions.run(this::postShipsReadyDescentEvent)
+                )
+        );
     }
 
     private void postShipsReadyDescentEvent() {

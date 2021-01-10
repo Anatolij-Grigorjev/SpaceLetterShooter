@@ -1,7 +1,5 @@
 package com.tiem625.space_letter_shooter.space;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
@@ -20,7 +18,6 @@ public class SpaceScene extends Scene {
     public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
         super(sceneConfigureSpec.getSceneId());
         this.enemyShipsStage = addEmptyShipsStage();
-        this.enemyShipsStage.addListener(new ShipTextCharsCaptureListener());
         this.fsm = new SpaceSceneFSM(this);
     }
 
@@ -28,6 +25,10 @@ public class SpaceScene extends Scene {
         Objects.requireNonNull(ship);
         enemyShipsStage.addActor(ship);
         return ship;
+    }
+
+    public Stage getEnemyShipsStage() {
+        return enemyShipsStage;
     }
 
     public Stream<EnemyShip> enemyShips() {
@@ -41,19 +42,4 @@ public class SpaceScene extends Scene {
     private Stage addEmptyShipsStage() {
         return addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
     }
-
-    private class ShipTextCharsCaptureListener extends InputListener {
-
-        @Override
-        public boolean keyTyped(InputEvent event, char character) {
-
-            enemyShips()
-                    .filter(ship -> ship.canHitCharacter(character))
-                    .findFirst()
-                    .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
-
-            return true;
-        }
-    }
-
 }

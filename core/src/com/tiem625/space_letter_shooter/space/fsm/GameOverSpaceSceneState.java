@@ -27,7 +27,6 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
 
     @Override
     public void enterState(String prevStateKey) {
-        super.enterState(prevStateKey);
         stopShipsWithSmiles();
         startGameOverStages();
     }

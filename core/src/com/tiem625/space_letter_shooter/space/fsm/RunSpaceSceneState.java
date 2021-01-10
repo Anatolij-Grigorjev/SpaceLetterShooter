@@ -11,6 +11,7 @@ import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.ShipTextCharsCaptureListener;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -30,8 +31,12 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     private float descentSpeedMin;
     private float descentSpeedMax;
 
+    private ShipTextCharsCaptureListener currentCharsCaptureListener;
+
+
     public RunSpaceSceneState(String sceneConfigSpecId) {
         super(KEY);
+        currentCharsCaptureListener = null;
         var sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
         readDescentConfig(sceneConfigureSpec);
     }
@@ -45,7 +50,8 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     @Override
     public void enterState(String prevStateKey) {
-
+        currentCharsCaptureListener = new ShipTextCharsCaptureListener(entity);
+        entity.getEnemyShipsStage().addListener(currentCharsCaptureListener);
         entity.enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
                     Actions.delay(0.5f),
@@ -55,6 +61,13 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
                     })
             ));
         });
+    }
+
+    @Override
+    public void exitState(String nextStateKey) {
+        Optional.ofNullable(currentCharsCaptureListener)
+                .ifPresent(listener -> entity.getEnemyShipsStage().removeListener(listener));
+        currentCharsCaptureListener = null;
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
