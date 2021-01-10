@@ -32,7 +32,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     private float descentSpeedMin;
     private float descentSpeedMax;
 
-    private ShipTextCharsCaptureListener currentCharsCaptureListener;
+    private final ShipTextCharsCaptureListener currentCharsCaptureListener;
 
 
     public RunSpaceSceneState(String sceneConfigSpecId) {
