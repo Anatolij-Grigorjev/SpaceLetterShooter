@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.config.GamePropsHolder;
@@ -11,7 +13,6 @@ import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
-import com.tiem625.space_letter_shooter.space.ShipTextCharsCaptureListener;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -36,7 +37,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     public RunSpaceSceneState(String sceneConfigSpecId) {
         super(KEY);
-        currentCharsCaptureListener = null;
+        currentCharsCaptureListener = new ShipTextCharsCaptureListener();
         var sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
         readDescentConfig(sceneConfigureSpec);
     }
@@ -50,7 +51,6 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     @Override
     public void enterState(String prevStateKey) {
-        currentCharsCaptureListener = new ShipTextCharsCaptureListener(entity);
         entity.getEnemyShipsStage().addListener(currentCharsCaptureListener);
         entity.enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
@@ -65,9 +65,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     @Override
     public void exitState(String nextStateKey) {
-        Optional.ofNullable(currentCharsCaptureListener)
-                .ifPresent(listener -> entity.getEnemyShipsStage().removeListener(listener));
-        currentCharsCaptureListener = null;
+        entity.getEnemyShipsStage().removeListener(currentCharsCaptureListener);
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
@@ -142,5 +140,19 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
 
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
+    }
+
+    private class ShipTextCharsCaptureListener extends InputListener {
+
+        @Override
+        public boolean keyTyped(InputEvent event, char character) {
+
+            entity.enemyShips()
+                    .filter(ship -> ship.canHitCharacter(character))
+                    .findFirst()
+                    .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
+
+            return true;
+        }
     }
 }
