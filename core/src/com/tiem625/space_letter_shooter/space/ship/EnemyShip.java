@@ -16,14 +16,16 @@ import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildS
 
 public class EnemyShip extends Actor {
 
+    private final String id;
     private final String text;
     private String spelledCharacters;
     private final TextureRegion texture;
     private final ShipRenderSpec shipRenderSpec;
     private boolean shipDisposing;
 
-    public EnemyShip(String text, ShipRenderSpec shipRenderSpec) {
+    public EnemyShip(String shipId, String text, ShipRenderSpec shipRenderSpec) {
         super();
+        this.id = shipId;
         this.text = text;
         this.setName(text);
         this.spelledCharacters = "";
@@ -33,7 +35,7 @@ public class EnemyShip extends Actor {
     }
 
     public EnemyShip cloneShip(String withText) {
-        return new EnemyShip(withText, shipRenderSpec);
+        return new EnemyShip(id, withText, shipRenderSpec);
     }
 
     public void stopActions() {
@@ -46,6 +48,10 @@ public class EnemyShip extends Actor {
 
     public void hide() {
         setVisible(false);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setSamePosition(Actor other) {

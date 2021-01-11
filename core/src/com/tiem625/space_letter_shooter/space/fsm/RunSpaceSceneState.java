@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
@@ -22,41 +21,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     public static final String KEY = "RUN_SPACE_SCENE";
-    private float descentStepMin;
-    private float descentStepMax;
-    private float descentSpeedMin;
-    private float descentSpeedMax;
 
     private final ShipTextCharsCaptureListener currentCharsCaptureListener;
+    private final SceneConfigureSpec sceneConfigureSpec;
 
 
     public RunSpaceSceneState(String sceneConfigSpecId) {
         super(KEY);
         currentCharsCaptureListener = new ShipTextCharsCaptureListener();
-        var sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
-        readDescentConfig(sceneConfigureSpec);
-    }
-
-    private void readDescentConfig(SceneConfigureSpec spec) {
-        descentStepMin = spec.getShipDescentSpec().getStepMin();
-        descentStepMax = spec.getShipDescentSpec().getStepMax();
-        descentSpeedMin = spec.getShipDescentSpec().getSpeedMin();
-        descentSpeedMax = spec.getShipDescentSpec().getSpeedMax();
+        sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
     }
 
     @Override
     public void enterState(String prevStateKey) {
         entity.getEnemyShipsStage().addListener(currentCharsCaptureListener);
+
+        var shipDescentSpecs = sceneConfigureSpec.getShipDescentSpecs().stream()
+                .collect(Collectors.toMap(SceneConfigureSpec.ShipDescentSpec::getShipId, Function.identity()));
+
         entity.enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
                     Actions.delay(0.5f),
                     Actions.run(() -> {
-                        addShipStepsDescentActions(ship);
+                        addShipStepsDescentActions(ship, shipDescentSpecs.get(ship.getId()));
                         postShipReachedBottomEvent(ship);
                     })
             ));
@@ -76,15 +70,23 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
         })));
     }
 
-    private void addShipStepsDescentActions(EnemyShip ship) {
+    private void addShipStepsDescentActions(
+            EnemyShip ship,
+            SceneConfigureSpec.ShipDescentSpec shipDescentSpec
+    ) {
 
-        List<Vector2> descentSteps = buildShipDescentPositions(ship);
+        List<Vector2> descentSteps = buildShipDescentPositions(ship, shipDescentSpec);
         List<Action> actionsList = new ArrayList<>();
         descentSteps.stream()
                 .reduce(actionsList, (actions, nextStepPosition) -> {
                     final Vector2 prevStepEndPosition = findPrevStepEndPosition(actions)
                             .orElse(new Vector2(ship.getX(), ship.getY()));
-                    actions.add(buildShipDescentAction(prevStepEndPosition, nextStepPosition));
+                    actions.add(buildShipDescentAction(
+                            prevStepEndPosition,
+                            nextStepPosition,
+                            shipDescentSpec.getSpeedMin(),
+                            shipDescentSpec.getSpeedMax()
+                    ));
                     return actions;
                 }, StreamUtils.concatLists())
                 .forEach(action -> ship.addAction(Actions.after(action)));
@@ -98,22 +100,26 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
                 .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
     }
 
-    private List<Vector2> buildShipDescentPositions(EnemyShip ship) {
-        final int resolutionWidth = GamePropsHolder.props.getResolutionWidth();
-        final float leftEdgeX = 0;
-        final float rightEdgeX = resolutionWidth - ship.getShipTextureSize().x;
-        final Supplier<Float> edgesSupplier;
-        if (ship.getX() < resolutionWidth / 2f) {
-//            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(leftEdgeX, rightEdgeX);
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
-        } else {
-//            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(rightEdgeX, leftEdgeX);
-            edgesSupplier = new StreamUtils.RollingValuesSupplier<>(ship.getX());
-        }
-        return breakShipHeightIntoDescentSteps(ship.getY(), -ship.getShipTextureSize().y, edgesSupplier);
+    private List<Vector2> buildShipDescentPositions(EnemyShip ship, SceneConfigureSpec.ShipDescentSpec shipDescentSpec) {
+        final Supplier<Float> edgesSupplier = new StreamUtils.RollingValuesSupplier<>(
+                shipDescentSpec.getDescentStepsX().stream().map(Integer::floatValue).toArray(Float[]::new)
+        );
+        return breakShipHeightIntoDescentSteps(
+                ship.getY(),
+                -ship.getShipTextureSize().y,
+                shipDescentSpec.getStepMin(),
+                shipDescentSpec.getStepMax(),
+                edgesSupplier
+        );
     }
 
-    private List<Vector2> breakShipHeightIntoDescentSteps(float startHeight, float endHeight, Supplier<Float> stepXCoordSource) {
+    private List<Vector2> breakShipHeightIntoDescentSteps(
+            float startHeight,
+            float endHeight,
+            float descentStepMin,
+            float descentStepMax,
+            Supplier<Float> stepXCoordSource
+    ) {
 
         float fullDescentHeight = startHeight - endHeight;
         int maxDescentSteps = (int) (fullDescentHeight / descentStepMin);
@@ -134,7 +140,12 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
         return descentSteps;
     }
 
-    private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo) {
+    private Action buildShipDescentAction(
+            Vector2 moveFrom,
+            Vector2 moveTo,
+            float descentSpeedMin,
+            float descentSpeedMax
+    ) {
 
         var speed = MathUtils.random(descentSpeedMin, descentSpeedMax);
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();

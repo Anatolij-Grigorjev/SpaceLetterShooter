@@ -11,19 +11,19 @@ public class SceneConfigureSpec {
     private final String sceneId;
     private final String sceneName;
     private final List<ShipPlacement> shipPlacements;
-    private final ShipDescentSpec shipDescentSpec;
+    private final List<ShipDescentSpec> shipDescentSpecs;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public SceneConfigureSpec(
             @JsonProperty("sceneId") String sceneId,
             @JsonProperty("sceneName") String sceneName,
             @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements,
-            @JsonProperty("shipDescentSpec") ShipDescentSpec shipDescentSpec
+            @JsonProperty("shipDescentSpec") List<ShipDescentSpec> shipDescentSpecs
     ) {
         this.sceneId = sceneId;
         this.sceneName = sceneName;
         this.shipPlacements = shipPlacements;
-        this.shipDescentSpec = shipDescentSpec;
+        this.shipDescentSpecs = shipDescentSpecs;
     }
 
     public String getSceneId() {
@@ -38,8 +38,8 @@ public class SceneConfigureSpec {
         return shipPlacements;
     }
 
-    public ShipDescentSpec getShipDescentSpec() {
-        return shipDescentSpec;
+    public List<ShipDescentSpec> getShipDescentSpecs() {
+        return shipDescentSpecs;
     }
 
     public static class ShipPlacement {
