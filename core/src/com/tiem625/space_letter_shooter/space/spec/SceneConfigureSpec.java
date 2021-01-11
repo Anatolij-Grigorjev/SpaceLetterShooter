@@ -44,16 +44,23 @@ public class SceneConfigureSpec {
 
     public static class ShipPlacement {
 
+        private final String shipId;
         private final ShipPosition position;
         private final String shipSpecId;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public ShipPlacement(
+                @JsonProperty("shipId") String shipId,
                 @JsonProperty("position") ShipPosition position,
                 @JsonProperty("shipSpecId") String shipSpecId
         ) {
+            this.shipId = shipId;
             this.position = position;
             this.shipSpecId = shipSpecId;
+        }
+
+        public String getShipId() {
+            return shipId;
         }
 
         public ShipPosition getPosition() {
@@ -94,22 +101,32 @@ public class SceneConfigureSpec {
 
     public static class ShipDescentSpec {
 
+        private final String shipId;
         private final float stepMin;
         private final float stepMax;
         private final float speedMin;
         private final float speedMax;
+        private final List<Integer> descentStepsX;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public ShipDescentSpec(
+                @JsonProperty("shipId") String shipId,
                 @JsonProperty("stepMin") float stepMin,
                 @JsonProperty("stepMax") float stepMax,
                 @JsonProperty("speedMin") float speedMin,
-                @JsonProperty("speedMax") float speedMax
+                @JsonProperty("speedMax") float speedMax,
+                @JsonProperty("descentStepsX") List<Integer> descentStepsX
         ) {
+            this.shipId = shipId;
             this.stepMin = stepMin;
             this.stepMax = stepMax;
             this.speedMin = speedMin;
             this.speedMax = speedMax;
+            this.descentStepsX = descentStepsX;
+        }
+
+        public String getShipId() {
+            return shipId;
         }
 
         public float getStepMin() {
@@ -126,6 +143,10 @@ public class SceneConfigureSpec {
 
         public float getSpeedMax() {
             return speedMax;
+        }
+
+        public List<Integer> getDescentStepsX() {
+            return descentStepsX;
         }
     }
 }

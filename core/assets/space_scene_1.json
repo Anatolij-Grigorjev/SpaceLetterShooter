@@ -1,14 +1,51 @@
 {
   "sceneId": "SS1",
   "sceneName": "Space Scene",
-  "shipDescentSpec": {
-    "stepMin": 15,
-    "stepMax": 25,
-    "speedMin": 200,
-    "speedMax": 600
-  },
+  "shipDescentSpecs": [
+    {
+      "shipId": "S1",
+      "stepMin": 15,
+      "stepMax": 25,
+      "speedMin": 200,
+      "speedMax": 600,
+      "descentStepsX": [
+        150, 250, 350, 450, 550
+      ]
+    },
+    {
+      "shipId": "S2",
+      "stepMin": 15,
+      "stepMax": 25,
+      "speedMin": 200,
+      "speedMax": 600,
+      "descentStepsX": [
+        550, 450, 350, 250, 150
+      ]
+    },
+    {
+      "shipId": "S3",
+      "stepMin": 15,
+      "stepMax": 25,
+      "speedMin": 200,
+      "speedMax": 600,
+      "descentStepsX": [
+        350, 450, 550, 450, 350, 250, 150
+      ]
+    },
+    {
+      "shipId": "S4",
+      "stepMin": 15,
+      "stepMax": 25,
+      "speedMin": 200,
+      "speedMax": 600,
+      "descentStepsX": [
+        750, 650, 550, 150, 300
+      ]
+    }
+  ],
   "shipPlacements": [
     {
+      "shipId": "S1",
       "position": {
         "x": 100,
         "y": 550
@@ -16,6 +53,7 @@
       "shipSpecId": "1WR"
     },
     {
+      "shipId": "S2",
       "position": {
         "x": 500,
         "y": 350
@@ -23,6 +61,7 @@
       "shipSpecId": "1WR"
     },
     {
+      "shipId": "S3",
       "position": {
         "x": 300,
         "y": 250
@@ -30,6 +69,7 @@
       "shipSpecId": "1WO"
     },
     {
+      "shipId": "S4",
       "position": {
         "x": 750,
         "y": 150
