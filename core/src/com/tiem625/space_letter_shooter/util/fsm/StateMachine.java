@@ -32,7 +32,7 @@ public abstract class StateMachine<E> {
                 .collect(Collectors.toMap(State::getKey, identity()));
     }
 
-    public State<E> getCurrentState() {
+    public final State<E> getCurrentState() {
         return getState(currentStateKey);
     }
 
