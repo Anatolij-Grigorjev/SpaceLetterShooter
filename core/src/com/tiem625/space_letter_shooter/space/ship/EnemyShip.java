@@ -67,7 +67,7 @@ public class EnemyShip extends Actor {
             return false;
         }
         var nextShipTextChar = text.substring(spelledCharacters.length()).charAt(0);
-        return nextShipTextChar == input;
+        return Character.toUpperCase(nextShipTextChar) == Character.toUpperCase(input);
     }
 
     public void hitCharacter(char input) {
