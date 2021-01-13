@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
+import com.tiem625.space_letter_shooter.events.EventsHandling;
+import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
@@ -87,6 +89,7 @@ public class EnemyShip extends Actor {
         if (shipTextIsSpelled()) {
             shipDisposing = true;
             beginDisposeActions();
+            postDisposingEvent();
         }
     }
 
@@ -96,6 +99,10 @@ public class EnemyShip extends Actor {
                 Actions.removeActor()
         );
         addAction(disappearActions);
+    }
+
+    private void postDisposingEvent() {
+        EventsHandling.postEvent(GameEventType.SHIP_DISPOSING.makeEvent());
     }
 
     @Override

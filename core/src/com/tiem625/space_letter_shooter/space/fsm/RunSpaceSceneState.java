@@ -31,12 +31,18 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
 
     private final ShipTextCharsCaptureListener currentCharsCaptureListener;
     private final SceneConfigureSpec sceneConfigureSpec;
+    private final int sceneNumShips;
+    private int disposedShips = 0;
 
 
     public RunSpaceSceneState(String sceneConfigSpecId) {
         super(KEY);
         currentCharsCaptureListener = new ShipTextCharsCaptureListener();
         sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
+        this.sceneNumShips = sceneConfigureSpec.getShipPlacements().size();
+        EventsHandling.addEventHandler(GameEventType.SHIP_DISPOSING, event -> {
+            disposedShips += 1;
+        });
     }
 
     @Override
@@ -63,11 +69,19 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
-        ship.addAction(Actions.after(Actions.run(() -> {
+        entity.getEnemyShipsStage().addAction(Actions.after(Actions.run(() -> {
             EventsHandling.postEvent(GameEventType.SHIP_REACH_BOTTOM_SCREEN.makeEvent(
                     Map.of("ship", ship)
             ));
         })));
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        if (disposedShips >= sceneNumShips) {
+            postShipReachedBottomEvent(null);
+        }
     }
 
     private void addShipStepsDescentActions(

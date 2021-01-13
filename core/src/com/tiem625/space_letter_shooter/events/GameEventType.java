@@ -6,6 +6,7 @@ public enum GameEventType {
 
     SHIPS_AT_START,
     SHIP_REACH_BOTTOM_SCREEN,
+    SHIP_DISPOSING,
     SCENE_RESTART,
     FSM_STATE_CHANGE,
     ;
