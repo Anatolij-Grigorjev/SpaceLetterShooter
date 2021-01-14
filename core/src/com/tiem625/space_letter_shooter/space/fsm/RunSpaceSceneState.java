@@ -30,19 +30,25 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public static final String KEY = "RUN_SPACE_SCENE";
 
     private final ShipTextCharsCaptureListener currentCharsCaptureListener;
-    private final SceneConfigureSpec sceneConfigureSpec;
-    private final int sceneNumShips;
-    private int disposedShips = 0;
+    private SceneConfigureSpec sceneConfigureSpec;
+    private int sceneNumShips;
+    private int disposedShips;
 
 
-    public RunSpaceSceneState(String sceneConfigSpecId) {
+    public RunSpaceSceneState() {
         super(KEY);
         currentCharsCaptureListener = new ShipTextCharsCaptureListener();
-        sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigSpecId);
-        this.sceneNumShips = sceneConfigureSpec.getShipPlacements().size();
-        EventsHandling.addEventHandler(GameEventType.SHIP_DISPOSING, event -> {
+        this.sceneNumShips = 0;
+        this.disposedShips = 0;
+        EventsHandling.addEventHandler(GameEventType.SHIP_GONE, event -> {
             disposedShips += 1;
         });
+    }
+
+    public void setSceneSpec(String sceneId) {
+        sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
+        this.sceneNumShips = sceneConfigureSpec.getShipPlacements().size();
+        this.disposedShips = 0;
     }
 
     @Override
@@ -80,7 +86,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public void act(float delta) {
         super.act(delta);
         if (disposedShips >= sceneNumShips) {
-            EventsHandling.postEvent(GameEventType.SHIP_REACH_BOTTOM_SCREEN.makeEvent());
+            EventsHandling.postEvent(GameEventType.SCENE_CLEAR.makeEvent(Map.of("scene", entity)));
         }
     }
 

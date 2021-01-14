@@ -38,6 +38,10 @@ public enum SceneConfigureSpecs implements ResourceLoader {
                 .orElseThrow(() -> new RuntimeException("No scene spec found for id '" + id + "'"));
     }
 
+    public SceneConfigureSpec getNextSceneSpecAfter(String sceneId) {
+        return getSceneConfigureSpec(getSceneConfigureSpec(sceneId).getNextSceneId());
+    }
+
     private Set<SceneConfigureSpec> loadSceneSpecs() {
         var sceneFiles = Set.of(
                 "space_scene_1.json"
@@ -53,6 +57,4 @@ public enum SceneConfigureSpecs implements ResourceLoader {
         }).filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
-
-
 }

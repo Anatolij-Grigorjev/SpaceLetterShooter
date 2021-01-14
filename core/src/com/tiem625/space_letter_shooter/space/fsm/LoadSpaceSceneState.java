@@ -23,11 +23,18 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
     public static final String KEY = "LOAD_SPACE_SCENE";
     private static final Vector2 OFFSCREEN_POS = new Vector2(-500, -500);
 
-    private final SceneConfigureSpec sceneConfigureSpec;
+    private SceneConfigureSpec sceneConfigureSpec;
 
-    public LoadSpaceSceneState(String sceneConfigureSpecKey) {
+    public LoadSpaceSceneState() {
         super(KEY);
-        this.sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneConfigureSpecKey);
+    }
+
+    public void setSceneSpec(String sceneId) {
+        this.sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
+    }
+
+    public String getLoadedSpecId() {
+        return this.sceneConfigureSpec.getSceneId();
     }
 
     @Override
@@ -61,7 +68,11 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
     private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
         return ImmutablePair.of(
                 placement.getPosition().toVector2(),
-                new EnemyShip(placement.getShipId(), placement.getShipId(), ShipRenderSpecs.api.getRenderSpec(placement.getShipSpecId()))
+                new EnemyShip(
+                        placement.getShipId(),
+                        placement.getText(),
+                        ShipRenderSpecs.api.getRenderSpec(placement.getShipSpecId())
+                )
         );
     }
 

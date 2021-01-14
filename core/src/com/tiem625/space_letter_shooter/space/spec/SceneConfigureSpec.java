@@ -9,6 +9,7 @@ import java.util.List;
 public class SceneConfigureSpec {
 
     private final String sceneId;
+    private final String nextSceneId;
     private final String sceneName;
     private final List<ShipPlacement> shipPlacements;
     private final List<ShipDescentSpec> shipDescentSpecs;
@@ -16,11 +17,13 @@ public class SceneConfigureSpec {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public SceneConfigureSpec(
             @JsonProperty("sceneId") String sceneId,
+            @JsonProperty("nextSceneId") String nextSceneId,
             @JsonProperty("sceneName") String sceneName,
             @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements,
             @JsonProperty("shipDescentSpec") List<ShipDescentSpec> shipDescentSpecs
     ) {
         this.sceneId = sceneId;
+        this.nextSceneId = nextSceneId;
         this.sceneName = sceneName;
         this.shipPlacements = shipPlacements;
         this.shipDescentSpecs = shipDescentSpecs;
@@ -28,6 +31,10 @@ public class SceneConfigureSpec {
 
     public String getSceneId() {
         return sceneId;
+    }
+
+    public String getNextSceneId() {
+        return nextSceneId;
     }
 
     public String getSceneName() {
@@ -45,22 +52,29 @@ public class SceneConfigureSpec {
     public static class ShipPlacement {
 
         private final String shipId;
+        private final String text;
         private final ShipPosition position;
         private final String shipSpecId;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public ShipPlacement(
                 @JsonProperty("shipId") String shipId,
+                @JsonProperty("text") String text,
                 @JsonProperty("position") ShipPosition position,
                 @JsonProperty("shipSpecId") String shipSpecId
         ) {
             this.shipId = shipId;
+            this.text = text;
             this.position = position;
             this.shipSpecId = shipSpecId;
         }
 
         public String getShipId() {
             return shipId;
+        }
+
+        public String getText() {
+            return text;
         }
 
         public ShipPosition getPosition() {

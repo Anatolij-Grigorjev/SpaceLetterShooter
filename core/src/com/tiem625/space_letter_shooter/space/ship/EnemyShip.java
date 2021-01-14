@@ -13,6 +13,8 @@ import com.tiem625.space_letter_shooter.resource.Fonts;
 import com.tiem625.space_letter_shooter.resource.Textures;
 import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
 
+import java.util.Map;
+
 import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildShakeActionSequence;
 
 
@@ -89,20 +91,21 @@ public class EnemyShip extends Actor {
         if (shipTextIsSpelled()) {
             shipDisposing = true;
             beginDisposeActions();
-            postDisposingEvent();
+            postShipEvent(GameEventType.SHIP_SPELLED);
         }
     }
 
     private void beginDisposeActions() {
         var disappearActions = Actions.sequence(
                 buildShakeActionSequence(25, new Vector2(25f, 25f), 2.0f),
+                Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
                 Actions.removeActor()
         );
         addAction(disappearActions);
     }
 
-    private void postDisposingEvent() {
-        EventsHandling.postEvent(GameEventType.SHIP_DISPOSING.makeEvent());
+    private void postShipEvent(GameEventType eventType) {
+        EventsHandling.postEvent(eventType.makeEvent(Map.of("ship", this)));
     }
 
     @Override
