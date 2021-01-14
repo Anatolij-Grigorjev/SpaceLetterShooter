@@ -69,7 +69,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     }
 
     private void postShipReachedBottomEvent(EnemyShip ship) {
-        entity.getEnemyShipsStage().addAction(Actions.after(Actions.run(() -> {
+        ship.addAction(Actions.after(Actions.run(() -> {
             EventsHandling.postEvent(GameEventType.SHIP_REACH_BOTTOM_SCREEN.makeEvent(
                     Map.of("ship", ship)
             ));
@@ -80,7 +80,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public void act(float delta) {
         super.act(delta);
         if (disposedShips >= sceneNumShips) {
-            postShipReachedBottomEvent(null);
+            EventsHandling.postEvent(GameEventType.SHIP_REACH_BOTTOM_SCREEN.makeEvent());
         }
     }
 
