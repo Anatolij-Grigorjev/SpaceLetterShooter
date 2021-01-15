@@ -6,6 +6,7 @@ import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.util.OneUseVal;
 import com.tiem625.space_letter_shooter.util.fsm.State;
 import com.tiem625.space_letter_shooter.util.fsm.StateMachine;
 
@@ -13,9 +14,9 @@ import java.util.Set;
 
 public class SpaceSceneFSM extends StateMachine<SpaceScene> {
 
-    private boolean shipReachedScreenBottom = false;
-    private boolean shipsReadyDescent = false;
-    private String nextSceneId = null;
+    private final OneUseVal<Boolean> shipReachedScreenBottomVal = OneUseVal.withDefault(false);
+    private final OneUseVal<Boolean> shipsReadyDescentVal = OneUseVal.withDefault(false);
+    private final OneUseVal<String> nextSceneIdVal = OneUseVal.withDefault(null);
 
     public SpaceSceneFSM(SpaceScene entity) {
         super(entity);
@@ -49,20 +50,18 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
 
         switch (currentStateKey) {
             case LoadSpaceSceneState.KEY:
-                if (shipsReadyDescent) {
-                    shipsReadyDescent = false;
+                if (shipsReadyDescentVal.get()) {
                     setRunLoadedSceneSpec();
                     return RunSpaceSceneState.KEY;
                 }
                 return null;
             case RunSpaceSceneState.KEY:
-                if (shipReachedScreenBottom) {
-                    shipReachedScreenBottom = false;
+                if (shipReachedScreenBottomVal.get()) {
                     return GameOverSpaceSceneState.KEY;
                 }
+                var nextSceneId = nextSceneIdVal.get();
                 if (nextSceneId != null) {
                     setLoadSceneSpec(nextSceneId);
-                    nextSceneId = null;
                     return LoadSpaceSceneState.KEY;
                 }
                 return null;
@@ -77,13 +76,13 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
         EventsHandling.addEventHandler(GameEventType.SCENE_CLEAR, gameEvent -> {
             var clearedScene = (Scene) gameEvent.payload.get("scene");
             SceneConfigureSpec nextSceneSpec = SceneConfigureSpecs.api.getNextSceneSpecAfter(clearedScene.getSceneId());
-            nextSceneId = nextSceneSpec.getSceneId();
+            nextSceneIdVal.set(nextSceneSpec.getSceneId());
         });
         EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
-            shipReachedScreenBottom = true;
+            shipReachedScreenBottomVal.set(true);
         });
         EventsHandling.addEventHandler(GameEventType.SHIPS_AT_START, gameEvent -> {
-            shipsReadyDescent = true;
+            shipsReadyDescentVal.set(true);
         });
     }
 }
