@@ -11,10 +11,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
-import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
-import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 
 import java.util.ArrayList;
@@ -25,17 +25,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class RunSpaceSceneState extends SceneState<SpaceScene> {
+public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
     public static final String KEY = "RUN_SPACE_SCENE";
 
     private final ShipTextCharsCaptureListener currentCharsCaptureListener;
-    private SceneConfigureSpec sceneConfigureSpec;
+    private SceneScript sceneScript;
     private int sceneNumShips;
     private int disposedShips;
 
 
-    public RunSpaceSceneState() {
+    public RunSpaceSceneScriptState() {
         super(KEY);
         currentCharsCaptureListener = new ShipTextCharsCaptureListener();
         this.sceneNumShips = 0;
@@ -45,9 +45,9 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
         });
     }
 
-    public void setSceneSpec(String sceneId) {
-        sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
-        this.sceneNumShips = sceneConfigureSpec.getShipPlacements().size();
+    public void setSceneScript(String scriptId) {
+        sceneScript = SceneScripts.api.getSceneScript(scriptId);
+        this.sceneNumShips = sceneScript.getShipPlacements().size();
         this.disposedShips = 0;
     }
 
@@ -55,8 +55,8 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public void enterState(String prevStateKey) {
         entity.getEnemyShipsStage().addListener(currentCharsCaptureListener);
 
-        var shipDescentSpecs = sceneConfigureSpec.getShipDescentSpecs().stream()
-                .collect(Collectors.toMap(SceneConfigureSpec.ShipDescentSpec::getShipId, Function.identity()));
+        var shipDescentSpecs = sceneScript.getShipDescentSpecs().stream()
+                .collect(Collectors.toMap(SceneScript.ShipDescentSpec::getShipId, Function.identity()));
 
         entity.enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
@@ -86,13 +86,13 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public void act(float delta) {
         super.act(delta);
         if (disposedShips >= sceneNumShips) {
-            EventsHandling.postEvent(GameEventType.SCENE_CLEAR.makeEvent(Map.of("spec", sceneConfigureSpec)));
+            EventsHandling.postEvent(GameEventType.SCRIPT_CLEAR.makeEvent(Map.of("script", sceneScript)));
         }
     }
 
     private void addShipStepsDescentActions(
             EnemyShip ship,
-            SceneConfigureSpec.ShipDescentSpec shipDescentSpec
+            SceneScript.ShipDescentSpec shipDescentSpec
     ) {
 
         List<Vector2> descentSteps = buildShipDescentPositions(ship, shipDescentSpec);
@@ -120,7 +120,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
                 .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
     }
 
-    private List<Vector2> buildShipDescentPositions(EnemyShip ship, SceneConfigureSpec.ShipDescentSpec shipDescentSpec) {
+    private List<Vector2> buildShipDescentPositions(EnemyShip ship, SceneScript.ShipDescentSpec shipDescentSpec) {
         final Supplier<Float> edgesSupplier = new StreamUtils.RollingValuesSupplier<>(
                 shipDescentSpec.getDescentStepsX().stream().map(Integer::floatValue).toArray(Float[]::new)
         );

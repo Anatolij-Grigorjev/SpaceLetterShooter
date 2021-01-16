@@ -9,44 +9,44 @@ import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.ColorOverlay;
-import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.ship.ShipRenderSpecs;
-import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LoadSpaceSceneState extends SceneState<SpaceScene> {
+public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
 
     public static final String KEY = "LOAD_SPACE_SCENE";
     private static final Vector2 OFFSCREEN_POS = new Vector2(-500, -500);
 
-    private SceneConfigureSpec sceneConfigureSpec;
+    private SceneScript sceneScript;
 
-    public LoadSpaceSceneState() {
+    public LoadSpaceSceneScriptState() {
         super(KEY);
     }
 
-    public void setSceneSpec(String sceneId) {
-        this.sceneConfigureSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
+    public void setSceneScript(String scriptId) {
+        this.sceneScript = SceneScripts.api.getSceneScript(scriptId);
     }
 
-    public String getLoadedSpecId() {
-        return this.sceneConfigureSpec.getSceneId();
+    public String getLoadedSceneScriptId() {
+        return this.sceneScript.getScriptId();
     }
 
     @Override
     public void enterState(String prevStateKey) {
         super.enterState(prevStateKey);
 
-        load(sceneConfigureSpec);
+        load(sceneScript);
     }
 
-    private void load(SceneConfigureSpec spec) {
+    private void load(SceneScript spec) {
 
         var shipDesiredPositions = spec.getShipPlacements().stream()
                 .map(this::placement2ShipWithPosition)
@@ -73,7 +73,7 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
         EventsHandling.postEvent(GameEventType.SHIPS_AT_START.makeEvent());
     }
 
-    private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneConfigureSpec.ShipPlacement placement) {
+    private Pair<Vector2, EnemyShip> placement2ShipWithPosition(SceneScript.ShipPlacement placement) {
         return ImmutablePair.of(
                 placement.getPosition().toVector2(),
                 new EnemyShip(

@@ -17,7 +17,7 @@ import com.tiem625.space_letter_shooter.resource.make.SceneMaker;
 import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
-import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.ship.ShipRenderSpecs;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class GameLoop extends ApplicationAdapter {
     private void loadStartupResources() {
         Stream.<ResourceLoader>of(
                 ShipRenderSpecs.api,
-                SceneConfigureSpecs.api
+                SceneScripts.api
         ).forEach(ResourceLoader::loadResources);
     }
 

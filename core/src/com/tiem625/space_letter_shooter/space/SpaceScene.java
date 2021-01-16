@@ -5,7 +5,7 @@ import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.fsm.SpaceSceneFSM;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
-import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 
 import java.util.Objects;
@@ -15,8 +15,8 @@ public class SpaceScene extends Scene {
 
     private final Stage enemyShipsStage;
 
-    public SpaceScene(SceneConfigureSpec sceneConfigureSpec) {
-        super(sceneConfigureSpec.getSceneId());
+    public SpaceScene(SceneScript sceneScript) {
+        super(sceneScript.getScriptId());
         this.enemyShipsStage = addEmptyShipsStage();
         this.fsm = new SpaceSceneFSM(this);
     }

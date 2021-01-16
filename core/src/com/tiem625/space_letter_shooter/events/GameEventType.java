@@ -8,7 +8,7 @@ public enum GameEventType {
     SHIP_REACH_BOTTOM_SCREEN,
     SHIP_SPELLED,
     SHIP_GONE,
-    SCENE_CLEAR,
+    SCRIPT_CLEAR,
     SCENE_RESTART,
     FSM_STATE_CHANGE,
     ;

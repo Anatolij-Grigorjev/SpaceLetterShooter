@@ -2,7 +2,7 @@ package com.tiem625.space_letter_shooter.resource.make;
 
 import com.tiem625.space_letter_shooter.background.AlwaysOnBGScene;
 import com.tiem625.space_letter_shooter.config.DebugScene;
-import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class SceneMaker extends ResourceMaker {
      * @return a newly constructed {@link SpaceScene}
      */
     public static SpaceScene buildSpaceScene(String sceneId) throws IOException {
-        var sceneSpec = SceneConfigureSpecs.api.getSceneConfigureSpec(sceneId);
+        var sceneSpec = SceneScripts.api.getSceneScript(sceneId);
         return makeResource(() -> new SpaceScene(sceneSpec));
     }
 

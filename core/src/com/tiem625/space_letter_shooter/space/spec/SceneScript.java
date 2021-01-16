@@ -6,35 +6,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class SceneConfigureSpec {
+public class SceneScript {
 
-    private final String sceneId;
-    private final String nextSceneId;
+    private final String scriptId;
+    private final String nextScriptId;
     private final String sceneName;
     private final List<ShipPlacement> shipPlacements;
     private final List<ShipDescentSpec> shipDescentSpecs;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public SceneConfigureSpec(
-            @JsonProperty("sceneId") String sceneId,
-            @JsonProperty("nextSceneId") String nextSceneId,
+    public SceneScript(
+            @JsonProperty("scriptId") String scriptId,
+            @JsonProperty("nextScriptId") String nextScriptId,
             @JsonProperty("sceneName") String sceneName,
             @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements,
             @JsonProperty("shipDescentSpec") List<ShipDescentSpec> shipDescentSpecs
     ) {
-        this.sceneId = sceneId;
-        this.nextSceneId = nextSceneId;
+        this.scriptId = scriptId;
+        this.nextScriptId = nextScriptId;
         this.sceneName = sceneName;
         this.shipPlacements = shipPlacements;
         this.shipDescentSpecs = shipDescentSpecs;
     }
 
-    public String getSceneId() {
-        return sceneId;
+    public String getScriptId() {
+        return scriptId;
     }
 
-    public String getNextSceneId() {
-        return nextSceneId;
+    public String getNextScriptId() {
+        return nextScriptId;
     }
 
     public String getSceneName() {

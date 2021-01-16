@@ -2,9 +2,9 @@ package com.tiem625.space_letter_shooter.space.fsm;
 
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
-import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
+import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import com.tiem625.space_letter_shooter.util.OneUseVal;
 import com.tiem625.space_letter_shooter.util.fsm.State;
 import com.tiem625.space_letter_shooter.util.fsm.StateMachine;
@@ -20,26 +20,26 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
     public SpaceSceneFSM(SpaceScene entity) {
         super(entity);
         setLoadSceneSpec("SS1");
-        setState(LoadSpaceSceneState.KEY);
+        setState(LoadSpaceSceneScriptState.KEY);
         setupEventHandlers();
     }
 
     private void setLoadSceneSpec(String sceneId) {
-        var loadSceneState = (LoadSpaceSceneState) getState(LoadSpaceSceneState.KEY);
-        loadSceneState.setSceneSpec(sceneId);
+        var loadSceneState = (LoadSpaceSceneScriptState) getState(LoadSpaceSceneScriptState.KEY);
+        loadSceneState.setSceneScript(sceneId);
     }
 
     private void setRunLoadedSceneSpec() {
-        var loadSceneState = (LoadSpaceSceneState) getCurrentState();
-        var nextState = (RunSpaceSceneState) getState(RunSpaceSceneState.KEY);
-        nextState.setSceneSpec(loadSceneState.getLoadedSpecId());
+        var loadSceneState = (LoadSpaceSceneScriptState) getCurrentState();
+        var nextState = (RunSpaceSceneScriptState) getState(RunSpaceSceneScriptState.KEY);
+        nextState.setSceneScript(loadSceneState.getLoadedSceneScriptId());
     }
 
     @Override
     protected Set<? extends State<SpaceScene>> loadStates() {
         return Set.of(
-                new LoadSpaceSceneState(),
-                new RunSpaceSceneState(),
+                new LoadSpaceSceneScriptState(),
+                new RunSpaceSceneScriptState(),
                 new GameOverSpaceSceneState()
         );
     }
@@ -48,20 +48,20 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
     protected String computeNextStateKey(float delta) {
 
         switch (currentStateKey) {
-            case LoadSpaceSceneState.KEY:
+            case LoadSpaceSceneScriptState.KEY:
                 if (shipsReadyDescentVal.get()) {
                     setRunLoadedSceneSpec();
-                    return RunSpaceSceneState.KEY;
+                    return RunSpaceSceneScriptState.KEY;
                 }
                 return null;
-            case RunSpaceSceneState.KEY:
+            case RunSpaceSceneScriptState.KEY:
                 if (shipReachedScreenBottomVal.get()) {
                     return GameOverSpaceSceneState.KEY;
                 }
                 var nextSceneId = nextSceneIdVal.get();
                 if (nextSceneId != null) {
                     setLoadSceneSpec(nextSceneId);
-                    return LoadSpaceSceneState.KEY;
+                    return LoadSpaceSceneScriptState.KEY;
                 }
                 return null;
             case GameOverSpaceSceneState.KEY:
@@ -72,10 +72,10 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
     }
 
     private void setupEventHandlers() {
-        EventsHandling.addEventHandler(GameEventType.SCENE_CLEAR, gameEvent -> {
-            var clearedSpec = (SceneConfigureSpec) gameEvent.payload.get("spec");
-            SceneConfigureSpec nextSceneSpec = SceneConfigureSpecs.api.getNextSceneSpecAfter(clearedSpec.getSceneId());
-            nextSceneIdVal.set(nextSceneSpec.getSceneId());
+        EventsHandling.addEventHandler(GameEventType.SCRIPT_CLEAR, gameEvent -> {
+            var clearedScript = (SceneScript) gameEvent.payload.get("script");
+            SceneScript nextScript = SceneScripts.api.getNextSceneSpecAfter(clearedScript.getScriptId());
+            nextSceneIdVal.set(nextScript.getScriptId());
         });
         EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
             shipReachedScreenBottomVal.set(true);

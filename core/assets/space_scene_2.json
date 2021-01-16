@@ -1,6 +1,6 @@
 {
-  "sceneId": "SS2",
-  "nextSceneId": "SS1",
+  "scriptId": "SS2",
+  "nextScriptId": "SS1",
   "sceneName": "Space Scene 2",
   "shipDescentSpecs": [
     {
