@@ -2,7 +2,6 @@ package com.tiem625.space_letter_shooter.space.fsm;
 
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
-import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.spec.SceneConfigureSpec;
@@ -74,8 +73,8 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
 
     private void setupEventHandlers() {
         EventsHandling.addEventHandler(GameEventType.SCENE_CLEAR, gameEvent -> {
-            var clearedScene = (Scene) gameEvent.payload.get("scene");
-            SceneConfigureSpec nextSceneSpec = SceneConfigureSpecs.api.getNextSceneSpecAfter(clearedScene.getSceneId());
+            var clearedSpec = (SceneConfigureSpec) gameEvent.payload.get("spec");
+            SceneConfigureSpec nextSceneSpec = SceneConfigureSpecs.api.getNextSceneSpecAfter(clearedSpec.getSceneId());
             nextSceneIdVal.set(nextSceneSpec.getSceneId());
         });
         EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {

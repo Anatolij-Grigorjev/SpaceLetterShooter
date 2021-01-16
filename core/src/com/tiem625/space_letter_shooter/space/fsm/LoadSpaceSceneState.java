@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
+import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.SceneState;
+import com.tiem625.space_letter_shooter.space.ColorOverlay;
 import com.tiem625.space_letter_shooter.space.SceneConfigureSpecs;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
@@ -40,6 +42,7 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
     @Override
     public void enterState(String prevStateKey) {
         super.enterState(prevStateKey);
+
         load(sceneConfigureSpec);
     }
 
@@ -53,10 +56,15 @@ public class LoadSpaceSceneState extends SceneState<SpaceScene> {
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
         shipDesiredPositions.keySet().forEach(ship -> entity.addEnemyShipToScene(ship));
 
+        var loadingOverlay = ColorOverlay.fullScreen(Colors.BLACK_ALPHA75);
+        entity.getEnemyShipsStage().addActor(loadingOverlay);
         entity.getEnemyShipsStage().addAction(
                 Actions.delay(
-                        totalSetupDelayAction.getDuration(),
-                        Actions.run(this::postShipsReadyDescentEvent)
+                        totalSetupDelayAction.getDuration() + 0.5f,
+                        Actions.sequence(
+                                Actions.removeActor(loadingOverlay),
+                                Actions.run(this::postShipsReadyDescentEvent)
+                        )
                 )
         );
     }

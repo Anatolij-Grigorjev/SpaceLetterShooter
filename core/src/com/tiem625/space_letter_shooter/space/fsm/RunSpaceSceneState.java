@@ -86,7 +86,7 @@ public class RunSpaceSceneState extends SceneState<SpaceScene> {
     public void act(float delta) {
         super.act(delta);
         if (disposedShips >= sceneNumShips) {
-            EventsHandling.postEvent(GameEventType.SCENE_CLEAR.makeEvent(Map.of("scene", entity)));
+            EventsHandling.postEvent(GameEventType.SCENE_CLEAR.makeEvent(Map.of("spec", sceneConfigureSpec)));
         }
     }
 

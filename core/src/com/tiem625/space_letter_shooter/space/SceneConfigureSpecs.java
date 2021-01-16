@@ -44,7 +44,8 @@ public enum SceneConfigureSpecs implements ResourceLoader {
 
     private Set<SceneConfigureSpec> loadSceneSpecs() {
         var sceneFiles = Set.of(
-                "space_scene_1.json"
+                "space_scene_1.json",
+                "space_scene_2.json"
         );
         return sceneFiles.stream().map(sceneFile -> {
             try {
