@@ -2,13 +2,16 @@ package com.tiem625.space_letter_shooter.space.fsm;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
+import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.ColorOverlay;
+import com.tiem625.space_letter_shooter.space.FlyInCenterText;
 import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
@@ -55,18 +58,26 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
 
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
         shipDesiredPositions.keySet().forEach(ship -> entity.addEnemyShipToScene(ship));
+        float shipsFlyInDuration = totalSetupDelayAction.getDuration() + 0.5f;
 
         var loadingOverlay = ColorOverlay.fullScreen(Colors.BLACK_ALPHA75);
         entity.getEnemyShipsStage().addActor(loadingOverlay);
         entity.getEnemyShipsStage().addAction(
                 Actions.delay(
-                        totalSetupDelayAction.getDuration() + 0.5f,
+                        shipsFlyInDuration,
                         Actions.sequence(
                                 Actions.removeActor(loadingOverlay),
                                 Actions.run(this::postShipsReadyDescentEvent)
                         )
                 )
         );
+        var titleCardStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        var sceneNameText = new FlyInCenterText(new String[]{entity.getClass().getSimpleName(), sceneScript.getSceneName()});
+        sceneNameText.setAnimateOnStage(titleCardStage);
+        titleCardStage.addAction(
+                Actions.delay(
+                        shipsFlyInDuration,
+                        Actions.run(() -> entity.removeAndGetStage(titleCardStage))));
     }
 
     private void postShipsReadyDescentEvent() {

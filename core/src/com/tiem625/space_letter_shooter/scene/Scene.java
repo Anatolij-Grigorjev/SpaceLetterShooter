@@ -37,6 +37,13 @@ public abstract class Scene implements Disposable {
         return stage;
     }
 
+    public Stage removeAndGetStage(Stage stage) {
+        Objects.requireNonNull(stage);
+        stages.remove(stage);
+
+        return stage;
+    }
+
     public Stream<Stage> stages() {
         return stages.stream();
     }
