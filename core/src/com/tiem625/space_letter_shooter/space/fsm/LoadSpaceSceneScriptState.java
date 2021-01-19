@@ -54,19 +54,30 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
 
         var shipDesiredPositions = spec.getShipPlacements().stream()
                 .map(this::placement2ShipWithPosition)
-                .peek(posShipPair -> posShipPair.getValue().setPosition(OFFSCREEN_POS.x, OFFSCREEN_POS.y))
+                .peek(posShipPair -> {
+                    var ship = posShipPair.getValue();
+                    var descentSpec = spec.getShipDescentSpecsMap().get(ship.getId());
+                    setShipDescentAttributes(ship, descentSpec);
+                })
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
 
         var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
         shipDesiredPositions.keySet().forEach(ship -> entity.addEnemyShipToScene(ship));
         float shipsFlyInDuration = totalSetupDelayAction.getDuration() + 0.5f;
 
+
         var whenShipsReadyActions = Actions.sequence(Actions.delay(shipsFlyInDuration));
         addStageLoadingOverlay(whenShipsReadyActions);
         addStageTitleSequence(whenShipsReadyActions);
         whenShipsReadyActions.addAction(Actions.run(this::postShipsReadyDescentEvent));
-
         entity.getEnemyShipsStage().addAction(whenShipsReadyActions);
+    }
+
+    private void setShipDescentAttributes(EnemyShip ship, SceneScript.ShipDescentSpec descentSpec) {
+        //set initial position
+        ship.setPosition(OFFSCREEN_POS.x, OFFSCREEN_POS.y);
+        ship.setSpeedRange(descentSpec.getSpeedMin(), descentSpec.getSpeedMax());
+        ship.setDescentYRange(descentSpec.getStepMin(), descentSpec.getStepMax());
     }
 
     private void addStageLoadingOverlay(SequenceAction postLoadSequence) {
@@ -105,10 +116,11 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
                 .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
                     var ship = shipPositionPair.getKey();
                     var startPosition = shipPositionPair.getValue();
+                    var moveDistance = startPosition.dst(ship.getX(), ship.getY());
+                    var moveDuration = moveDistance / ship.nextVelocity();
                     var moveToStartAction = Actions.moveTo(
-                            startPosition.x,
-                            startPosition.y,
-                            1,
+                            startPosition.x, startPosition.y,
+                            moveDuration,
                             Interpolation.sine
                     );
                     var shipActions = Actions.sequence(
@@ -117,7 +129,7 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
                     );
                     ship.addAction(shipActions);
 
-                    return Actions.delay(prevDelay.getDuration() + 0.5f);
+                    return Actions.delay(prevDelay.getDuration() + moveDuration);
                 }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));
     }
 }

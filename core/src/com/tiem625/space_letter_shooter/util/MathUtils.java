@@ -1,8 +1,11 @@
 package com.tiem625.space_letter_shooter.util;
 
+import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Vector2;
 
 public class MathUtils {
+
+    private static RandomXS128 RNG = new RandomXS128();
 
     private MathUtils() {
         throw new ClassIsStaticException(getClass());

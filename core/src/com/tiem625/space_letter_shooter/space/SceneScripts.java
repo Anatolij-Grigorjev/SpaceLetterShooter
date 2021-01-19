@@ -2,6 +2,7 @@ package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.Gdx;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.resource.ResourceLoader;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript;
@@ -47,9 +48,11 @@ public enum SceneScripts implements ResourceLoader {
                 "space_scene_1.json",
                 "space_scene_2.json"
         );
+        var objectMapper = new ObjectMapper()
+                .disable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS);
         return sceneFiles.stream().map(sceneFile -> {
             try {
-                return new ObjectMapper().readValue(Gdx.files.internal(sceneFile).read(), new TypeReference<SceneScript>() {
+                return objectMapper.readValue(Gdx.files.internal(sceneFile).read(), new TypeReference<SceneScript>() {
                 });
             } catch (IOException ex) {
                 ex.printStackTrace();

@@ -1,7 +1,6 @@
 package com.tiem625.space_letter_shooter.space.fsm;
 
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,15 +14,14 @@ import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript;
+import com.tiem625.space_letter_shooter.space.spec.SceneScript.ShipDescentSpec;
 import com.tiem625.space_letter_shooter.util.StreamUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
@@ -55,8 +53,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
     public void enterState(String prevStateKey) {
         entity.getEnemyShipsStage().addListener(currentCharsCaptureListener);
 
-        var shipDescentSpecs = sceneScript.getShipDescentSpecs().stream()
-                .collect(Collectors.toMap(SceneScript.ShipDescentSpec::getShipId, Function.identity()));
+        var shipDescentSpecs = sceneScript.getShipDescentSpecsMap();
 
         entity.enemyShips().forEach(ship -> {
             ship.addAction(Actions.sequence(
@@ -90,10 +87,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
         }
     }
 
-    private void addShipStepsDescentActions(
-            EnemyShip ship,
-            SceneScript.ShipDescentSpec shipDescentSpec
-    ) {
+    private void addShipStepsDescentActions(EnemyShip ship, ShipDescentSpec shipDescentSpec) {
 
         List<Vector2> descentSteps = buildShipDescentPositions(ship, shipDescentSpec);
         List<Action> actionsList = new ArrayList<>();
@@ -104,8 +98,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
                     actions.add(buildShipDescentAction(
                             prevStepEndPosition,
                             nextStepPosition,
-                            shipDescentSpec.getSpeedMin(),
-                            shipDescentSpec.getSpeedMax()
+                            ship.nextVelocity()
                     ));
                     return actions;
                 }, StreamUtils.concatLists())
@@ -120,34 +113,21 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
                 .map(moveToAction -> new Vector2(moveToAction.getX(), moveToAction.getY()));
     }
 
-    private List<Vector2> buildShipDescentPositions(EnemyShip ship, SceneScript.ShipDescentSpec shipDescentSpec) {
+    private List<Vector2> buildShipDescentPositions(EnemyShip ship, ShipDescentSpec shipDescentSpec) {
         final Supplier<Float> edgesSupplier = new StreamUtils.RollingValuesSupplier<>(
                 shipDescentSpec.getDescentStepsX().stream().map(Integer::floatValue).toArray(Float[]::new)
         );
-        return breakShipHeightIntoDescentSteps(
-                ship.getY(),
-                -ship.getShipTextureSize().y,
-                shipDescentSpec.getStepMin(),
-                shipDescentSpec.getStepMax(),
-                edgesSupplier
-        );
+        return breakShipHeightIntoDescentSteps(ship, edgesSupplier);
     }
 
-    private List<Vector2> breakShipHeightIntoDescentSteps(
-            float startHeight,
-            float endHeight,
-            float descentStepMin,
-            float descentStepMax,
-            Supplier<Float> stepXCoordSource
-    ) {
-
-        float fullDescentHeight = startHeight - endHeight;
-        int maxDescentSteps = (int) (fullDescentHeight / descentStepMin);
-        var descentSteps = new ArrayList<Vector2>(maxDescentSteps);
+    private List<Vector2> breakShipHeightIntoDescentSteps(EnemyShip ship, Supplier<Float> stepXCoordSource) {
+        var startHeight = ship.getY();
+        var endHeight = -ship.getShipTextureSize().y;
+        var descentSteps = new ArrayList<Vector2>();
         var remainingHeight = startHeight;
         while (remainingHeight > endHeight) {
             var stepX = stepXCoordSource.get();
-            var nextStepHeight = MathUtils.random(descentStepMin, descentStepMax);
+            var nextStepHeight = ship.nextDescentStep();
             if (remainingHeight - nextStepHeight > endHeight) {
                 remainingHeight -= nextStepHeight;
                 descentSteps.add(new Vector2(stepX, remainingHeight));
@@ -160,16 +140,9 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
         return descentSteps;
     }
 
-    private Action buildShipDescentAction(
-            Vector2 moveFrom,
-            Vector2 moveTo,
-            float descentSpeedMin,
-            float descentSpeedMax
-    ) {
+    private Action buildShipDescentAction(Vector2 moveFrom, Vector2 moveTo, float speed) {
 
-        var speed = MathUtils.random(descentSpeedMin, descentSpeedMax);
         var distance = new Vector2(Math.abs(moveFrom.x - moveTo.x), moveTo.y).len();
-
         return Actions.moveTo(moveTo.x, moveTo.y, distance / speed, Interpolation.sine);
     }
 

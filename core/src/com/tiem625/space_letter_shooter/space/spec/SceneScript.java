@@ -2,9 +2,15 @@ package com.tiem625.space_letter_shooter.space.spec;
 
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 public class SceneScript {
 
@@ -13,20 +19,24 @@ public class SceneScript {
     private final String sceneName;
     private final List<ShipPlacement> shipPlacements;
     private final List<ShipDescentSpec> shipDescentSpecs;
+    @JsonIgnore
+    private final Map<String, ShipDescentSpec> shipDescentSpecsMap;
 
-    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    @JsonCreator(mode = JsonCreator.Mode.DEFAULT)
     public SceneScript(
             @JsonProperty("scriptId") String scriptId,
             @JsonProperty("nextScriptId") String nextScriptId,
             @JsonProperty("sceneName") String sceneName,
             @JsonProperty("shipPlacements") List<ShipPlacement> shipPlacements,
-            @JsonProperty("shipDescentSpec") List<ShipDescentSpec> shipDescentSpecs
+            @JsonProperty("shipDescentSpecs") List<ShipDescentSpec> shipDescentSpecs
     ) {
         this.scriptId = scriptId;
         this.nextScriptId = nextScriptId;
         this.sceneName = sceneName;
         this.shipPlacements = shipPlacements;
-        this.shipDescentSpecs = shipDescentSpecs;
+        this.shipDescentSpecs = ofNullable(shipDescentSpecs).orElse(List.of());
+        this.shipDescentSpecsMap = this.shipDescentSpecs.stream()
+                .collect(Collectors.toMap(ShipDescentSpec::getShipId, Function.identity()));
     }
 
     public String getScriptId() {
@@ -45,6 +55,12 @@ public class SceneScript {
         return shipPlacements;
     }
 
+    @JsonIgnore
+    public Map<String, ShipDescentSpec> getShipDescentSpecsMap() {
+        return shipDescentSpecsMap;
+    }
+
+    //required by jackson
     public List<ShipDescentSpec> getShipDescentSpecs() {
         return shipDescentSpecs;
     }

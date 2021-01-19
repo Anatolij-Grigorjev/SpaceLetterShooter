@@ -3,6 +3,7 @@ package com.tiem625.space_letter_shooter.space.ship;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -20,12 +21,20 @@ import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildS
 
 public class EnemyShip extends Actor {
 
+    //DESCRIPTOR
     private final String id;
     private final String text;
-    private String spelledCharacters;
     private final TextureRegion texture;
     private final ShipRenderSpec shipRenderSpec;
+
+
+    //STATE
+    private String spelledCharacters;
     private boolean shipDisposing;
+    private float minSpeed;
+    private float maxSpeed;
+    private float minDescentY;
+    private float maxDescentY;
 
     public EnemyShip(String shipId, String text, ShipRenderSpec shipRenderSpec) {
         super();
@@ -44,6 +53,24 @@ public class EnemyShip extends Actor {
 
     public void stopActions() {
         clearActions();
+    }
+
+    public float nextVelocity() {
+        return MathUtils.random(minSpeed, maxSpeed);
+    }
+
+    public float nextDescentStep() {
+        return MathUtils.random(minDescentY, maxDescentY);
+    }
+
+    public void setSpeedRange(float min, float max) {
+        minSpeed = min;
+        maxSpeed = max;
+    }
+
+    public void setDescentYRange(float min, float max) {
+        minDescentY = min;
+        maxDescentY = max;
     }
 
     public void show() {
