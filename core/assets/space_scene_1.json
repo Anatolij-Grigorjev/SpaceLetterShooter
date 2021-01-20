@@ -7,7 +7,7 @@
       "shipId": "S1",
       "stepMin": 15,
       "stepMax": 25,
-      "speedMin": 200,
+      "speedMin": 500,
       "speedMax": 600,
       "descentStepsX": [
         150, 250, 350, 450, 550
@@ -17,7 +17,7 @@
       "shipId": "S2",
       "stepMin": 15,
       "stepMax": 25,
-      "speedMin": 200,
+      "speedMin": 400,
       "speedMax": 600,
       "descentStepsX": [
         550, 450, 350, 250, 150
@@ -27,7 +27,7 @@
       "shipId": "S3",
       "stepMin": 15,
       "stepMax": 25,
-      "speedMin": 200,
+      "speedMin": 450,
       "speedMax": 600,
       "descentStepsX": [
         350, 450, 550, 450, 350, 250, 150
@@ -38,7 +38,7 @@
       "stepMin": 15,
       "stepMax": 25,
       "speedMin": 200,
-      "speedMax": 600,
+      "speedMax": 500,
       "descentStepsX": [
         750, 650, 550, 150, 300
       ]

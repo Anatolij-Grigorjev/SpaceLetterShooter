@@ -115,7 +115,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
     private List<Vector2> buildShipDescentPositions(EnemyShip ship, ShipDescentSpec shipDescentSpec) {
         final Supplier<Float> edgesSupplier = new StreamUtils.RollingValuesSupplier<>(
-                shipDescentSpec.getDescentStepsX().stream().map(Integer::floatValue).toArray(Float[]::new)
+                shipDescentSpec.getDescentStepsX().toArray(Float[]::new)
         );
         return breakShipHeightIntoDescentSteps(ship, edgesSupplier);
     }

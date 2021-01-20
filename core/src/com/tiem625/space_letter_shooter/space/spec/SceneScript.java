@@ -136,7 +136,7 @@ public class SceneScript {
         private final float stepMax;
         private final float speedMin;
         private final float speedMax;
-        private final List<Integer> descentStepsX;
+        private final List<Float> descentStepsX;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public ShipDescentSpec(
@@ -145,7 +145,7 @@ public class SceneScript {
                 @JsonProperty("stepMax") float stepMax,
                 @JsonProperty("speedMin") float speedMin,
                 @JsonProperty("speedMax") float speedMax,
-                @JsonProperty("descentStepsX") List<Integer> descentStepsX
+                @JsonProperty("descentStepsX") List<Float> descentStepsX
         ) {
             this.shipId = shipId;
             this.stepMin = stepMin;
@@ -175,7 +175,7 @@ public class SceneScript {
             return speedMax;
         }
 
-        public List<Integer> getDescentStepsX() {
+        public List<Float> getDescentStepsX() {
             return descentStepsX;
         }
     }

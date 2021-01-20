@@ -116,8 +116,7 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
                 .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
                     var ship = shipPositionPair.getKey();
                     var startPosition = shipPositionPair.getValue();
-                    var moveDistance = startPosition.dst(ship.getX(), ship.getY());
-                    var moveDuration = moveDistance / ship.nextVelocity();
+                    var moveDuration = 1f;
                     var moveToStartAction = Actions.moveTo(
                             startPosition.x, startPosition.y,
                             moveDuration,
