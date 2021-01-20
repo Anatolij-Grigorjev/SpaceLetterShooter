@@ -42,9 +42,13 @@ public class EnemyShip extends Actor {
         this.text = text;
         this.setName(text);
         this.spelledCharacters = "";
+        this.shipDisposing = false;
+
         this.shipRenderSpec = shipRenderSpec;
         this.texture = Textures.buildAndGetAtlasRegionSprite(shipRenderSpec.spriteKey);
-        this.shipDisposing = false;
+        this.setWidth(texture.getRegionWidth());
+        this.setHeight(texture.getRegionHeight());
+        this.setOrigin(Align.center);
     }
 
     public EnemyShip cloneShip(String withText) {
@@ -87,10 +91,6 @@ public class EnemyShip extends Actor {
 
     public void setSamePosition(Actor other) {
         setPosition(other.getX(), other.getY());
-    }
-
-    public Vector2 getShipTextureSize() {
-        return new Vector2(texture.getRegionWidth(), texture.getRegionHeight());
     }
 
     public boolean canHitCharacter(char input) {
@@ -138,7 +138,7 @@ public class EnemyShip extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         //draw sprite with actor origin at sprite center
-        batch.draw(texture, getX(), getY());
+        drawTexture(batch, parentAlpha);
         var font = Fonts.ENEMY_TEXT_NORMAL_FONT;
         Fonts.useFontWithColor(font, Color.YELLOW, colorFont -> {
             var drawString = text.substring(spelledCharacters.length());
@@ -164,5 +164,16 @@ public class EnemyShip extends Actor {
                 "text='" + text + '\'' +
                 ", shipSprite=" + texture +
                 '}';
+    }
+
+    private void drawTexture(Batch batch, float parentAlpha) {
+        batch.draw(
+                texture,
+                getX(), getY(),
+                getOriginX(), getOriginY(),
+                getWidth(), getHeight(),
+                getScaleX(), getScaleY(),
+                getRotation()
+        );
     }
 }

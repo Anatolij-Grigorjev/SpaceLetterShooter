@@ -122,7 +122,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
     private List<Vector2> breakShipHeightIntoDescentSteps(EnemyShip ship, Supplier<Float> stepXCoordSource) {
         var startHeight = ship.getY();
-        var endHeight = -ship.getShipTextureSize().y;
+        var endHeight = -ship.getHeight();
         var descentSteps = new ArrayList<Vector2>();
         var remainingHeight = startHeight;
         while (remainingHeight > endHeight) {

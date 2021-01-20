@@ -56,13 +56,13 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
                 .map(this::placement2ShipWithPosition)
                 .peek(posShipPair -> {
                     var ship = posShipPair.getValue();
+                    entity.addEnemyShipToScene(ship);
                     var descentSpec = spec.getShipDescentSpecsMap().get(ship.getId());
                     setShipDescentAttributes(ship, descentSpec);
                 })
                 .collect(Collectors.toMap(Pair::getValue, Pair::getKey));
 
-        var totalSetupDelayAction = setupShipsFlyToStartActions(shipDesiredPositions);
-        shipDesiredPositions.keySet().forEach(ship -> entity.addEnemyShipToScene(ship));
+        var totalSetupDelayAction = setupShipsAnimateToStartPositionsActions(shipDesiredPositions);
         float shipsFlyInDuration = totalSetupDelayAction.getDuration() + 0.5f;
 
 
@@ -111,16 +111,19 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
         );
     }
 
-    private DelayAction setupShipsFlyToStartActions(Map<EnemyShip, Vector2> shipDesiredPositions) {
+    private DelayAction setupShipsAnimateToStartPositionsActions(Map<EnemyShip, Vector2> shipDesiredPositions) {
         return shipDesiredPositions.entrySet().stream()
                 .reduce(Actions.delay(0.5f), (prevDelay, shipPositionPair) -> {
                     var ship = shipPositionPair.getKey();
                     var startPosition = shipPositionPair.getValue();
                     var moveDuration = 1f;
-                    var moveToStartAction = Actions.moveTo(
-                            startPosition.x, startPosition.y,
-                            moveDuration,
-                            Interpolation.sine
+
+                    //ship to start position action
+                    ship.setPosition(startPosition.x, startPosition.y);
+                    ship.setScale(0.0f);
+                    var moveToStartAction = Actions.parallel(
+                        Actions.scaleTo(1.0f, 1.0f, moveDuration, Interpolation.bounceOut),
+                        Actions.rotateBy(360f, moveDuration, Interpolation.sine)
                     );
                     var shipActions = Actions.sequence(
                             Actions.delay(prevDelay.getDuration()),
