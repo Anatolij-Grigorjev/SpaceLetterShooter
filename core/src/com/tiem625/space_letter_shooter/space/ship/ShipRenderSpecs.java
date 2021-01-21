@@ -29,7 +29,7 @@ public enum ShipRenderSpecs implements ResourceLoader {
     public void loadResources() {
         var shipSpecs = loadShipSpecs();
         loadedRenderSpecs.putAll(shipSpecs.stream()
-                .collect(Collectors.toMap(spec -> spec.specId, Function.identity())));
+                .collect(Collectors.toMap(ShipRenderSpec::getSpecId, Function.identity())));
     }
 
     public ShipRenderSpec getRenderSpec(String specId) {

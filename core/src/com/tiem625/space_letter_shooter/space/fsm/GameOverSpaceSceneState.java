@@ -16,8 +16,6 @@ import com.tiem625.space_letter_shooter.space.FlyInCenterText;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
 
-import java.util.stream.Collectors;
-
 import static java.util.function.Predicate.not;
 
 public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
@@ -56,22 +54,12 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
     }
 
     private void stopShipsWithSmiles() {
-        var liveEnemyShips = entity.enemyShips()
+        entity.enemyShips()
                 .filter(not(EnemyShip::isShipDisposing))
-                .collect(Collectors.toSet());
-        var smilingReplacementShips = liveEnemyShips.stream()
-                .map(this::createSmilingClone)
-                .collect(Collectors.toSet());
-        //remove OG ships
-        liveEnemyShips.forEach(EnemyShip::remove);
-        //add smiling ships
-        smilingReplacementShips.forEach(entity::addEnemyShipToScene);
-    }
-
-    private EnemyShip createSmilingClone(EnemyShip originalShip) {
-        var smilingShip = originalShip.cloneShip(":)");
-        smilingShip.setSamePosition(originalShip);
-        return smilingShip;
+                .forEach(liveShip -> {
+                    liveShip.stopActions();
+                    liveShip.setShipText(":)");
+                });
     }
 
     private static class RestartSceneInputListener extends InputListener {
