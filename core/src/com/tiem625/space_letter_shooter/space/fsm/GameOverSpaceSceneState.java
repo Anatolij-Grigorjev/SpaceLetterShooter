@@ -1,5 +1,6 @@
 package com.tiem625.space_letter_shooter.space.fsm;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -21,7 +22,11 @@ import static java.util.function.Predicate.not;
 public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
 
     public static final String KEY = "GAME_OVER_SPACE_SCENE";
-    private final String[] centerTextLines = {"GAME OVER", "Press 'R' to try again..."};
+    private final String[] centerTextLines = {
+            "GAME OVER",
+            "Press 'R' to try again...",
+            "Press 'Q' to quit..."
+    };
 
     public GameOverSpaceSceneState() {
         super(KEY);
@@ -40,9 +45,9 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
 
     private void startGameOverOverlayStage() {
         var overlayStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
-        ColorOverlay colorOverlay = ColorOverlay.fullScreen(Colors.BLACK_ALPHA01);
+        ColorOverlay colorOverlay = ColorOverlay.fullScreen(Colors.DARK_RED_ALPHA75);
         overlayStage.addActor(colorOverlay);
-        colorOverlay.addAction(Actions.color(Colors.BLACK_ALPHA75, 1, Interpolation.fastSlow));
+        colorOverlay.addAction(Actions.color(colorOverlay.getColor(), 1, Interpolation.fastSlow));
     }
 
     private void startGameOverTextStage() {
@@ -70,6 +75,10 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
                 case 'R':
                 case 'r':
                     EventsHandling.postEvent(GameEventType.SCENE_RESTART.makeEvent());
+                    break;
+                case 'Q':
+                case 'q':
+                    Gdx.app.exit();
                     break;
                 default:
                     break;
