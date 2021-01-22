@@ -12,7 +12,7 @@ import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
+import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript.ShipDescentSpec;
 import com.tiem625.space_letter_shooter.util.StreamUtils;

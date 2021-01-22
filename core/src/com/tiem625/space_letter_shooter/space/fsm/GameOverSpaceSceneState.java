@@ -14,7 +14,7 @@ import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.ColorOverlay;
 import com.tiem625.space_letter_shooter.space.FlyInCenterText;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
-import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
+import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 
 import static java.util.function.Predicate.not;
 

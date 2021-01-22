@@ -1,10 +1,10 @@
-package com.tiem625.space_letter_shooter.space.ship;
+package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.Gdx;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiem625.space_letter_shooter.resource.ResourceLoader;
-import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.space.spec.EnemyShipRenderSpec;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -19,7 +19,7 @@ public enum ShipRenderSpecs implements ResourceLoader {
 
     api;
 
-    private final Map<String, ShipRenderSpec> loadedRenderSpecs;
+    private final Map<String, EnemyShipRenderSpec> loadedRenderSpecs;
 
     ShipRenderSpecs() {
         loadedRenderSpecs = new ConcurrentHashMap<>();
@@ -29,15 +29,15 @@ public enum ShipRenderSpecs implements ResourceLoader {
     public void loadResources() {
         var shipSpecs = loadShipSpecs();
         loadedRenderSpecs.putAll(shipSpecs.stream()
-                .collect(Collectors.toMap(ShipRenderSpec::getSpecId, Function.identity())));
+                .collect(Collectors.toMap(EnemyShipRenderSpec::getSpecId, Function.identity())));
     }
 
-    public ShipRenderSpec getRenderSpec(String specId) {
+    public EnemyShipRenderSpec getRenderSpec(String specId) {
         return Optional.ofNullable(loadedRenderSpecs.get(specId))
                 .orElseThrow(() -> new RuntimeException("No ship spec found for id '" + specId + "'"));
     }
 
-    private Set<ShipRenderSpec> loadShipSpecs() {
+    private Set<EnemyShipRenderSpec> loadShipSpecs() {
 
         try {
             return new ObjectMapper().readValue(Gdx.files.internal("enemy_ships.json").read(), new TypeReference<>() {});

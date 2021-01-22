@@ -1,9 +1,11 @@
 [
 	{
 		"specId": "1WR",
-		"spriteKey" : "enemy_ship_1w_v1",
-		"width": 200,
-		"height": 100,
+		"vesselRenderSpec": {
+			"spriteKey" : "enemy_ship_1w_v1",
+			"width": 200,
+			"height": 100
+		},
 		"textRenderSpec": {
 			"offsetX" : 35,
 			"offsetY" : 98,
@@ -12,9 +14,11 @@
 	},
 	{
 		"specId": "1WO",
-		"spriteKey" : "enemy_ship_1w_v2",
-		"width": 100,
-		"height": 200,
+		"vesselRenderSpec":  {
+			"spriteKey" : "enemy_ship_1w_v2",
+			"width": 100,
+			"height": 200
+		},
 		"textRenderSpec": {
 			"offsetX" : 33,
 			"offsetY" : 126,

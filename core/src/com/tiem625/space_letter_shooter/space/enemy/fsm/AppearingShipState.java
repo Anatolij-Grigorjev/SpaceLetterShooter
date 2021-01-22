@@ -1,13 +1,13 @@
-package com.tiem625.space_letter_shooter.space.ship.fsm;
+package com.tiem625.space_letter_shooter.space.enemy.fsm;
 
-import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
+import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.util.fsm.State;
 
-public class DescendShipState extends State<EnemyShip> {
+public class AppearingShipState extends State<EnemyShip> {
 
-    public static final String KEY = "DESCEND_SHIP";
+    public static final String KEY = "APPEAR_SHIP";
 
-    public DescendShipState() {
+    public AppearingShipState() {
         super(KEY);
     }
 
@@ -25,5 +25,4 @@ public class DescendShipState extends State<EnemyShip> {
     public void enterState(String prevStateKey) {
         super.enterState(prevStateKey);
     }
-
 }

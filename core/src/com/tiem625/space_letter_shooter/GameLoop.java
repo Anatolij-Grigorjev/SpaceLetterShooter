@@ -18,7 +18,7 @@ import com.tiem625.space_letter_shooter.resource.make.SpriteBatchMaker;
 import com.tiem625.space_letter_shooter.scene.Scene;
 import com.tiem625.space_letter_shooter.scene.ScenesManager;
 import com.tiem625.space_letter_shooter.space.SceneScripts;
-import com.tiem625.space_letter_shooter.space.ship.ShipRenderSpecs;
+import com.tiem625.space_letter_shooter.space.ShipRenderSpecs;
 
 import java.io.IOException;
 import java.util.Objects;

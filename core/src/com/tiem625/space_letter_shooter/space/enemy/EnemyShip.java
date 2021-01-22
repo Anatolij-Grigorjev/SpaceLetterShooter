@@ -1,4 +1,4 @@
-package com.tiem625.space_letter_shooter.space.ship;
+package com.tiem625.space_letter_shooter.space.enemy;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -6,7 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
-import com.tiem625.space_letter_shooter.space.spec.ShipRenderSpec;
+import com.tiem625.space_letter_shooter.space.spec.EnemyShipRenderSpec;
+import com.tiem625.space_letter_shooter.space.vessel.Vessel;
 import com.tiem625.space_letter_shooter.text.SpellableText;
 
 import java.util.Map;
@@ -18,7 +19,7 @@ public class EnemyShip extends Group {
 
     //DESCRIPTOR
     private final String id;
-    private final DrawnShip shipModel;
+    private final Vessel shipModel;
     private final SpellableText shipText;
 
     //STATE
@@ -28,11 +29,11 @@ public class EnemyShip extends Group {
     private float minDescentY;
     private float maxDescentY;
 
-    public EnemyShip(String shipId, String text, ShipRenderSpec shipRenderSpec) {
+    public EnemyShip(String shipId, String text, EnemyShipRenderSpec enemyShipRenderSpec) {
         super();
         this.id = shipId;
-        this.shipText = new SpellableText(text, shipRenderSpec.getTextRenderSpec());
-        this.shipModel = new DrawnShip(shipRenderSpec);
+        this.shipText = new SpellableText(text, enemyShipRenderSpec.getTextRenderSpec());
+        this.shipModel = new Vessel(enemyShipRenderSpec.getVesselRenderSpec());
         addActor(shipModel);
         addActor(shipText);
         this.shipDisposing = false;

@@ -1,6 +1,6 @@
-package com.tiem625.space_letter_shooter.space.ship.fsm;
+package com.tiem625.space_letter_shooter.space.enemy.fsm;
 
-import com.tiem625.space_letter_shooter.space.ship.EnemyShip;
+import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.util.fsm.State;
 import com.tiem625.space_letter_shooter.util.fsm.StateMachine;
 
