@@ -2,7 +2,9 @@ package com.tiem625.space_letter_shooter.space;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -10,6 +12,7 @@ import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
@@ -45,8 +48,7 @@ public class FlyInCenterText extends Actor {
 
     public void setAnimateOnStage(Stage stage) {
         var root = stage.getRoot();
-        var resolution = GamePropsHolder.props.getResolution();
-        root.setPosition(resolution.x / 2, resolution.y / 2 + textTravelExtent);
+        setTextCenterPosition(root);
         root.setScale(0.0f);
         root.addAction(Actions.sequence(
                 Actions.parallel(
@@ -59,6 +61,19 @@ public class FlyInCenterText extends Actor {
                 )
         ));
         stage.addActor(this);
+    }
+
+    private void setTextCenterPosition(Actor actor) {
+        var resolution = GamePropsHolder.props.getResolution();
+        var screenCenterPoint = new Vector2(resolution.x / 2, resolution.y / 2 + textTravelExtent);
+
+        var layoutSizeCalc = new GlyphLayout();
+        var totalTextHeight = Stream.of(text).reduce(0.0f, (accum, nextLine) -> {
+            layoutSizeCalc.setText(font, nextLine);
+            return layoutSizeCalc.height + font.getLineHeight();
+        }, Float::sum) - font.getLineHeight();
+
+        actor.setPosition(screenCenterPoint.x, screenCenterPoint.y + totalTextHeight);
     }
 
 }
