@@ -12,7 +12,7 @@ public class BitmapFontMaker extends ResourceMaker {
 
     public static BitmapFont buildEnemyShipNormalFont() {
         var normalEnemyFont = makeResource(BitmapFont::new);
-        normalEnemyFont.setColor(Color.WHITE);
+        normalEnemyFont.setColor(Color.YELLOW);
         return normalEnemyFont;
     }
 }

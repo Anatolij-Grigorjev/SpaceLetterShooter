@@ -1,26 +1,14 @@
 package com.tiem625.space_letter_shooter.text;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.resource.Fonts;
 
-public class SpellableText extends Actor {
-
-    private String text;
-    private final BitmapFont font;
-
-    private final float drawOffsetX;
-    private final float drawOffsetY;
-    private final int targetWidth;
+public class SpellableText extends DrawnText {
 
     private int numSpelledCharacters;
 
     public SpellableText(String text, TextRenderSpec textRenderSpec) {
-        this.text = text;
-        this.font = Fonts.ENEMY_TEXT_NORMAL_FONT;
+        super(text, Fonts.ENEMY_TEXT_NORMAL_FONT);
         this.drawOffsetX = textRenderSpec.getOffsetX();
         this.drawOffsetY = textRenderSpec.getOffsetY();
         this.targetWidth = textRenderSpec.getTargetWidth();
@@ -28,9 +16,11 @@ public class SpellableText extends Actor {
         this.numSpelledCharacters = 0;
     }
 
+    @Override
     public void setText(String newText) {
-        text = newText;
+        super.setText(newText);
         numSpelledCharacters = 0;
+        drawSubstringStartIdx = 0;
     }
 
     public boolean canSpellCharacter(char input) {
@@ -43,6 +33,7 @@ public class SpellableText extends Actor {
 
     public void spellCharacter() {
         numSpelledCharacters++;
+        drawSubstringStartIdx++;
     }
 
     public boolean isSpelled() {
@@ -55,32 +46,6 @@ public class SpellableText extends Actor {
             return;
         }
 
-        Fonts.useFontWithColor(font, Color.YELLOW, colorFont -> {
-            var drawString = text.substring(numSpelledCharacters);
-            colorFont.draw(
-                    batch,
-                    //text
-                    drawString,
-                    //position
-                    drawOffsetX, drawOffsetY,
-                    //substring indexes
-                    0, drawString.length(),
-                    //width
-                    targetWidth,
-                    //align, wrap, truncate
-                    Align.center, true, "..."
-            );
-        });
-    }
-
-    @Override
-    public String toString() {
-        return "SpellableText{" +
-                "text='" + text + '\'' +
-                ", drawOffsetX=" + drawOffsetX +
-                ", drawOffsetY=" + drawOffsetY +
-                ", targetWidth=" + targetWidth +
-                ", numSpelledCharacters=" + numSpelledCharacters +
-                '}';
+        super.draw(batch, parentAlpha);
     }
 }
