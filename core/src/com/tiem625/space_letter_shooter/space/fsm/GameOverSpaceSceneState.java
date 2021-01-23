@@ -1,6 +1,5 @@
 package com.tiem625.space_letter_shooter.space.fsm;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -78,7 +77,7 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
                     break;
                 case 'Q':
                 case 'q':
-                    Gdx.app.exit();
+                    EventsHandling.postEvent(GameEventType.SCENE_QUIT.makeEvent());
                     break;
                 default:
                     break;

@@ -47,9 +47,16 @@ public class GameLoop extends ApplicationAdapter {
 
         GamePropsHolder.applyCurrentGameConfig();
 
+        setupSceneEventsHandlers();
+    }
+
+    private void setupSceneEventsHandlers() {
         EventsHandling.addEventHandler(GameEventType.SCENE_RESTART, restart -> {
             var scene = buildSpaceScene();
             setRenderAndInputToScene(scene);
+        });
+        EventsHandling.addEventHandler(GameEventType.SCENE_QUIT, quit -> {
+            Gdx.app.exit();
         });
     }
 

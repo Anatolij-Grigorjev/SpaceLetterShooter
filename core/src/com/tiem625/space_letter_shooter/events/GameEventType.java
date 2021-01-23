@@ -10,6 +10,7 @@ public enum GameEventType {
     SHIP_GONE,
     SCRIPT_CLEAR,
     SCENE_RESTART,
+    SCENE_QUIT,
     FSM_STATE_CHANGE,
     ;
 
