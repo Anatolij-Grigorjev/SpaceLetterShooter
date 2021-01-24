@@ -11,9 +11,13 @@ import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.SceneState;
-import com.tiem625.space_letter_shooter.space.*;
+import com.tiem625.space_letter_shooter.space.ColorOverlay;
+import com.tiem625.space_letter_shooter.space.SceneScripts;
+import com.tiem625.space_letter_shooter.space.ShipRenderSpecs;
+import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript;
+import com.tiem625.space_letter_shooter.text.FlyInCenterText;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -88,7 +92,7 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
 
         var titleCardStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
         var sceneNameText = new FlyInCenterText(new String[]{entity.getClass().getSimpleName(), sceneScript.getSceneName()});
-        sceneNameText.setAnimateOnStage(titleCardStage);
+        titleCardStage.addActor(sceneNameText);
         postLoadSequence.addAction(Actions.run(() -> entity.removeAndGetStage(titleCardStage)));
     }
 

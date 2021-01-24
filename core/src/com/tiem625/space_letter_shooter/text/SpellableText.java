@@ -9,8 +9,10 @@ public class SpellableText extends DrawnText {
 
     public SpellableText(String text, TextRenderSpec textRenderSpec) {
         super(text, Fonts.ENEMY_TEXT_NORMAL_FONT);
-        this.drawOffsetX = textRenderSpec.getOffsetX();
-        this.drawOffsetY = textRenderSpec.getOffsetY();
+        setPosition(
+                textRenderSpec.getOffsetX(),
+                textRenderSpec.getOffsetY()
+        );
         this.targetWidth = textRenderSpec.getTargetWidth();
 
         this.numSpelledCharacters = 0;

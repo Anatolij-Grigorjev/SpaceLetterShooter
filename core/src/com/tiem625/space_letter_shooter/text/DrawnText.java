@@ -2,9 +2,9 @@ package com.tiem625.space_letter_shooter.text;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
-import com.tiem625.space_letter_shooter.config.GamePropsHolder;
 
 import static java.util.Optional.ofNullable;
 
@@ -12,9 +12,8 @@ public class DrawnText extends Actor {
 
     protected String text;
     protected BitmapFont font;
+    protected GlyphLayout layout;
 
-    protected float drawOffsetX;
-    protected float drawOffsetY;
     protected int targetWidth;
 
     protected int drawSubstringStartIdx;
@@ -23,11 +22,9 @@ public class DrawnText extends Actor {
     public DrawnText(String text, BitmapFont font) {
         this.font = font;
         this.text = ofNullable(text).orElse("");
-        //defaults
-        drawOffsetX = 0;
-        drawOffsetY = 0;
-        targetWidth = GamePropsHolder.props.getResolutionWidth();
+        this.layout = new GlyphLayout(font, text);
 
+        targetWidth = (int) layout.width;
         drawSubstringStartIdx = 0;
         drawSubstringEndIdx = this.text.length();
     }
@@ -40,7 +37,7 @@ public class DrawnText extends Actor {
                 //text
                 text,
                 //position
-                drawOffsetX, drawOffsetY,
+                getX(), getY(),
                 //substring indexes
                 drawSubstringStartIdx, drawSubstringEndIdx,
                 //width
@@ -62,12 +59,8 @@ public class DrawnText extends Actor {
         return font;
     }
 
-    public float getDrawOffsetX() {
-        return drawOffsetX;
-    }
-
-    public float getDrawOffsetY() {
-        return drawOffsetY;
+    public GlyphLayout getLayout() {
+        return layout;
     }
 
     public int getTargetWidth() {
@@ -79,8 +72,8 @@ public class DrawnText extends Actor {
         return "DrawnText{" +
                 "text='" + text + '\'' +
                 ", font=" + font +
-                ", drawOffsetX=" + drawOffsetX +
-                ", drawOffsetY=" + drawOffsetY +
+                ", X=" + getX() +
+                ", Y=" + getY() +
                 ", targetWidth=" + targetWidth +
                 '}';
     }

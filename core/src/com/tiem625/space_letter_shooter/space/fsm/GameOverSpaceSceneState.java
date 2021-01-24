@@ -12,9 +12,9 @@ import com.tiem625.space_letter_shooter.input.InputProcessorManager;
 import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.scene.SceneState;
 import com.tiem625.space_letter_shooter.space.ColorOverlay;
-import com.tiem625.space_letter_shooter.space.FlyInCenterText;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
 import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
+import com.tiem625.space_letter_shooter.text.FlyInCenterText;
 
 import static java.util.function.Predicate.not;
 
@@ -52,7 +52,7 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
     private void startGameOverTextStage() {
         var gameOverTextStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
         FlyInCenterText flyInCenterText = new FlyInCenterText(centerTextLines);
-        flyInCenterText.setAnimateOnStage(gameOverTextStage);
+        gameOverTextStage.addActor(flyInCenterText);
         gameOverTextStage.addListener(new RestartSceneInputListener());
         InputProcessorManager.setCurrentInputProcessors(gameOverTextStage);
     }
