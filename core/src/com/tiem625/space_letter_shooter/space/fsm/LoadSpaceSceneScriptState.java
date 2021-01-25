@@ -2,11 +2,9 @@ package com.tiem625.space_letter_shooter.space.fsm;
 
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.resource.Colors;
@@ -90,10 +88,10 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
 
     private void addStageTitleSequence(SequenceAction postLoadSequence) {
 
-        var titleCardStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        var titleCardStage = entity.getTitleCardStage();
         var sceneNameText = new FlyInCenterText(new String[]{entity.getClass().getSimpleName(), sceneScript.getSceneName()});
         titleCardStage.addActor(sceneNameText);
-        postLoadSequence.addAction(Actions.run(() -> entity.removeAndGetStage(titleCardStage)));
+        postLoadSequence.addAction(Actions.removeActor(sceneNameText));
     }
 
     private void postShipsReadyDescentEvent() {

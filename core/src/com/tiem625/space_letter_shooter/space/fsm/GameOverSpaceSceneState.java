@@ -3,9 +3,7 @@ package com.tiem625.space_letter_shooter.space.fsm;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.tiem625.space_letter_shooter.config.Viewports;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.input.InputProcessorManager;
@@ -43,14 +41,14 @@ public class GameOverSpaceSceneState extends SceneState<SpaceScene> {
     }
 
     private void startGameOverOverlayStage() {
-        var overlayStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        var overlayStage = entity.getEnemyShipsStage();
         ColorOverlay colorOverlay = ColorOverlay.fullScreen(Colors.DARK_RED_ALPHA75);
         overlayStage.addActor(colorOverlay);
         colorOverlay.addAction(Actions.color(colorOverlay.getColor(), 1, Interpolation.fastSlow));
     }
 
     private void startGameOverTextStage() {
-        var gameOverTextStage = entity.addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
+        var gameOverTextStage = entity.getTitleCardStage();
         FlyInCenterText flyInCenterText = new FlyInCenterText(centerTextLines);
         gameOverTextStage.addActor(flyInCenterText);
         gameOverTextStage.addListener(new RestartSceneInputListener());
