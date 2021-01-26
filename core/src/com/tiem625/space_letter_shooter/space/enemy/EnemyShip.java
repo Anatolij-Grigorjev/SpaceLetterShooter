@@ -93,7 +93,7 @@ public class EnemyShip extends Group {
 
     private void beginDisposeActions() {
         var disappearActions = Actions.sequence(
-                buildShakeActionSequence(25, new Vector2(25f, 25f), 2.0f),
+                buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
                 Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
                 Actions.removeActor()
         );

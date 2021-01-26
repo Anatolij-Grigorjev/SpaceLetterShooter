@@ -4,6 +4,7 @@ import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
 import com.tiem625.space_letter_shooter.space.SceneScripts;
 import com.tiem625.space_letter_shooter.space.SpaceScene;
+import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.space.spec.SceneScript;
 import com.tiem625.space_letter_shooter.util.OneUseVal;
 import com.tiem625.space_letter_shooter.util.fsm.State;
@@ -78,7 +79,12 @@ public class SpaceSceneFSM extends StateMachine<SpaceScene> {
             nextSceneIdVal.set(nextScript.getScriptId());
         });
         EventsHandling.addEventHandler(GameEventType.SHIP_REACH_BOTTOM_SCREEN, gameEvent -> {
-            shipReachedScreenBottomVal.set(true);
+            var ship = (EnemyShip) gameEvent.payload.get("ship");
+
+            //only process events from non-disposing ships
+            if (!ship.isShipDisposing()) {
+                shipReachedScreenBottomVal.set(true);
+            }
         });
         EventsHandling.addEventHandler(GameEventType.SHIPS_AT_START, gameEvent -> {
             shipsReadyDescentVal.set(true);

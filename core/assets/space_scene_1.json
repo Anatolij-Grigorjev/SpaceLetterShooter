@@ -59,7 +59,7 @@
       "text": "S2",
       "position": {
         "x": 500,
-        "y": 350
+        "y": 500
       },
       "shipSpecId": "1WR"
     },
@@ -68,7 +68,7 @@
       "text": "S3",
       "position": {
         "x": 300,
-        "y": 250
+        "y": 515
       },
       "shipSpecId": "1WO"
     },
@@ -77,7 +77,7 @@
       "text": "S4",
       "position": {
         "x": 750,
-        "y": 150
+        "y": 475
       },
       "shipSpecId": "1WO"
     }
