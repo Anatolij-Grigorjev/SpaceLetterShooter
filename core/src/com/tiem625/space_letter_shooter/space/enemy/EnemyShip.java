@@ -100,8 +100,8 @@ public class EnemyShip extends Group {
                     buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
                     buildPulseActionSequence(10, 0.2f, 1.5f)
                 ),
-                Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
                 Actions.scaleTo(0.0f, 0.0f, 0.25f, Interpolation.slowFast),
+                Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
                 Actions.removeActor()
         );
         addAction(disappearActions);
