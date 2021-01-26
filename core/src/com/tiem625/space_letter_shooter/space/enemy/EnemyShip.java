@@ -1,5 +1,6 @@
 package com.tiem625.space_letter_shooter.space.enemy;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -12,6 +13,7 @@ import com.tiem625.space_letter_shooter.text.SpellableText;
 
 import java.util.Map;
 
+import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildPulseActionSequence;
 import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildShakeActionSequence;
 
 
@@ -36,6 +38,7 @@ public class EnemyShip extends Group {
         this.shipModel = new Vessel(enemyShipRenderSpec.getVesselRenderSpec());
         addActor(shipModel);
         addActor(shipText);
+        setOrigin(shipModel.getOriginX(), shipModel.getOriginY());
         this.shipDisposing = false;
     }
 
@@ -93,8 +96,12 @@ public class EnemyShip extends Group {
 
     private void beginDisposeActions() {
         var disappearActions = Actions.sequence(
-                buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
+                Actions.parallel(
+                    buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
+                    buildPulseActionSequence(10, 0.2f, 1.5f)
+                ),
                 Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
+                Actions.scaleTo(0.0f, 0.0f, 0.25f, Interpolation.slowFast),
                 Actions.removeActor()
         );
         addAction(disappearActions);

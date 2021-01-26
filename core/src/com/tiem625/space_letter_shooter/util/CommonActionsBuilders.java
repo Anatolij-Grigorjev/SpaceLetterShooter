@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 import java.util.stream.IntStream;
 
+import static com.badlogic.gdx.math.MathUtils.clamp;
+import static com.badlogic.gdx.math.MathUtils.random;
+
 public class CommonActionsBuilders {
 
     private CommonActionsBuilders() {
@@ -27,6 +30,21 @@ public class CommonActionsBuilders {
                     seq.addAction(Actions.moveBy(moveBackToCenter.x, moveBackToCenter.y, halfShake));
                     return seq;
 
+                }, Actions::sequence);
+    }
+
+    public static Action buildPulseActionSequence(int numPulses, float magnitude, float duration) {
+
+        float onePulseDuration = duration / numPulses;
+        float halfPulseDuration = onePulseDuration / 2;
+
+        return IntStream.range(0, numPulses)
+                .mapToObj(idx -> random(0.0f, magnitude))
+                .reduce(Actions.sequence(), (SequenceAction seq, Float pulseMagnitude) -> {
+                    var pulsedScale = clamp(1.0f - pulseMagnitude, 0f, 1.0f);
+                    seq.addAction(Actions.scaleTo(pulsedScale, pulsedScale, halfPulseDuration));
+                    seq.addAction(Actions.scaleTo(1.0f, 1.0f, halfPulseDuration));
+                    return seq;
                 }, Actions::sequence);
     }
 }
