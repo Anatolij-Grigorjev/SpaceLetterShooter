@@ -1,6 +1,5 @@
 package com.tiem625.space_letter_shooter.space.fsm;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
@@ -116,18 +115,7 @@ public class LoadSpaceSceneScriptState extends SceneState<SpaceScene> {
                     var startPosition = shipPositionPair.getValue();
                     var moveDuration = 1f;
 
-                    //ship to start position action
-                    ship.setPosition(startPosition.x, startPosition.y);
-                    ship.setScale(0.0f);
-                    var moveToStartAction = Actions.parallel(
-                        Actions.scaleTo(1.0f, 1.0f, moveDuration, Interpolation.bounceOut),
-                        Actions.rotateBy(360f, moveDuration, Interpolation.sine)
-                    );
-                    var shipActions = Actions.sequence(
-                            Actions.delay(prevDelay.getDuration()),
-                            moveToStartAction
-                    );
-                    ship.addAction(shipActions);
+                    ship.beginAppearActions(startPosition, prevDelay.getDuration(), moveDuration);
 
                     return Actions.delay(prevDelay.getDuration() + moveDuration);
                 }, (delay1, delay2) -> Actions.delay(delay1.getDuration() + delay2.getDuration()));

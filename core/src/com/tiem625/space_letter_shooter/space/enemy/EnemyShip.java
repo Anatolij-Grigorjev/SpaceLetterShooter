@@ -87,6 +87,20 @@ public class EnemyShip extends Group {
         }
     }
 
+    public void beginAppearActions(Vector2 appearPosition, float actionDelay, float duration) {
+        setPosition(appearPosition.x, appearPosition.y);
+        setScale(0.0f);
+        var moveToStartAction = Actions.parallel(
+                Actions.scaleTo(1.0f, 1.0f, duration, Interpolation.slowFast),
+                Actions.rotateBy(360f, duration, Interpolation.circle)
+        );
+        var shipActions = Actions.sequence(
+                Actions.delay(actionDelay),
+                moveToStartAction
+        );
+        addAction(shipActions);
+    }
+
     private void disposeShip() {
 
         shipDisposing = true;
