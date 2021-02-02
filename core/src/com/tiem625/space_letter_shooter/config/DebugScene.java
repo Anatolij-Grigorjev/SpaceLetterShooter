@@ -30,6 +30,7 @@ public class DebugScene extends Scene {
                     GamePropsHolder.props.toggleEnabledDynamicBg();
                     break;
                 case Input.Keys.Q:
+                    System.out.println("!!!DEBUG EXIT GAME!!!");
                     Gdx.app.exit();
                     break;
                 default:
