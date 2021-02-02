@@ -18,9 +18,12 @@ public abstract class Scene implements Disposable {
     protected final List<Stage> stages;
     protected StateMachine<? extends Scene> fsm;
 
+    private boolean paused;
+
     public Scene(String sceneId) {
         this.sceneId = sceneId;
         this.stages = new CopyOnWriteArrayList<>();
+        this.paused = false;
     }
 
     public String getSceneId() {
@@ -42,15 +45,21 @@ public abstract class Scene implements Disposable {
         return addAndGetStage(new Stage(Viewports.FIT_FULLSCREEN));
     }
 
-    public Stage removeAndGetStage(Stage stage) {
-        Objects.requireNonNull(stage);
-        stages.remove(stage);
-
-        return stage;
-    }
-
     public Stream<Stage> stages() {
         return stages.stream();
+    }
+
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void resume() {
+        this.paused = false;
+    }
+
+    public final void togglePause() {
+        if (paused) resume();
+        else pause();
     }
 
     /**
@@ -64,7 +73,9 @@ public abstract class Scene implements Disposable {
     }
 
     private final Consumer<Stage> renderStage = stage -> {
-        stage.act(Gdx.graphics.getDeltaTime());
+        if (!paused) {
+            stage.act(Gdx.graphics.getDeltaTime());
+        }
         stage.draw();
     };
 

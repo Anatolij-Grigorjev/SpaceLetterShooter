@@ -55,6 +55,9 @@ public class GameLoop extends ApplicationAdapter {
             var scene = buildSpaceScene();
             setRenderAndInputToScene(scene);
         });
+        EventsHandling.addEventHandler(GameEventType.SCENE_TOGGLE_PAUSE, pause -> {
+            ScenesManager.api.currentScene().ifPresent(Scene::togglePause);
+        });
         EventsHandling.addEventHandler(GameEventType.SCENE_QUIT, quit -> {
             Gdx.app.exit();
         });

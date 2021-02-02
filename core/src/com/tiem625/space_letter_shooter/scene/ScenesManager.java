@@ -13,10 +13,6 @@ public enum ScenesManager {
 
     private final List<Scene> alwaysOnScenes;
 
-    public Optional<Scene> currentScene() {
-        return Optional.ofNullable(currentScene);
-    }
-
     private Scene currentScene;
 
     ScenesManager() {
@@ -27,6 +23,10 @@ public enum ScenesManager {
     public void addAlwaysOnScene(Scene scene) {
         Objects.requireNonNull(scene);
         alwaysOnScenes.add(scene);
+    }
+
+    public Optional<Scene> currentScene() {
+        return Optional.ofNullable(currentScene);
     }
 
     public void setCurrentScene(Scene scene) {
