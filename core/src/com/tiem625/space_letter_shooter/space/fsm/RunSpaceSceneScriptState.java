@@ -153,7 +153,7 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
             entity.enemyShips()
                     .filter(ship -> ship.canHitCharacter(character))
-                    .findFirst()
+                    .findAny()
                     .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
 
             return true;

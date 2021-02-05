@@ -7,14 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
+import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.space.spec.EnemyShipRenderSpec;
 import com.tiem625.space_letter_shooter.space.vessel.Vessel;
 import com.tiem625.space_letter_shooter.text.SpellableText;
 
 import java.util.Map;
 
-import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildPulseActionSequence;
-import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.buildShakeActionSequence;
+import static com.tiem625.space_letter_shooter.util.CommonActionsBuilders.*;
 
 
 public class EnemyShip extends Group {
@@ -82,6 +82,7 @@ public class EnemyShip extends Group {
 
     public void hitCharacter(char input) {
         shipText.spellCharacter();
+        shipModel.addAction(buildColorFlashAction(shipModel.getColor(), Colors.LIGHT_GREEN, 0.16f));
         if (shipText.isSpelled()) {
             disposeShip();
         }
@@ -111,8 +112,8 @@ public class EnemyShip extends Group {
     private void beginDisposeActions() {
         var disappearActions = Actions.sequence(
                 Actions.parallel(
-                    buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
-                    buildPulseActionSequence(10, 0.2f, 1.5f)
+                        buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
+                        buildPulseActionSequence(10, 0.2f, 1.5f)
                 ),
                 Actions.scaleTo(0.0f, 0.0f, 0.25f, Interpolation.slowFast),
                 Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),

@@ -1,5 +1,7 @@
 package com.tiem625.space_letter_shooter.util;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -46,5 +48,12 @@ public class CommonActionsBuilders {
                     seq.addAction(Actions.scaleTo(1.0f, 1.0f, halfPulseDuration));
                     return seq;
                 }, Actions::sequence);
+    }
+
+    public static Action buildColorFlashAction(Color currentColor, Color flashColor, float duration) {
+        return Actions.sequence(
+                Actions.color(flashColor, duration / 2 , Interpolation.fastSlow),
+                Actions.color(currentColor, duration / 2, Interpolation.slowFast)
+        );
     }
 }
