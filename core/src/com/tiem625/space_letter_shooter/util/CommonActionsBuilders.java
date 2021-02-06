@@ -50,10 +50,10 @@ public class CommonActionsBuilders {
                 }, Actions::sequence);
     }
 
-    public static Action buildColorFlashAction(Color currentColor, Color flashColor, float duration) {
+    public static Action buildColorFlashAction(Color resetColor, Color flashColor, float duration) {
         return Actions.sequence(
                 Actions.color(flashColor, duration / 2 , Interpolation.fastSlow),
-                Actions.color(currentColor, duration / 2, Interpolation.slowFast)
+                Actions.color(resetColor, duration / 2, Interpolation.slowFast)
         );
     }
 }

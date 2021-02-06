@@ -1,5 +1,6 @@
 package com.tiem625.space_letter_shooter.space.enemy;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -110,10 +111,13 @@ public class EnemyShip extends Group {
     }
 
     private void beginDisposeActions() {
+        var numPulses = 10;
+        var pulsesDuration = 1.5f;
         var disappearActions = Actions.sequence(
                 Actions.parallel(
+                        Actions.run(() -> shipModel.addAction(Actions.color(Color.RED, pulsesDuration, Interpolation.fastSlow))),
                         buildShakeActionSequence(15, new Vector2(20f, 20f), 1.0f),
-                        buildPulseActionSequence(10, 0.2f, 1.5f)
+                        buildPulseActionSequence(numPulses, 0.2f, pulsesDuration)
                 ),
                 Actions.scaleTo(0.0f, 0.0f, 0.25f, Interpolation.slowFast),
                 Actions.run(() -> postShipEvent(GameEventType.SHIP_GONE)),
