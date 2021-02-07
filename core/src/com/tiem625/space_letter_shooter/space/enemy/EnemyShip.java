@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.tiem625.space_letter_shooter.events.EventsHandling;
 import com.tiem625.space_letter_shooter.events.GameEventType;
-import com.tiem625.space_letter_shooter.resource.Colors;
 import com.tiem625.space_letter_shooter.space.spec.EnemyShipRenderSpec;
 import com.tiem625.space_letter_shooter.space.vessel.Vessel;
 import com.tiem625.space_letter_shooter.text.SpellableText;
@@ -83,7 +82,8 @@ public class EnemyShip extends Group {
 
     public void hitCharacter(char input) {
         shipText.spellCharacter();
-        shipModel.addAction(buildColorFlashAction(shipModel.getColor(), Colors.LIGHT_GREEN, 0.16f));
+        shipModel.addAction(buildColorFlashAction(shipModel.getColor(), Color.RED, 0.16f));
+        this.addAction(buildShakeActionSequence(2, new Vector2(15f, 15f), 0.16f));
         if (shipText.isSpelled()) {
             disposeShip();
         }

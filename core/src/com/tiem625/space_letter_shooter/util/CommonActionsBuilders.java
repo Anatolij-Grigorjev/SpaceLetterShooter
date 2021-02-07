@@ -27,9 +27,9 @@ public class CommonActionsBuilders {
                 .mapToObj(idx -> MathUtils.nextRandomVector2(amplitude))
                 .reduce(Actions.sequence(), (SequenceAction seq, Vector2 shakeCoords) -> {
 
-                    seq.addAction(Actions.moveBy(shakeCoords.x, shakeCoords.y, halfShake));
+                    seq.addAction(Actions.moveBy(shakeCoords.x, shakeCoords.y, halfShake, Interpolation.fastSlow));
                     var moveBackToCenter = MathUtils.inverse(shakeCoords);
-                    seq.addAction(Actions.moveBy(moveBackToCenter.x, moveBackToCenter.y, halfShake));
+                    seq.addAction(Actions.moveBy(moveBackToCenter.x, moveBackToCenter.y, halfShake, Interpolation.slowFast));
                     return seq;
 
                 }, Actions::sequence);
@@ -44,8 +44,8 @@ public class CommonActionsBuilders {
                 .mapToObj(idx -> random(0.0f, magnitude))
                 .reduce(Actions.sequence(), (SequenceAction seq, Float pulseMagnitude) -> {
                     var pulsedScale = clamp(1.0f - pulseMagnitude, 0f, 1.0f);
-                    seq.addAction(Actions.scaleTo(pulsedScale, pulsedScale, halfPulseDuration));
-                    seq.addAction(Actions.scaleTo(1.0f, 1.0f, halfPulseDuration));
+                    seq.addAction(Actions.scaleTo(pulsedScale, pulsedScale, halfPulseDuration, Interpolation.fastSlow));
+                    seq.addAction(Actions.scaleTo(1.0f, 1.0f, halfPulseDuration, Interpolation.slowFast));
                     return seq;
                 }, Actions::sequence);
     }
