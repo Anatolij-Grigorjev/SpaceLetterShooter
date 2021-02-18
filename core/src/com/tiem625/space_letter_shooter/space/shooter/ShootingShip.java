@@ -28,9 +28,9 @@ public class ShootingShip extends Group {
         System.out.println(
                 "enemy: " + enemyPosition
                         + " shooter: " + position
-                        + ") degrees: " + angle
+                        + " angle: " + angle
         );
-        setRotation(angle);
+        setRotation(-angle);
     }
 
     private void startShotFeedback() {

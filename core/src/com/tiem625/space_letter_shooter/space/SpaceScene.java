@@ -62,7 +62,7 @@ public class SpaceScene extends Scene {
         var resolution = GamePropsHolder.props.getResolution();
         shootingShip.setPosition(
                 (resolution.x - shootingShip.getWidth()) / 2,
-                (resolution.y - shootingShip.getHeight()) / 2
+                shootingShip.getHeight() / 2
         );
         enemyShipsStage.addActor(shootingShip);
     }
