@@ -2,6 +2,7 @@ package com.tiem625.space_letter_shooter.space.shooter;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.space.vessel.Vessel;
 
@@ -13,6 +14,9 @@ public class ShootingShip extends Group {
 
     public ShootingShip(Vessel shipModel) {
         this.shipModel = shipModel;
+        setWidth(shipModel.getWidth());
+        setHeight(shipModel.getHeight());
+        setOrigin(Align.center);
         addActor(shipModel);
     }
 
