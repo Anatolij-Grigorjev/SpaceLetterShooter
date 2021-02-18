@@ -42,6 +42,10 @@ public class EnemyShip extends Group {
         this.shipDisposing = false;
     }
 
+    public Vector2 getPosition() {
+        return new Vector2(getX(), getY());
+    }
+
     public void setShipText(String newText) {
         shipText.setText(newText);
     }

@@ -150,11 +150,14 @@ public class RunSpaceSceneScriptState extends SceneState<SpaceScene> {
 
         @Override
         public boolean keyTyped(InputEvent event, char character) {
-
+            var shootingShip = entity.getShootingShip();
             entity.enemyShips()
                     .filter(ship -> ship.canHitCharacter(character))
                     .findAny()
-                    .ifPresent(enemyShip -> enemyShip.hitCharacter(character));
+                    .ifPresent(enemyShip -> {
+                        shootingShip.shootAt(enemyShip);
+                        enemyShip.hitCharacter(character);
+                    });
 
             return true;
         }

@@ -32,7 +32,7 @@ public class Vessel extends Actor {
 
     @Override
     public String toString() {
-        return "DrawnShip{" +
+        return "Vessel{" +
                 "texture=" + texture +
                 ", width=" + texture.getWidth() +
                 ", height=" + texture.getHeight() +

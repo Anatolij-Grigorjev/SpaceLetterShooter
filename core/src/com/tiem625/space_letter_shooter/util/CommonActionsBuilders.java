@@ -52,8 +52,15 @@ public class CommonActionsBuilders {
 
     public static Action buildColorFlashAction(Color resetColor, Color flashColor, float duration) {
         return Actions.sequence(
-                Actions.color(flashColor, duration / 2 , Interpolation.fastSlow),
+                Actions.color(flashColor, duration / 2, Interpolation.fastSlow),
                 Actions.color(resetColor, duration / 2, Interpolation.slowFast)
+        );
+    }
+
+    public static Action buildShoveAction(float offsetX, float offsetY, float duration) {
+        return Actions.sequence(
+                Actions.moveBy(offsetX, offsetY, duration / 2, Interpolation.fastSlow),
+                Actions.moveBy(-offsetX, -offsetY, duration / 2, Interpolation.slowFast)
         );
     }
 }
