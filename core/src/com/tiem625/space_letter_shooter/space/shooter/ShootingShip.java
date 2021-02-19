@@ -1,7 +1,10 @@
 package com.tiem625.space_letter_shooter.space.shooter;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.tiem625.space_letter_shooter.space.enemy.EnemyShip;
 import com.tiem625.space_letter_shooter.space.vessel.Vessel;
@@ -35,7 +38,7 @@ public class ShootingShip extends Group {
                         + " angle: " + angle
         );
         var angleSide = enemyPosition.x < position.x ? -1 : 1;
-        setRotation(angleSide * angle);
+        addAction(Actions.rotateTo(angleSide * angle, Gdx.graphics.getDeltaTime(), Interpolation.slowFast));
     }
 
     private void startShotFeedback() {
