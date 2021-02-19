@@ -32,11 +32,6 @@ public class ShootingShip extends Group {
         var enemyPosition = ship.getPosition();
         var position = new Vector2(getX(), getY());
         var angle = enemyPosition.angle(position);
-        System.out.println(
-                "enemy: " + enemyPosition
-                        + " shooter: " + position
-                        + " angle: " + angle
-        );
         var angleSide = enemyPosition.x < position.x ? -1 : 1;
         addAction(Actions.rotateTo(angleSide * angle, Gdx.graphics.getDeltaTime(), Interpolation.slowFast));
     }
