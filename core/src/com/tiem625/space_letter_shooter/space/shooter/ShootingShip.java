@@ -34,7 +34,8 @@ public class ShootingShip extends Group {
                         + " shooter: " + position
                         + " angle: " + angle
         );
-        setRotation(-angle);
+        var angleSide = enemyPosition.x < position.x ? -1 : 1;
+        setRotation(angleSide * angle);
     }
 
     private void startShotFeedback() {

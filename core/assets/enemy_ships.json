@@ -7,8 +7,8 @@
 			"height": 100
 		},
 		"textRenderSpec": {
-			"offsetX" : 65,
-			"offsetY" : 68,
+			"offsetX" : 30,
+			"offsetY" : 80,
 			"targetWidth" : 85
 		}
 	},

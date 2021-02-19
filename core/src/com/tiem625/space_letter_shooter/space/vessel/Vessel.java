@@ -15,11 +15,11 @@ public class Vessel extends Actor {
         var scaleX = vesselRenderSpec.getWidth() / texture.getWidth();
         var scaleY = vesselRenderSpec.getHeight() / texture.getHeight();
         this.texture.setScale(scaleX, scaleY);
+        this.setWidth(vesselRenderSpec.getWidth());
+        this.setHeight(vesselRenderSpec.getHeight());
 
         this.setOrigin(Align.center);
         this.texture.setOrigin(this.getOriginX(), this.getOriginY());
-        this.setWidth(vesselRenderSpec.getWidth());
-        this.setHeight(vesselRenderSpec.getHeight());
     }
 
     @Override
