@@ -24,16 +24,28 @@ public class ShootingShip extends Group {
     }
 
     public void shootAt(EnemyShip ship) {
-        lookAt(ship);
+        var newShooterAngle = startLookAtTarget(ship);
+        createProjectileToPosition(newShooterAngle, ship.getPosition());
         startShotFeedback();
     }
 
-    private void lookAt(EnemyShip ship) {
-        var enemyPosition = ship.getPosition();
+    private float startLookAtTarget(EnemyShip target) {
+        var enemyPosition = target.getPosition();
         var position = new Vector2(getX(), getY());
         var angle = enemyPosition.angle(position);
         var angleSide = enemyPosition.x < position.x ? -1 : 1;
-        addAction(Actions.rotateTo(angleSide * angle, Gdx.graphics.getDeltaTime(), Interpolation.slowFast));
+        var actualAngleDegrees = angle * angleSide;
+        addAction(Actions.rotateTo(actualAngleDegrees, Gdx.graphics.getDeltaTime(), Interpolation.slowFast));
+
+        return actualAngleDegrees;
+    }
+
+    private void createProjectileToPosition(float angle, Vector2 targetPosition) {
+        var projectile = new ShotProjectile();
+        projectile.setPosition(getX(), getY());
+        projectile.setRotation(angle);
+        projectile.startShotTo(targetPosition);
+        getStage().addActor(projectile);
     }
 
     private void startShotFeedback() {
