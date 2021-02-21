@@ -31,6 +31,8 @@ public class EnemyShip extends Group {
     private float minDescentY;
     private float maxDescentY;
 
+    private final Vector2 extents;
+
     public EnemyShip(String shipId, String text, EnemyShipRenderSpec enemyShipRenderSpec) {
         super();
         this.id = shipId;
@@ -38,13 +40,18 @@ public class EnemyShip extends Group {
         this.shipModel = new Vessel(enemyShipRenderSpec.getVesselRenderSpec());
         addActor(shipModel);
         addActor(shipText);
+        setWidth(this.shipModel.getWidth());
+        setHeight(this.shipModel.getHeight());
         setOrigin(shipModel.getOriginX(), shipModel.getOriginY());
         this.shipDisposing = false;
+        this.extents = new Vector2(getWidth(), getHeight()).scl(0.5f);
     }
 
     public Vector2 getPosition() {
         return new Vector2(getX(), getY());
     }
+
+    public Vector2 getExtents() { return extents; }
 
     public void setShipText(String newText) {
         shipText.setText(newText);

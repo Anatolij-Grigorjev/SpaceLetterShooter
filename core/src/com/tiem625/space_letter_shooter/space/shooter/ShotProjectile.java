@@ -12,7 +12,7 @@ public class ShotProjectile extends Group {
 
     private final ColorOverlay body;
     //pixels / s
-    private final float VELOCITY = 750;
+    private final float VELOCITY = 1000;
 
     public ShotProjectile() {
         this.body = new ColorOverlay(Color.WHITE, new Rectangle(0, 0, 15, 30));

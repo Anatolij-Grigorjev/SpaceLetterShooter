@@ -25,7 +25,7 @@ public class ShootingShip extends Group {
 
     public void shootAt(EnemyShip ship) {
         var newShooterAngle = startLookAtTarget(ship);
-        createProjectileToPosition(newShooterAngle, ship.getPosition());
+        createProjectileToPosition(newShooterAngle, ship);
         startShotFeedback();
     }
 
@@ -40,11 +40,11 @@ public class ShootingShip extends Group {
         return actualAngleDegrees;
     }
 
-    private void createProjectileToPosition(float angle, Vector2 targetPosition) {
+    private void createProjectileToPosition(float angle, EnemyShip ship) {
         var projectile = new ShotProjectile();
         projectile.setPosition(getX(), getY());
         projectile.setRotation(angle);
-        projectile.startShotTo(targetPosition);
+        projectile.startShotTo(ship.getPosition().sub(ship.getExtents()));
         getStage().addActor(projectile);
     }
 
